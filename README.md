@@ -32,12 +32,14 @@ Culex species identification and blood meal analysis with de novo assembly of il
 ```chmod -R g+w subseq```
 
 ## check samples exist
+```
 bash
 for SAMPLE in `echo B002f_S1 B013f_S2 B015f_S3 B016f_S4 B020f_S5 B021f_S6 B022f_S7 B023f_S8`; do
   echo $SAMPLE
   ls -l MAD_21_${SAMPLE}_R1_001.fastq.gz
   ls -l MAD_21_${SAMPLE}_R2_001.fastq.gz
 done
+```
 
 ## run subseq for paired reads use same seed
 ```
