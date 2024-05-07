@@ -23,25 +23,28 @@ Culex species identification and blood meal analysis with de novo assembly of il
 
 # Task 1: seqtk 
 ## working directory
-cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles
+```cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles```
 
 ## make dir for subseq
-mkdir subseq
+```mkdir subseq```
 
 ## change permissions
-chmod -R g+w subseq
+```chmod -R g+w subseq```
 
 ## run subseq for paired reads use same seed
+```
 bash
 for SAMPLE in `echo B002f B013f B015f B016f B020f B021f B022f B023f`; do
   echo $SAMPLE
   seqtk sample -s100 MAD_21_${SAMPLE}_S1_R1_001.fastq.gz 10000 > ./subseq/MAD_21_${SAMPLE}_S1_R1_001_sub1.fq; chmod -R g+w subseq
   seqtk sample -s100 MAD_21_${SAMPLE}_S1_R2_001.fastq.gz 10000 > MAD_21_${SAMPLE}_S1_R2_001_sub2.fq; chmod -R g+w subseq
 done
+```
 
 ## change permissions
+```
 chmod -R g+w subseq
-
+```
 
 
 
