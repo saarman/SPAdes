@@ -35,11 +35,12 @@ chmod -R g+w subseq
 bash
 for SAMPLE in `echo B002f B013f B015f B016f B020f B021f B022f B023f`; do
   echo $SAMPLE
-  seqtk sample -s100 MAD_21_${SAMPLE}_S1_R1_001.fastq.gz 10000 > MAD_21_${SAMPLE}_S1_R1_001_sub1.fq
-  seqtk sample -s100 MAD_21_${SAMPLE}_S1_R2_001.fastq.gz 10000 > MAD_21_${SAMPLE}_S1_R2_001_sub2.fq
+  seqtk sample -s100 MAD_21_${SAMPLE}_S1_R1_001.fastq.gz 10000 > ./subseq/MAD_21_${SAMPLE}_S1_R1_001_sub1.fq; chmod -R g+w subseq
+  seqtk sample -s100 MAD_21_${SAMPLE}_S1_R2_001.fastq.gz 10000 > MAD_21_${SAMPLE}_S1_R2_001_sub2.fq; chmod -R g+w subseq
 done
 
-
+## change permissions
+chmod -R g+w subseq
 
 
 
