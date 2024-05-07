@@ -10,3 +10,8 @@ Culex species identification and blood meal analysis with de novo assembly of il
 4. map reads back to assembly and confirm which have good support
 5. blast all consensus sequences (.fa) - relabel as COi if match COi
 6. blast/bold consensus of COi matches only
+
+## Manuals for seqtk, fastqc, SPades 
+ - seqtk https://docs.csc.fi/apps/seqtk/#usage   
+ - fastqc https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
+ - SPAdes https://ablab.github.io/spades/ 
