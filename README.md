@@ -6,7 +6,7 @@ Culex species identification and blood meal analysis with de novo assembly of il
 ## Logging onto CHPC with Terminal on a mac
 1. Open Terminal
 2. ssh u6036559@notchpeak.chpc.utah.edu        #replace with your username
-3. salloc --time=1:00:00 --ntasks 1 --mem=100G --account=saarman-np --partition=saarman-shared-np
+3. salloc --time=72:00:00 --ntasks 1 --mem=100G --account=saarman-np --partition=saarman-shared-np
 
 ## Outline of steps:
 1. seqtk to subsample reads (tens to hundreds of 1000's?)
@@ -41,9 +41,11 @@ for SAMPLE in `echo B002f_S1 B013f_S2 B015f_S3 B016f_S4 B020f_S5 B021f_S6 B022f_
 done
 ```
 
+## load the module
+```module load seqtk```
+
 ## run subseq for paired reads use same seed
 ```
-bash
 for SAMPLE in `echo B002f_S1 B013f_S2 B015f_S3 B016f_S4 B020f_S5 B021f_S6 B022f_S7 B023f_S8`; do
   echo $SAMPLE
   seqtk sample -s100 MAD_21_${SAMPLE}_R1_001.fastq.gz 10000 > ./subseq/MAD_21_${SAMPLE}_R1_001_sub1.fq; chmod -R g+w subseq
