@@ -56,8 +56,12 @@ done
 chmod -R g+w subseq
 ```
 
+# Task 2: FastQC
 
-
+## example command
+```
+fastqc ./subseq/*.fq -o ./fastqc
+```
 
 
 
