@@ -34,10 +34,10 @@ Culex species identification and blood meal analysis with de novo assembly of il
 ## run subseq for paired reads use same seed
 ```
 bash
-for SAMPLE in `echo B002f B013f B015f B016f B020f B021f B022f B023f`; do
+for SAMPLE in `echo B002f_S1 B013f_S2 B015f_S3 B016f_S4 B020f_S5 B021f_S6 B022f_S7 B023f_S8`; do
   echo $SAMPLE
-  seqtk sample -s100 MAD_21_${SAMPLE}_S1_R1_001.fastq.gz 10000 > ./subseq/MAD_21_${SAMPLE}_S1_R1_001_sub1.fq; chmod -R g+w subseq
-  seqtk sample -s100 MAD_21_${SAMPLE}_S1_R2_001.fastq.gz 10000 > MAD_21_${SAMPLE}_S1_R2_001_sub2.fq; chmod -R g+w subseq
+  seqtk sample -s100 MAD_21_${SAMPLE}_R1_001.fastq.gz 10000 > ./subseq/MAD_21_${SAMPLE}_R1_001_sub1.fq; chmod -R g+w subseq
+  seqtk sample -s100 MAD_21_${SAMPLE}_R2_001.fastq.gz 10000 > MAD_21_${SAMPLE}_R2_001_sub2.fq; chmod -R g+w subseq
 done
 ```
 
