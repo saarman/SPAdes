@@ -1,2 +1,11 @@
 Trying FASTQ steps!
 
+5/13/2024
+
+1. cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles
+
+2. mkdir fastq 
+
+3. fastqc ./subseq/*.fq -o fastqc
+
+*chmod -R g+w fastqc *not working? saying either I don't have permission or the directory doesn't exist
