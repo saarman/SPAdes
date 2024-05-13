@@ -9,4 +9,4 @@ Trying FASTQ steps!
 3. fastqc ./subseq/*.fq -o fastqc
 
 *chmod -R g+w fastqc *not working? saying either I don't have permission or the directory doesn't exist
-*html files are not opening as they normally have in the past - do we need to unzip and use the zipped files? -> got it! just had to download
+*download html files and open in browser to see QC
