@@ -1,6 +1,5 @@
-Trying FASTQ steps!
-
 5/13/2024
+Step 2. FASTQ 
 
 1. cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles
 
@@ -10,3 +9,28 @@ Trying FASTQ steps!
 
 *chmod -R g+w fastqc *not working? saying either I don't have permission or the directory doesn't exist
 *download html files and open in browser to see QC
+
+
+5/15/2024 
+Step 3. SPAdes
+https://biomedicalhub.github.io/genomics/04-part4-denovo-assembly.html
+https://docs.hpc.ufs.ac.za/training/genomics_tutorial/genomics_tutorial_5/
+1. cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles
+
+***found subseq files for R2 in the uphlfiles folder mv to subseq do fastq for R2s.. not sure why there are duplicates. Worth removing?
+rm MAD_21_B002f_R2_001_sub1.fq 
+*also checked in the dashboard and removed files with 0 bites.. not sure why they were there hopefully ok!
+
+
+ok back to code
+2. spades.py -o denovo_assembly_run /subseq/*.fq
+
+
+coming back with error for code spades.py -h works and shows its loaded
+
+
+
+
+
+
+
