@@ -94,10 +94,14 @@ done
 chmod -R g+w denovo_assembly
 ```
 
-## filter by coverage and length
+## filter by coverage >4, length > 150, looking at https://gist.github.com/shenwei356/a94a23ce27e13056ac4a6f1758f4abb2
 
 ```
-seqkit fx2tab contigs.fasta | csvtk mutate -H -t -f 1 -p "cov_(.+)_" | csvtk mutate -H -t -f 1 -p "length_([0-9]+)" | awk -F "\t" '$4>=10 && $5>=500' | seqkit tab2fx > filtered_contigs.fasta
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/denovo_assembly
+bash
+for SAMPLE in `echo B002f_S1 B013f_S2 B015f_S3 B016f_S4 B020f_S5 B021f_S6 B022f_S7 B023f_S8`; do
+  echo $SAMPLE
+  seqkit fx2tab ./${SAMPLE}/contigs.fasta | csvtk mutate -H -t -f 1 -p "cov_(.+)_" | csvtk mutate -H -t -f 1 -p "length_([0-9]+)" | awk -F "\t" '$4>=10 && $5>=150' | seqkit tab2fx > ./${SAMPLE}/filtered_contigs.fasta
 ```
 
 
