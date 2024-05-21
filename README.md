@@ -74,6 +74,10 @@ spades.py -1 left.fastq.gz -2 right.fastq.gz -o output_folder
 ## make an directory   
 denovo_assembly
 
+```
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles
+spades.py -1 ./subseq/MAD_21_B002f_S1_R1_001_sub1.fq -2	./subseq/MAD_21_B002f_S1_R2_001_sub2.fq -o ./denovo_assembly
+```
 
 
 
