@@ -97,13 +97,14 @@ chmod -R g+w denovo_assembly
 ## filter by coverage >4, length > 150
 looking at https://gist.github.com/shenwei356/a94a23ce27e13056ac4a6f1758f4abb2
 looking at https://github.com/nylander/fasta-tab
-
+perl -naF\t -e 'print">$F[0]\n$F[1]\n"'
 ```
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/denovo_assembly
 bash
-for SAMPLE in `echo B002f_S1`; do # B013f_S2 B015f_S3 B016f_S4 B020f_S5 B021f_S6 B022f_S7 B023f_S8`; do
+for SAMPLE in `echo B002f_S1 B013f_S2 B015f_S3 B016f_S4 B020f_S5 B021f_S6 B022f_S7 B023f_S8`; do
   echo $SAMPLE
-  perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' ./B002f_S1/contigs.fasta | sed 's/_/\t/g' | awk -F "\t" '$4>=10 && $6>=150'
+  perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' ./${SAMPLE}/contigs.fasta | sed 's/_/\t/g' | awk -F "\t" '$4>=150 && $6>=4' > ./${SAMPLE}/filtered_contigs.tab
 done
+chmod -R g+w ../denovo_assembly
 ```
 
