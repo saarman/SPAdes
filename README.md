@@ -94,6 +94,10 @@ done
 chmod -R g+w denovo_assembly
 ```
 
+## filter by coverage and length
 
+```
+seqkit fx2tab contigs.fasta | csvtk mutate -H -t -f 1 -p "cov_(.+)_" | csvtk mutate -H -t -f 1 -p "length_([0-9]+)" | awk -F "\t" '$4>=10 && $5>=500' | seqkit tab2fx > filtered_contigs.fasta
+```
 
 
