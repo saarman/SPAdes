@@ -19,6 +19,8 @@ rm MAD_21_B002f_R2_001_sub1.fq
 Step 3. SPAdes
 https://biomedicalhub.github.io/genomics/04-part4-denovo-assembly.html
 https://docs.hpc.ufs.ac.za/training/genomics_tutorial/genomics_tutorial_5/
+https://github.com/ablab/spades
+
 1. cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles
 
 2. module load spades
