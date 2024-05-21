@@ -64,7 +64,15 @@ chmod -R g+w subseq
 ```
 fastqc ./subseq/*.fq -o ./fastqc
 ```
+# Task 3: SPAdes
 
+## example command
+```
+module load SPAdes
+spades.py -1 left.fastq.gz -2 right.fastq.gz -o output_folder
+```
+## make an directory   
+denovo_assembly
 
 
 
