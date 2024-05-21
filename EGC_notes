@@ -16,6 +16,7 @@ Step 3. SPAdes
 https://biomedicalhub.github.io/genomics/04-part4-denovo-assembly.html
 https://docs.hpc.ufs.ac.za/training/genomics_tutorial/genomics_tutorial_5/
 1. cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles
+2. module load spades
 
 ***found subseq files for R2 in the uphlfiles folder mv to subseq do fastq for R2s.. not sure why there are duplicates. Worth removing?
 rm MAD_21_B002f_R2_001_sub1.fq 
@@ -23,10 +24,17 @@ rm MAD_21_B002f_R2_001_sub1.fq
 
 
 ok back to code
-2. spades.py -o denovo_assembly_run /subseq/*.fq
+3. spades.py -1 ./subseq/MAD_21_B002f_S1_R1_001_sub1.fq -2 ./subseq/MAD_21_B002f_S1_R2_001_sub2.fq -o denovo_assembly
 
 
-coming back with error for code spades.py -h works and shows its loaded
+
+
+
+
+
+
+
+coming back with error for code spades.py -h works and shows its loaded 
 
 
 
