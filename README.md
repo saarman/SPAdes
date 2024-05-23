@@ -94,7 +94,7 @@ done
 chmod -R g+w denovo_assembly
 ```
 
-## filter by coverage >400, length > 150
+## filter by coverage >150, length > 150
 looking at https://gist.github.com/shenwei356/a94a23ce27e13056ac4a6f1758f4abb2
 looking at https://github.com/nylander/fasta-tab
 substituded some perl with sed 
@@ -105,7 +105,7 @@ cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/denovo_assembly
 bash
 for SAMPLE in `echo B002f_S1 B013f_S2 B015f_S3 B016f_S4 B020f_S5 B021f_S6 B022f_S7 B023f_S8`; do
   echo $SAMPLE
-  perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' ./${SAMPLE}/contigs.fasta | sed 's/_/ /g' | awk -F " " '$4>=150 && $6>=400' | sed 's/ /_/g' | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}/g" > ./${SAMPLE}/filtered_contigs.fasta
+  perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' ./${SAMPLE}/contigs.fasta | sed 's/_/ /g' | awk -F " " '$4>=150 && $6>=150' | sed 's/ /_/g' | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}/g" > ./${SAMPLE}/filtered_contigs.fasta
  cp ./${SAMPLE}/filtered_contigs.fasta ./${SAMPLE}_filtered_contigs.fasta
 done
 chmod -R g+w ../denovo_assembly
