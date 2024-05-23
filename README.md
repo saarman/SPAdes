@@ -130,4 +130,7 @@ cat *.fasta
 ```
 
 
+* I also noticed that some of the sequences had poly-C and poly-G at ends, probably an artifact that can be removed by filtering raw reads before assembly.
+
+
 
