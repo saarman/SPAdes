@@ -110,7 +110,7 @@ done
 chmod -R g+w ../denovo_assembly
 ```
 
-## Final filter: Coverage >1000, Length > 150 
+## Final filter: Coverage >500, Length > 150 
 Remove unreliable samples (no COi amplification, according to tape station results)
 B0021-23 did not have successful COi PCR amplification
 
