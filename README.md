@@ -110,10 +110,11 @@ done
 chmod -R g+w ../denovo_assembly
 ```
 
-## Final filter: Coverage >500, Length > 200 
+## Final filter: Coverage >600, Length > 200 
 Remove unreliable samples (no COi amplification, according to tape station results). 
 B0021-23 did not have successful COi PCR amplification. 
-B015f did have some amplification with only 600 coverage, so will place threshold at 500. 
+B015f did have some amplification with only 602 coverage, so will place threshold at 600. 
+B023f did not work, but had maximum 531 coverage on a random fragment.
 This threshold depends on the subsampling step as well, so needs to be adjusted for each experiment. 
 
 ```
