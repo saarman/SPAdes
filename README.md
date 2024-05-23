@@ -125,6 +125,7 @@ for SAMPLE in `echo B002f_S1 B013f_S2 B015f_S3 B016f_S4 B020f_S5 B021f_S6 B022f_
  cp ./${SAMPLE}/filtered1000_contigs.fasta ./${SAMPLE}_filtered_contigs.fasta
 done
 chmod -R g+w ../denovo_assembly
+cat *.fasta
 ```
 
 
