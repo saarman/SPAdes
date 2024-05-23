@@ -94,7 +94,7 @@ done
 chmod -R g+w denovo_assembly
 ```
 
-## filter by coverage >20, length > 150
+## filter by coverage >400, length > 150
 looking at https://gist.github.com/shenwei356/a94a23ce27e13056ac4a6f1758f4abb2
 looking at https://github.com/nylander/fasta-tab
 substituded some perl with sed 
