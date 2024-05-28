@@ -105,14 +105,15 @@ This threshold depends on the subsampling step as well, so needs to be adjusted 
 ```
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/denovo_assembly
 bash
-#change 600 and 200 below in awk command to edit the thresholds
+COVERAGE=600 #change this to set min coverage
+LENGTH=200 #change this to set min length
 for SAMPLE in `echo B002f_S1 B013f_S2 B015f_S3 B016f_S4 B020f_S5 B021f_S6 B022f_S7 B023f_S8`; do
   echo $SAMPLE
-  perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' ./${SAMPLE}/contigs.fasta | sed 's/_/ /g' | awk -F " " '$4>=200 && $6>=400' | sed 's/ /_/g' | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}/g" > ./${SAMPLE}/filtered600_contigs.fasta
+  perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' ./${SAMPLE}/contigs.fasta | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' | sed 's/ /_/g' | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}/g" > ./${SAMPLE}/filtered600_contigs.fasta
  cp ./${SAMPLE}/filtered600_contigs.fasta ./${SAMPLE}_filtered_contigs.fasta
 done
 chmod -R g+w ../denovo_assembly
-cat *.fasta
+cat *.fasta #concatenate
 ```
 * I also noticed that some of the sequences had poly-C and poly-G at ends, probably an artifact that can be removed by filtering raw reads before assembly.
 
