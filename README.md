@@ -95,21 +95,7 @@ chmod -R g+w denovo_assembly
 
 # Step 3: Filter for minimum coverage and length
 
-## Rough filter: Coverage >30, Length > 150
-looking at https://gist.github.com/shenwei356/a94a23ce27e13056ac4a6f1758f4abb2
-looking at https://github.com/nylander/fasta-tab
-
-```
-cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/denovo_assembly
-bash
-for SAMPLE in `echo B002f_S1 B013f_S2 B015f_S3 B016f_S4 B020f_S5 B021f_S6 B022f_S7 B023f_S8`; do
-  echo $SAMPLE
-  perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' ./${SAMPLE}/contigs.fasta | sed 's/_/ /g' | awk -F " " '$4>=150 && $6>=30' | sed 's/ /_/g' | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}/g" > ./${SAMPLE}/filtered_contigs.fasta
-done
-chmod -R g+w ../denovo_assembly
-```
-
-## Final filter: Coverage >600, Length > 200 
+## With a hard threshold filter of COVERAGE>600, LENGTH> 200 
 Remove unreliable samples (no COi amplification, according to tape station results). 
 B0021-23 did not have successful COi PCR amplification. 
 B015f did have some amplification with only 602 coverage, so will place threshold at 600. 
@@ -119,18 +105,19 @@ This threshold depends on the subsampling step as well, so needs to be adjusted 
 ```
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/denovo_assembly
 bash
-COVERAGE=600  #change this to set min coverage
-LENGTH=200 #change this to set min length
+#change 600 and 200 below in awk command to edit the thresholds
 for SAMPLE in `echo B002f_S1 B013f_S2 B015f_S3 B016f_S4 B020f_S5 B021f_S6 B022f_S7 B023f_S8`; do
   echo $SAMPLE
-  perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' ./${SAMPLE}/contigs.fasta | sed 's/_/ /g' | awk -F " " '$4>=${LENGTH} && $6>=${COVERAGE}' | sed 's/ /_/g' | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}/g" > ./${SAMPLE}/filtered600_contigs.fasta
+  perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' ./${SAMPLE}/contigs.fasta | sed 's/_/ /g' | awk -F " " '$4>=200 && $6>=400' | sed 's/ /_/g' | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}/g" > ./${SAMPLE}/filtered600_contigs.fasta
  cp ./${SAMPLE}/filtered600_contigs.fasta ./${SAMPLE}_filtered_contigs.fasta
 done
 chmod -R g+w ../denovo_assembly
 cat *.fasta
 ```
-
 * I also noticed that some of the sequences had poly-C and poly-G at ends, probably an artifact that can be removed by filtering raw reads before assembly.
+
+## With a SORT and take top 3 COVERAGE
+
 
 # Step 4: Blastn
 
