@@ -11,10 +11,9 @@ Culex species identification and blood meal analysis with de novo assembly of il
 ## Outline of steps:
 1. seqtk to subsample reads (tens to hundreds of 1000's?)
 2. fastqc to trim/clean/quality control
-3. de novo assembly with SPAdes https://biomedicalhub.github.io/genomics/04-part4-denovo-assembly.html
-4. map reads back to assembly and confirm which have good support
-5. blast all consensus sequences (.fa) - relabel as COi if match COi
-6. blast/bold consensus of COi matches only
+3. SPAdes for de novo assembly, https://biomedicalhub.github.io/genomics/04-part4-denovo-assembly.html
+4. Filter contigs for min length and min coverage
+5. Blastn to identify COi match
 
 ## Manuals for seqtk, fastqc, SPades 
  - seqtk https://docs.csc.fi/apps/seqtk/#usage   
@@ -94,7 +93,7 @@ done
 chmod -R g+w denovo_assembly
 ```
 
-# Filter 
+# Step 3: Filter for minimum coverage and length
 
 ## Rough filter: Coverage >30, Length > 150
 looking at https://gist.github.com/shenwei356/a94a23ce27e13056ac4a6f1758f4abb2
@@ -120,17 +119,18 @@ This threshold depends on the subsampling step as well, so needs to be adjusted 
 ```
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/denovo_assembly
 bash
+COVERAGE=600  #change this to set min coverage
+LENGTH=200 #change this to set min length
 for SAMPLE in `echo B002f_S1 B013f_S2 B015f_S3 B016f_S4 B020f_S5 B021f_S6 B022f_S7 B023f_S8`; do
   echo $SAMPLE
-  perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' ./${SAMPLE}/contigs.fasta | sed 's/_/ /g' | awk -F " " '$4>=200 && $6>=600' | sed 's/ /_/g' | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}/g" > ./${SAMPLE}/filtered600_contigs.fasta
+  perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' ./${SAMPLE}/contigs.fasta | sed 's/_/ /g' | awk -F " " '$4>=${LENGTH} && $6>=${COVERAGE}' | sed 's/ /_/g' | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}/g" > ./${SAMPLE}/filtered600_contigs.fasta
  cp ./${SAMPLE}/filtered600_contigs.fasta ./${SAMPLE}_filtered_contigs.fasta
 done
 chmod -R g+w ../denovo_assembly
 cat *.fasta
 ```
 
-
 * I also noticed that some of the sequences had poly-C and poly-G at ends, probably an artifact that can be removed by filtering raw reads before assembly.
 
-
+# Step 4: Blastn
 
