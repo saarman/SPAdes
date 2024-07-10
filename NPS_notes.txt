@@ -1,0 +1,3 @@
+# new data from UPHL, first P1 2018 and P1 2021
+
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702
