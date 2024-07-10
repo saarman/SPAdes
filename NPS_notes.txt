@@ -7,3 +7,8 @@ md5sum *fastq.gz > received_checksum.txt
 
 #check for differences before and after transfer
 diff md5sum.txt  received_checksum.txt 
+
+#make list of names of samples we want to loop through:
+ls -l *R1_001.fastq.gz |  awk '{print $NF}' | cut -d_ -f1-2
+
+#apply this to a for loop:
