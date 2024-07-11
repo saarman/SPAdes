@@ -41,9 +41,42 @@ done
 ```
 
 
-5/28/2024 Filtering for 
 
 
 
+
+7/11/24 #new data from UPHL, first P1 2018 and P1 2021
+
+https://ondemand.chpc.utah.edu/pun/sys/shell/ssh/default/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702
+
+1. #make list of names of samples we want to loop through:
+ls -l *R1_001.fastq.gz |  awk '{print $NF}' | cut -d_ -f1-2
+
+#apply this to a for loop????
+
+2. Fastqc
+#made directory called fastqc
+
+chmod -R g+w fastqc
+
+fastqc * .fastq.gz (inside the directory with the sequence data (UT-M07101-240702))
+
+#move .zip and .html files into fastqc directory
+mv ./*.zip fastqc
+mv ./*.html fastqc 
+
+3. SPAdes
+
+#make denovo_assembly directory 
+
+module load spades/3.15.4
+spades.py --help
+
+bash
+for SAMPLE in `ls -l *R1_001.fastq.gz |  awk '{print $NF}' | cut -d_ -f1-2`; do
+  echo $SAMPLE
+  spades.py -1 ${SAMPLE}_L001_R1_001.fastq.gz -2 ${SAMPLE}_L001_R2_001.fastq.gz -o ./denovo_assembly/${SAMPLE} --isolate
+done
 
 
