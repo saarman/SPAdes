@@ -79,4 +79,10 @@ for SAMPLE in `ls -l *R1_001.fastq.gz |  awk '{print $NF}' | cut -d_ -f1-2`; do
   spades.py -1 ${SAMPLE}_L001_R1_001.fastq.gz -2 ${SAMPLE}_L001_R2_001.fastq.gz -o ./denovo_assembly/${SAMPLE} --isolate
 done
 
+chmod -R g+w denovo_assembly
+
+4. Filter for minimum coverage and length
+
+
+
 
