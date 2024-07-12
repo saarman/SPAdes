@@ -44,7 +44,6 @@ done
 
 
 
-
 7/11/24 #new data from UPHL, first P1 2018 and P1 2021
 
 https://ondemand.chpc.utah.edu/pun/sys/shell/ssh/default/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702
@@ -80,9 +79,25 @@ for SAMPLE in `ls -l *R1_001.fastq.gz |  awk '{print $NF}' | cut -d_ -f1-2`; do
 done
 
 chmod -R g+w denovo_assembly
+#operation not permitted....
 
-4. Filter for minimum coverage and length
+7/12/24
 
+4. Filter for minimum coverage and length and SORT for top 3 COVERAGE added
+#Still includes hard filter for LENGTH>200 and COVERAGE>30
 
+#having some permissions issues? ls -;
+#emily testing things ... need to get this loop to run through all the files in denovo assembly directory - each file has different ending S number
 
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702/denovo_assembly
+bash
+LENGTH=400
+COVERAGE=30 
+for SAMPLE in `ls -l /* |  awk '{print $NF}' | cut -d_ -f1-2`; do
+  echo $SAMPLE
+  perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' ./${SAMPLE}/contigs.fasta  | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | head -3 | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}/g" > ./${SAMPLE}/sort30_contigs.fasta
+ cp ./${SAMPLE}/sort30_contigs.fasta ./${SAMPLE}_sorted_contigs.fasta
+done
+chmod -R g+w denovo_assembly
+cat *sorted_contigs.fasta   
 
