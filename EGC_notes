@@ -101,3 +101,29 @@ done
 chmod -R g+w denovo_assembly
 cat *sorted_contigs.fasta   
 
+*Generated two files (sort30_contigs.fasta and _sorted_contigs.fasta) but both of them are empty!
+
+7/29/2024
+
+4. Still trying to filter for minimum coverage and length and SORT for top 3
+
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702/denovo_assembly
+
+*removed empty files - sort30_contigs.fasta and _sorted_contigs.fasta *
+
+bash
+LENGTH=300
+COVERAGE=30 
+for SAMPLE in `ls -l /* |  awk '{print $NF}' | cut -d_ -f1-2`; do
+  echo $SAMPLE
+  perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' ./${SAMPLE}/contigs.fasta  | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | head -3 | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}/g" > ./${SAMPLE}/sort30_contigs.fasta
+ cp ./${SAMPLE}/sort30_contigs.fasta ./${SAMPLE}_sorted_contigs.fasta
+done
+chmod -R g+w denovo_assembly
+cat *sorted_contigs.fasta 
+
+
+ERROR - No such file or directory // Can't open
+
+Tried chmod -R g+w denovo_assembly on the whole directory first, then running the code but that has same error
+
