@@ -114,7 +114,7 @@ cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702/den
 bash
 LENGTH=300
 COVERAGE=30 
-for SAMPLE in `ls -l /* |  awk '{print $NF}' | cut -d_ -f1-2`; do
+for SAMPLE in `ls -l | grep -v "total" |  awk '{print $NF}'`; do
   echo $SAMPLE
   perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' ./${SAMPLE}/contigs.fasta  | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | head -3 | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}/g" > ./${SAMPLE}/sort30_contigs.fasta
  cp ./${SAMPLE}/sort30_contigs.fasta ./${SAMPLE}_sorted_contigs.fasta
