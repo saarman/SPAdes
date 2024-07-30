@@ -93,7 +93,7 @@ done
 chmod -R g+w denovo_assembly
 ```
 
-# Step 3: Filter for minimum coverage and length
+# Step 4: Filter for minimum coverage and length
 
 ## With a hard threshold filter of COVERAGE>600, LENGTH> 200 
 Remove unreliable samples (no COi amplification, according to tape station results). 
