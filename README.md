@@ -135,4 +135,4 @@ cat *sorted_contigs.fasta    #concatenate all sorted matches
 ```
 sort -nk3
 
-# Step 4: Blastn
+# Step 5: Blastn
