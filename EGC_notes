@@ -112,7 +112,7 @@ cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702/den
 *removed empty files - sort30_contigs.fasta and _sorted_contigs.fasta *
 
 bash
-LENGTH=300
+LENGTH=200
 COVERAGE=30 
 for SAMPLE in `ls -l | grep -v "total" |  awk '{print $NF}'`; do
   echo $SAMPLE
@@ -125,5 +125,25 @@ cat *sorted_contigs.fasta
 
 ERROR - No such file or directory // Can't open
 
+Still not getting the same results. 
 Tried chmod -R g+w denovo_assembly on the whole directory first, then running the code but that has same error
+
+
+8/1/2024
+Tried running above code again - 
+
+ERROR- 
+Can't open ./B503-UT-M07101-240702_S187/contigs.fasta: No such file or directory.
+B504-UT-M07101-240702_S188
+B505-UT-M07101-240702_S189
+B520-UT-M07101-240702_S190
+B521-UT-M07101-240702_S191
+B522-UT-M07101-240702_S192
+(base) [u1055819@notch320:denovo_assembly]$ chmod -R g+w denovo_assembly
+chmod: cannot access 'denovo_assembly': No such file or directory
+(base) [u1055819@notch320:denovo_assembly]$ cat *sorted_contigs.fasta 
+
+***Looked like it worked though - they all have sorted contigs fasta files!
+*Going through BLAST and not getting the same results - going to run above code again with the same parameters we used before - oops
+
 
