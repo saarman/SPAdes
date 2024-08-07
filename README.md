@@ -136,4 +136,25 @@ cat *sorted_contigs.fasta    #concatenate all sorted matches
 ```
 sort -nk3
 
+
+## Another example with SORT for top 10 
+Still includes hard filter for LENGTH>300 and COVERAGE>300
+
+```
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702/denovo_assembly
+bash
+MAXLEN=700 #change this to set max length
+LENGTH=300 #change this to set min length
+COVERAGE=100 #change this to set min coverage
+NUM=10 #change this to set number of top sorted contigs to retain
+for SAMPLE in `ls -l | grep -v "total" |  awk '{print $NF}'`; do
+  echo $SAMPLE
+  perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' ./${SAMPLE}/contigs.fasta  | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | head -${NUM} | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}/g" > ./${SAMPLE}/sort100_contigs.fasta
+ cp ./${SAMPLE}/sort100_contigs.fasta ./${SAMPLE}_top10_contigs.fasta
+done
+chmod -R g+w ../denovo_assembly
+cat *top10_contigs.fasta    #concatenate all sorted matches
+```
+
+
 # Step 5: Blastn
