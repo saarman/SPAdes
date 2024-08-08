@@ -156,6 +156,28 @@ done
 chmod -R g+w ../denovo_assembly
 ls -l *top${NUM}_contigs.fasta  #list all sorted matches
 cat *top10_contigs.fasta    #concatenate all sorted matches
+
+```
+# Step 4: A different approach - filtering with primer sequence  
+Idea and example at https://bioinf.shenwei.me/seqkit/usage/#seqkit
+mkdir ../seqkit; chmod -R g+w ../seqkit
+
+primers for coi: Mod_RepCOI_F TNTTYTCMACYAACCACAAAGA, VertCOI_7216_R CARAAGCTYATGTTRTTYATDCG, Mod_RepCOI_R TTCDGGRTGNCCRAARAATCA, 	VertCOI_7194_F CGMATRAAYAAYATRAGCTTCTGAY
+primers for ace2: 	ace2-F1457 GAGGAGATGTGGAATCCCAA, 	ace2-B1246s TGGAGCCTCCTCTTCACGG
+primers for cqm1: cqm1-F894 ATGACGGAAGCGTATTCGAG, cqm1-R1834 AAGGTTGATAGCAGCTGCCG
+
+```
+module load seqkit
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702/denovo_assembly
+
+for SAMPLE in `ls -l | grep -v "total" |  grep -v "fasta" | awk '{print $NF}'`; do
+  echo $SAMPLE
+  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p TYTCMACYAACCACAAAGA DGGRTGNCCRAARAATCA -m 3 > ../seqkit/${SAMPLE}_coi.fasta
+  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p GAGATGTGGAATCCCAA AGCCTCCTCTTCACGG -m 3 > ../seqkit/${SAMPLE}_ace2.fasta
+  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p ACGGAAGCGTATTCGAG GTTGATAGCAGCTGCCG -m 3 > ../seqkit/${SAMPLE}_cqm1.fasta
+done
+
+chmod -R g+w ../seqkit
 ```
 
 
