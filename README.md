@@ -166,7 +166,7 @@ cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702/den
 mkdir ../seqkit
 chmod -R g+w ../seqkit  
 ```
-##For COI:  
+## For COI:  
 Primers for coi: Mod_RepCOI_F TNTTYTCMACYAACCACAAAGA, VertCOI_7216_R CARAAGCTYATGTTRTTYATDCG, Mod_RepCOI_R TTCDGGRTGNCCRAARAATCA, 	VertCOI_7194_F CGMATRAAYAAYATRAGCTTCTGAY   
 Search for primer sequence after trimming 4 bp from start/end, with 3 mismatches allowed  
 
@@ -188,8 +188,7 @@ chmod -R g+w ../seqkit
 cat ../seqkit/coi/*coi.fasta
 ```
 
-##For Ace2: 
-
+## For Ace2: 
 Primers for ace2: 	ace2-F1457 GAGGAGATGTGGAATCCCAA, 	ace2-B1246s TGGAGCCTCCTCTTCACGG   
 Search for primer sequence after trimming 4 bp from start/end, with 3 mismatches allowed  
 
@@ -211,13 +210,9 @@ chmod -R g+w ../seqkit
 cat ../seqkit/ace2/*ace2.fasta
 ```
 
-
-
-##For cqm1:  
-
+## For cqm1:  
 Primers for cqm1: cqm1-F894 ATGACGGAAGCGTATTCGAG, cqm1-R1834 AAGGTTGATAGCAGCTGCCG    
 Search for primer sequence after trimming 4 bp from start/end, with 3 mismatches allowed  
-
 ```
 module load seqkit
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702/denovo_assembly
