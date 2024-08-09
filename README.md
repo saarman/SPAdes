@@ -93,7 +93,7 @@ done
 chmod -R g+w denovo_assembly
 ```
 
-# Step 4: Filter for minimum coverage and length
+## Trial Step 4: Filter for minimum coverage and length
 
 ## With a hard threshold filter of COVERAGE>600, LENGTH> 200 
 Remove unreliable samples (no COi amplification, according to tape station results). 
@@ -177,9 +177,9 @@ cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702/den
 
 for SAMPLE in `ls -l | grep -v "total" |  grep -v "fasta" | awk '{print $NF}'`; do
   echo $SAMPLE
-  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p TYTCMACYAACCACAAAGA DGGRTGNCCRAARAATCA -m 3 > ../seqkit/${SAMPLE}_coi.fasta
-  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p GAGATGTGGAATCCCAA AGCCTCCTCTTCACGG -m 3 > ../seqkit/${SAMPLE}_ace2.fasta
-  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p ACGGAAGCGTATTCGAG GTTGATAGCAGCTGCCG -m 3 > ../seqkit/${SAMPLE}_cqm1.fasta
+  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p TYTCMACYAACCACAAAGA -p DGGRTGNCCRAARAATCA -m 3 > ../seqkit/${SAMPLE}_coi.fasta
+  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p GAGATGTGGAATCCCAA -p AGCCTCCTCTTCACGG -m 3 > ../seqkit/${SAMPLE}_ace2.fasta
+  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p ACGGAAGCGTATTCGAG -p GTTGATAGCAGCTGCCG -m 3 > ../seqkit/${SAMPLE}_cqm1.fasta
 done
 
 chmod -R g+w ../seqkit
