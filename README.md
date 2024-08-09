@@ -177,9 +177,9 @@ cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702/den
 
 for SAMPLE in `ls -l | grep -v "total" |  grep -v "fasta" | awk '{print $NF}'`; do
   echo $SAMPLE
-  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p TYTCMACYAACCACAAAGA -p DGGRTGNCCRAARAATCA -m 3 > ../seqkit/${SAMPLE}_coi.fasta
-  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p GAGATGTGGAATCCCAA -p AGCCTCCTCTTCACGG -m 3 > ../seqkit/${SAMPLE}_ace2.fasta
-  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p ACGGAAGCGTATTCGAG -p GTTGATAGCAGCTGCCG -m 3 > ../seqkit/${SAMPLE}_cqm1.fasta
+  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p YTCMACYAACCACA -p GRTGNCCRAARA -p AGCTYATGTTRTTYA -p TRAAYAAYATRAGCTTC -m 3 > ../seqkit/${SAMPLE}_coi.fasta
+  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p AGATGTGGAATC -p GCCTCCTCTTC -m 3 > ../seqkit/${SAMPLE}_ace2.fasta
+  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p CGGAAGCGTATT -p TTGATAGCAGCT -m 3 > ../seqkit/${SAMPLE}_cqm1.fasta
 done
 
 chmod -R g+w ../seqkit
