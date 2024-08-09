@@ -167,7 +167,7 @@ mkdir ../seqkit
 chmod -R g+w ../seqkit  
 ```
 
-primers for coi: Mod_RepCOI_F TNTTYTCMACYAACCACAAAGA, VertCOI_7216_R CARAAGCTYATGTTRTTYATDCG, Mod_RepCOI_R TTCDGGRTGNCCRAARAATCA, 	VertCOI_7194_F CGMATRAAYAAYATRAGCTTCTGAY  
+primers for coi: Mod_RepCOI_F TNTTYTCMACYAACCACAAAGA, VertCOI_7216_R CARAAGCTYATGTTRTTYATDCG, Mod_RepCOI_R TTCDGGRTGNCCRAARAATCA, 	VertCOI_7194_F CGMATRAAYAAYATRAGCTTCTGAY, 
 primers for ace2: 	ace2-F1457 GAGGAGATGTGGAATCCCAA, 	ace2-B1246s TGGAGCCTCCTCTTCACGG  
 primers for cqm1: cqm1-F894 ATGACGGAAGCGTATTCGAG, cqm1-R1834 AAGGTTGATAGCAGCTGCCG  
  
@@ -185,9 +185,16 @@ for SAMPLE in `ls -l | grep -v "total" |  grep -v "fasta" | awk '{print $NF}'`; 
   cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p AGATGTGGAATC -p GCCTCCTCTTC -m 3 | perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | head -${TOP} | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}_NODE/g" > ../seqkit/${SAMPLE}_ace2.fasta
   cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p CGGAAGCGTATT -p TTGATAGCAGCT -m 3 | perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | head -${TOP} | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}_NODE/g" > ../seqkit/${SAMPLE}_cqm1.fasta
 done
-
 chmod -R g+w ../seqkit
+
+#return all coi sequences
 cat ../seqkit/*coi.fasta
+
+#return all ace2 sequences
+cat ../seqkit/*ace2.fasta
+
+#return all cqm1 sequences
+cat ../seqkit/*cqm1.fasta
 ```
 
 
