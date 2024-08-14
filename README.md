@@ -171,6 +171,7 @@ Primers for coi: Mod_RepCOI_F TNTTYTCMACYAACCACAAAGA, VertCOI_7216_R CARAAGCTYAT
 Search for primer sequence after trimming 4 bp from start/end, with 3 mismatches allowed  
 
 ```
+bash
 module load seqkit
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702/denovo_assembly
 mkdir ../seqkit/coi ; chmod -R g+w ../seqkit/coi
@@ -193,6 +194,7 @@ Primers for ace2: 	ace2-F1457 GAGGAGATGTGGAATCCCAA, 	ace2-B1246s TGGAGCCTCCTCTTC
 Search for primer sequence after trimming 4 bp from start/end, with 3 mismatches allowed  
 
 ```
+bash
 module load seqkit
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702/denovo_assembly
 mkdir ../seqkit/ace2 ; chmod -R g+w ../seqkit/ace2
@@ -213,7 +215,9 @@ cat ../seqkit/ace2/*ace2.fasta
 ## For cqm1:  
 Primers for cqm1: cqm1-F894 ATGACGGAAGCGTATTCGAG, cqm1-R1834 AAGGTTGATAGCAGCTGCCG    
 Search for primer sequence after trimming 4 bp from start/end, with 3 mismatches allowed  
+
 ```
+bash
 module load seqkit
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702/denovo_assembly
 mkdir ../seqkit/cqm1 ; chmod -R g+w ../seqkit/cqm1
