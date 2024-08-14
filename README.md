@@ -262,8 +262,8 @@ cat ../seqkit/cqm1/*cqm1.fasta
 This requires running blast on CHPC since there are too many reads to run it online
 
 One last approach we can use to get data from failed COi samples  
-a. Blast sorted contigs from spades, length >150 bp, >10X, top 10
-b. Filter results by organism: mammals, birds  
+a. Blast sorted contigs from spades, length >150 bp, >10X, top 10  
+b. Filter results by organism: mammals, birds    
 c. Do we get any results that conflict with COi sequences?  
 
 ```
