@@ -258,7 +258,8 @@ cat ../seqkit/cqm1/*cqm1.fasta
 
 # Step 5: Blast
 
-## Another idea is to use blastn for mammal/bird hits, this requires running blast on CHPC
+## Another idea is to use blastn filtered for mammal/birds
+This requires running blast on CHPC since there are too many reads to run it online
 
 One last approach we can use to get data from failed COi samples  
 a. Blast sorted contigs from spades, length >150 bp, >10X, top 10
