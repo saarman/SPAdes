@@ -240,6 +240,7 @@ b. Filter results by organism: mammals, birds
 c. Do we get any results that conflict with COi sequences?  
 
 ```
+bash
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702/denovo_assembly
 mkdir ./sorted ; chmod -R g+w ./sorted
 LENGTH=150 #change this to set min length
@@ -251,7 +252,7 @@ for SAMPLE in `ls -l | grep -v "total" |  grep -v "fasta" | awk '{print $NF}'`; 
 done
 chmod -R g+w ./sorted
 
-#return all cqm1 sequences
+#return all 
 cat ./sorted*.fasta
 ```
 
