@@ -136,6 +136,26 @@ cat *sorted_contigs.fasta    #concatenate all sorted matches
 ```
 sort -nk3
 
+## Another example with SORT min coverage 150
+```
+bash
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702/denovo_assembly
+LENGTH=150 #change this to set min length
+COVERAGE=1 #change this to set min coverage
+TOP=500 #change this to set number of top sorted contigs to retain
+for SAMPLE in `ls -l | grep -v "total" |  grep -v "fasta" | awk '{print $NF}'`; do
+  echo $SAMPLE
+  cat ./${SAMPLE}/contigs.fasta | perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}_NODE/g" > ./${SAMPLE}_min${LENGTH}_sorted.fasta
+done
+
+# return all 
+cat *sorted.fasta
+#this returns 179,792 sequences to blast. Too many?
+#yes, Your query(45,700,645 bases) is longer than the maximum allowed(1,000,000 bases).
+
+#write to file to download and upload to blastn
+cat *sorted.fasta > all_min150_sorted.fasta 
+```
 
 ## Another example with SORT for top 10 
 Still includes hard filters
@@ -236,30 +256,33 @@ cat ../seqkit/cqm1/*cqm1.fasta
 ```
 
 
-# Step 5: Broad blastn for mammal/bird hits  
+# Step 5: Blast
+
+## Another idea is to use blastn for mammal/bird hits, this requires running blast on CHPC
 
 One last approach we can use to get data from failed COi samples  
-a. Blast sorted contigs from spades, >150 bp, >1X
+a. Blast sorted contigs from spades, length >150 bp, >10X, top 10
 b. Filter results by organism: mammals, birds  
 c. Do we get any results that conflict with COi sequences?  
 
 ```
-bash
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702/denovo_assembly
+bash
 LENGTH=150 #change this to set min length
-COVERAGE=1 #change this to set min coverage
-TOP=500 #change this to set number of top sorted contigs to retain
+COVERAGE=10 #change this to set min coverage
+NUM=10 #change this to set number of top sorted contigs to retain
 for SAMPLE in `ls -l | grep -v "total" |  grep -v "fasta" | awk '{print $NF}'`; do
   echo $SAMPLE
-  cat ./${SAMPLE}/contigs.fasta | perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}_NODE/g" > ./${SAMPLE}_min${LENGTH}_sorted.fasta
+  cat ./${SAMPLE}/contigs.fasta | perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}_NODE/g" > ./${SAMPLE}_min${LENGTH}_top${NUM}.fasta
 done
+chmod -R g+w ../denovo_assembly
 
-# return all 
-cat *sorted.fasta
-#this returns 179,792 sequences to blast. Too many?
-#yes, Your query(45,700,645 bases) is longer than the maximum allowed(1,000,000 bases).
+#combine all output into one file
+cat *top10.fasta > all_min150_top10.fasta    #concatenate top 10 of all sorted matches
+# still 18x too many bp to put into one online query
 
-#write to file to download and upload to blastn
-cat *sorted.fasta > all_min150_sorted.fasta 
+#testing blastn on CHPC
+blastn -query B002-UT-M07101-240702_S1_min150_sorted.fasta -db /scratch/general/vast/app-repo/blastdb/DbFiles/v5/nt -out blast_out_B002-UT-M07101-240702_S1_min150_sorted.txt
+
 ```
 
