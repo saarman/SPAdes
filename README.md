@@ -257,6 +257,7 @@ done
 # return all 
 cat *sorted.fasta
 #this returns 179,792 sequences to blast. Too many?
+#yes, Your query(45,700,645 bases) is longer than the maximum allowed(1,000,000 bases).
 
 #write to file to download and upload to blastn
 cat *sorted.fasta > all_min150_sorted.fasta 
