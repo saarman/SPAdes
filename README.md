@@ -215,7 +215,7 @@ Search for primer sequence after trimming 4 bp from start/end, with 3 mismatches
 
 Add a step to filter to species with internal species diagnostic primers, with 1 mismatch allowed
 ACEpip GGAAACAACGACGTATGTACT, trimmed first/last 2, 1 mismatch allowed, alignment shows >2 diagnostic positions
-ACEquin CCTTCTTGAATGGCTGTGGCA, trimmed first/last 2, 1 mismatch allowed, alignment shows >4 diagnostic positions
+ACEquin CCTTCTTGAATGGCTGTGGCA, trimmed first/last 2, 3 mismatch allowed, alignment shows >4 diagnostic positions
 
 ```
 bash
