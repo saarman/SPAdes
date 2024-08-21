@@ -238,7 +238,13 @@ done
 chmod -R g+w ../seqkit
 
 #return all ace2 sequences
-cat ../seqkit/ace2/*ace2.fasta
+cat ../seqkit/ace2/*.fasta
+
+#return all ACEpip matches
+cat ../seqkit/ACEpip/*fasta
+
+#return all ACEquin matches
+cat ../seqkit/ACEquin/*fasta
 ```
 
 ## For cqm1:  
