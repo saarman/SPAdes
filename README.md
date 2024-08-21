@@ -213,11 +213,18 @@ cat ../seqkit/coi/*coi.fasta
 Primers for ace2: 	ace2-F1457 GAGGAGATGTGGAATCCCAA, 	ace2-B1246s TGGAGCCTCCTCTTCACGG   
 Search for primer sequence after trimming 4 bp from start/end, with 3 mismatches allowed  
 
+Add a step to filter to species with internal species diagnostic primers, with 1 mismatch allowed
+ACEpip GGAAACAACGACGTATGTACT, trimmed first/last 2, 1 mismatch allowed, alignment shows >2 diagnostic positions
+ACEquin CCTTCTTGAATGGCTGTGGCA, trimmed first/last 2, 1 mismatch allowed, alignment shows >4 diagnostic positions
+
 ```
 bash
 module load seqkit
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702/denovo_assembly
 mkdir ../seqkit/ace2 ; chmod -R g+w ../seqkit/ace2
+mkdir ../seqkit/ACEpip ; chmod -R g+w ../seqkit/ACEpip
+mkdir ../seqkit/ACEquin ; chmod -R g+w ../seqkit/ACEquin
+
 LENGTH=150 #change this to set min length
 COVERAGE=1 #change this to set min coverage
 TOP=1 #change this to set number of top sorted contigs to retain
@@ -225,6 +232,8 @@ TOP=1 #change this to set number of top sorted contigs to retain
 for SAMPLE in `ls -l | grep -v "total" |  grep -v "fasta" | awk '{print $NF}'`; do
   echo $SAMPLE
   cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p AGATGTGGAATC -p GCCTCCTCTTC -m 3 | perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | head -${TOP} | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}_NODE/g" > ../seqkit/ace2/${SAMPLE}_ace2.fasta
+  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p AGATGTGGAATC -p GCCTCCTCTTC -m 3 | seqkit grep -s -i -p AAACAACGACGTATGTA -m 1 | perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | head -${TOP} | sed 's/\t/\n/g' | sed "s/NODE/\>ACEpip_${SAMPLE}_NODE/g" > ../seqkit/ace2/${SAMPLE}_ACEpip.fasta
+  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p AGATGTGGAATC -p GCCTCCTCTTC -m 3 | seqkit grep -s -i -p TTCTTGAATGGCTGTGG -m 1 | perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | head -${TOP} | sed 's/\t/\n/g' | sed "s/NODE/\>ACEquin_${SAMPLE}_NODE/g" > ../seqkit/ace2/${SAMPLE}_ACEquin.fasta
 done
 chmod -R g+w ../seqkit
 
