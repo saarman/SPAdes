@@ -188,7 +188,9 @@ chmod -R g+w ../seqkit
 ```
 ## For COI:  
 Primers for coi: Mod_RepCOI_F TNTTYTCMACYAACCACAAAGA, VertCOI_7216_R CARAAGCTYATGTTRTTYATDCG, Mod_RepCOI_R TTCDGGRTGNCCRAARAATCA, 	VertCOI_7194_F CGMATRAAYAAYATRAGCTTCTGAY   
-Search for primer sequence after trimming 4 bp from start/end, with 3 mismatches allowed  
+Search for primer sequence after trimming 4 bp from start/end, with 3 mismatches allowed
+
+*NOTE:* [ERRO] flag -r (--use-regexp) or -d (--degenerate) not allowed when giving flag -m (--max-mismatch)
 
 ```
 bash
