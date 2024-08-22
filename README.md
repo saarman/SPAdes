@@ -201,7 +201,7 @@ TOP=1 #change this to set number of top sorted contigs to retain
 
 for SAMPLE in `ls -l | grep -v "total" |  grep -v "fasta" | awk '{print $NF}'`; do
   echo $SAMPLE
-  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p YTCMACYAACCACA -p GRTGNCCRAARA -p AGCTYATGTTRTTYA -p TRAAYAAYATRAGCTTC -m 3 | perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | head -${TOP} | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}_NODE/g" > ../seqkit/coi/${SAMPLE}_coi.fasta
+  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -d -p YTCMACYAACCACA -p GRTGNCCRAARA -p AGCTYATGTTRTTYA -p TRAAYAAYATRAGCTTC -m 3 | perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | head -${TOP} | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}_NODE/g" > ../seqkit/coi/${SAMPLE}_coi.fasta
 done
 chmod -R g+w ../seqkit
 
@@ -231,20 +231,22 @@ TOP=1 #change this to set number of top sorted contigs to retain
 
 for SAMPLE in `ls -l | grep -v "total" |  grep -v "fasta" | awk '{print $NF}'`; do
   echo $SAMPLE
-  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p AGATGTGGAATC -p GCCTCCTCTTC -m 3 | perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | head -${TOP} | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}_NODE/g" > ../seqkit/ace2/${SAMPLE}_ace2.fasta
-  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p AGATGTGGAATC -p GCCTCCTCTTC -m 3 | seqkit grep -s -i -p AAACAACGACGTATGTA -m 1 | perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | head -${TOP} | sed 's/\t/\n/g' | sed "s/NODE/\>ACEpip_${SAMPLE}_NODE/g" > ../seqkit/ACEpip/${SAMPLE}_ACEpip.fasta
-  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p AGATGTGGAATC -p GCCTCCTCTTC -m 3 | seqkit grep -s -i -p TTCTTGAATGGCTGTGG -m 3 | perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | head -${TOP} | sed 's/\t/\n/g' | sed "s/NODE/\>ACEquin_${SAMPLE}_NODE/g" > ../seqkit/ACEquin/${SAMPLE}_ACEquin.fasta
+  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -d -p AGATGTGGAATC -p GCCTCCTCTTC -m 3 | perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | head -${TOP} | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}_NODE/g" > ../seqkit/ace2/${SAMPLE}_ace2.fasta
+  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -d -p AGATGTGGAATC -p GCCTCCTCTTC -m 3 | seqkit grep -s -i -d -p AAACAACGACGTATGTA -m 1 | perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | head -${TOP} | sed 's/\t/\n/g' | sed "s/NODE/\>ACEpip_${SAMPLE}_NODE/g" > ../seqkit/ACEpip/${SAMPLE}_ACEpip.fasta
+  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -d -p AGATGTGGAATC -p GCCTCCTCTTC -m 3 | seqkit grep -s -i -d -p TTCTTGAATGGCTGTGG -m 3 | perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | head -${TOP} | sed 's/\t/\n/g' | sed "s/NODE/\>ACEquin_${SAMPLE}_NODE/g" > ../seqkit/ACEquin/${SAMPLE}_ACEquin.fasta
 done
 chmod -R g+w ../seqkit
 
-#return all ace2 sequences
+#return all ace2 sequences/headers
 cat ../seqkit/ace2/*.fasta
 
-#return all ACEpip matches
+#return all ACEpip matching sequences/headers
 cat ../seqkit/ACEpip/*fasta
+cat ../seqkit/ACEpip/*fasta | grep ">" | awk '{print $1}'
 
-#return all ACEquin matches
-cat ../seqkit/ACEquin/*fasta
+#return all ACEquin matching sequences/headers
+cat ../seqkit/ACEquin/*fasta 
+cat ../seqkit/ACEquin/*fasta | grep ">" | awk '{print $1}'
 ```
 
 ## For cqm1:  
@@ -262,7 +264,7 @@ TOP=1 #change this to set number of top sorted contigs to retain
 
 for SAMPLE in `ls -l | grep -v "total" |  grep -v "fasta" | awk '{print $NF}'`; do
   echo $SAMPLE
-  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p CGGAAGCGTATT -p TTGATAGCAGCT -m 3 | perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | head -${TOP} | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}_NODE/g" > ../seqkit/cqm1/${SAMPLE}_cqm1.fasta
+  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -d -p CGGAAGCGTATT -p TTGATAGCAGCT -m 3 | perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | head -${TOP} | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}_NODE/g" > ../seqkit/cqm1/${SAMPLE}_cqm1.fasta
 done
 chmod -R g+w ../seqkit
 
