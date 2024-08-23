@@ -210,16 +210,17 @@ chmod -R g+w ../seqkit
 
 #count matches
 cat ../seqkit/coi/*coi.fasta | grep ">" | wc -l
-#122 # -m 3 with 4 primers
-#158 # -m 3 with 2 fewer bp from VertCOI_7194_F
-#144 # with 2 fewer bp from VertCOI_7194_F
-#22  # with Mod primers only
-#13  # -m 3 with Mod primers only
+#122 # -m 3 with full length-4 (all 4 primers)
+#158 # -m 3 with full length-4 and -2 more bp from VertCOI_7194_F
+#144 # with full length-4 and -2 more bp from VertCOI_7194_F
+#22  # with full length-4 Mod primers only
+#13  # -m 3 with full length-4 Mod primers only
 #188 # -m 3 with 1/2/2 fewer bp from Mod_F/Mod_R/VertCOI_7194_F
 #188 # -m 3 with Mod only, 1/2 fewer bp from Mod_F/Mod_R
 #190 # -m 4 with Mod only, 1/2 fewer bp from Mod_F/Mod_R
-#190 # -m 4 with 1/2/2 fewer bp from Mod_F/Mod_R/VertCOI_7194_F
+190 # -m 4 with 1/2/2 fewer bp from Mod_F/Mod_R/VertCOI_7194_F 
 
+#Note: with -m 4 too many are insects! Should we do a directional filtering to figure out which of the matches from -m 4 are vertebrates? using the top coverage is not working, but the question is if there ARE vertebrate sequences present, they are just not top (#2, #3, etc? what distinguishes them?
 ```
 
 ## For Ace2: 
