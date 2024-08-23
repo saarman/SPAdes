@@ -188,7 +188,7 @@ chmod -R g+w ../seqkit
 ```
 ## For COI:  
 Primers for coi: Mod_RepCOI_F TNTTYTCMACYAACCACAAAGA, Mod_RepCOI_R TTCDGGRTGNCCRAARAATCA, 	VertCOI_7216_R CARAAGCTYATGTTRTTYATDCG, VertCOI_7194_F CGMATRAAYAAYATRAGCTTCTGAY   
-Search for primer sequence after trimming 4 bp from start/end, with 3 mismatches allowed
+Search for primer sequence after trimming 4+ bp from start/end with effort to remove degenerate bases, with 4 mismatches allowed
 
 *NOTE: [ERRO] flag -r (--use-regexp) or (--degenerate) not allowed when giving flag -m (--max-mismatch)*
 *I found that using -m worked better anyway!*
@@ -204,7 +204,6 @@ TOP=1 #change this to set number of top sorted contigs to retain
 
 for SAMPLE in `ls -l | grep -v "total" |  grep -v "fasta" | awk '{print $NF}'`; do
   echo $SAMPLE
-  #cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p YTCMACYAACCACA -p GRTGNCCRAARA -p AGCTYATGTTRTTYA -p TRAAYAAYATRAGCTTC -m 3 | perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | head -${TOP} | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}_NODE/g" > ../seqkit/coi/${SAMPLE}_coi.fasta
   cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p TCMACYAACCACA -p TGNCCRAARA -p AGCTYATGTTRTTYA -p AAYAAYATRAGCTTC -m 4 | perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | head -${TOP} | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}_NODE/g" > ../seqkit/coi/${SAMPLE}_coi.fasta
 done
 chmod -R g+w ../seqkit
