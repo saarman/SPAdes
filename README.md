@@ -188,10 +188,69 @@ chmod -R g+w ../seqkit
 ```
 ## For COI:  
 Primers for coi: Mod_RepCOI_F TNTTYTCMACYAACCACAAAGA, Mod_RepCOI_R TTCDGGRTGNCCRAARAATCA, 	VertCOI_7216_R CARAAGCTYATGTTRTTYATDCG, VertCOI_7194_F CGMATRAAYAAYATRAGCTTCTGAY   
-Search for primer sequence after trimming 4+ bp from start/end with effort to remove degenerate bases, with 4 mismatches allowed
+Search for primer sequence after trimming 2+ bp from start/end, resolving as many degenerate bases as possible, with 2? mismatches allowed
 
 *NOTE: [ERRO] flag -r (--use-regexp) or (--degenerate) not allowed when giving flag -m (--max-mismatch)*
 *I found that using -m worked better anyway!*
+
+
+Mod_RepCOI_F, removed 2 from start, no degenerate sites
+TTCTCAACCAACCACAAAGA
+TTCTCAACTAACCACAAAGA
+TTCTCCACCAACCACAAAGA
+TTCTCCACTAACCACAAAGA
+TTTTCAACCAACCACAAAGA
+TTTTCAACTAACCACAAAGA
+TTTTCCACCAACCACAAAGA
+TTTTCCACTAACCACAAAGA
+
+Mod_RepCOI_R, removed 4 from start, one degenerate site
+GGATGNCCAAAAAATCA
+GGGTGNCCAAAAAATCA
+GGATGNCCGAAAAATCA
+GGGTGNCCGAAAAATCA
+GGATGNCCAAAGAATCA
+GGGTGNCCAAAGAATCA
+GGATGNCCGAAGAATCA
+GGGTGNCCGAAGAATCA
+
+VertCOI_7216_R, removed 3 from end, no degenerate sites
+CAAAAGCTCATGTTATTCAT
+CAAAAGCTCATGTTATTTAT
+CAAAAGCTCATGTTGTTCAT
+CAAAAGCTCATGTTGTTTAT
+CAGAAGCTCATGTTATTCAT
+CAGAAGCTCATGTTATTTAT
+CAGAAGCTCATGTTGTTCAT
+CAGAAGCTCATGTTGTTTAT
+CAAAAGCTTATGTTATTCAT
+CAAAAGCTTATGTTATTTAT
+CAAAAGCTTATGTTGTTCAT
+CAAAAGCTTATGTTGTTTAT
+CAGAAGCTTATGTTATTCAT
+CAGAAGCTTATGTTATTTAT
+CAGAAGCTTATGTTGTTCAT
+CAGAAGCTTATGTTGTTTAT
+
+VertCOI_7194_F, removed 3 from start, 1 from end, no degenerate sites
+ATAAACAACATAAGCTTCTGA
+ATAAATAACATAAGCTTCTGA
+ATAAACAACATGAGCTTCTGA
+ATAAATAACATGAGCTTCTGA
+ATAAACAATATAAGCTTCTGA
+ATAAATAATATAAGCTTCTGA
+ATAAACAATATGAGCTTCTGA
+ATAAATAATATGAGCTTCTGA
+ATGAACAACATAAGCTTCTGA
+ATGAATAACATAAGCTTCTGA
+ATGAACAACATGAGCTTCTGA
+ATGAATAACATGAGCTTCTGA
+ATGAACAATATAAGCTTCTGA
+ATGAATAATATAAGCTTCTGA
+ATGAACAATATGAGCTTCTGA
+ATGAATAATATGAGCTTCTGA
+
+
 
 ```
 bash
@@ -204,7 +263,7 @@ TOP=1 #change this to set number of top sorted contigs to retain
 
 for SAMPLE in `ls -l | grep -v "total" |  grep -v "fasta" | awk '{print $NF}'`; do
   echo $SAMPLE
-  cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p TCMACYAACCACA -p TGNCCRAARA -p AGCTYATGTTRTTYA -p AAYAAYATRAGCTTC -m 4 | perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | head -${TOP} | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}_NODE/g" > ../seqkit/coi/${SAMPLE}_coi.fasta
+   cat ./${SAMPLE}/contigs.fasta | seqkit grep -s -i -p TTCTCAACCAACCACAAAGA -p TTCTCAACTAACCACAAAGA -p TTCTCCACCAACCACAAAGA -p TTCTCCACTAACCACAAAGA -p TTTTCAACCAACCACAAAGA -p TTTTCAACTAACCACAAAGA -p TTTTCCACCAACCACAAAGA -p TTTTCCACTAACCACAAAGA -p GGATGNCCAAAAAATCA -p GGGTGNCCAAAAAATCA -p GGATGNCCGAAAAATCA -p GGGTGNCCGAAAAATCA -p GGATGNCCAAAGAATCA -p GGGTGNCCAAAGAATCA -p GGATGNCCGAAGAATCA -p GGGTGNCCGAAGAATCA -p CAAAAGCTCATGTTATTCAT -p CAAAAGCTCATGTTATTTAT -p CAAAAGCTCATGTTGTTCAT -p CAAAAGCTCATGTTGTTTAT -p CAGAAGCTCATGTTATTCAT -p CAGAAGCTCATGTTATTTAT -p CAGAAGCTCATGTTGTTCAT -p CAGAAGCTCATGTTGTTTAT -p CAAAAGCTTATGTTATTCAT -p CAAAAGCTTATGTTATTTAT -p CAAAAGCTTATGTTGTTCAT -p CAAAAGCTTATGTTGTTTAT -p CAGAAGCTTATGTTATTCAT -p CAGAAGCTTATGTTATTTAT -p CAGAAGCTTATGTTGTTCAT -p CAGAAGCTTATGTTGTTTAT -p ATAAACAACATAAGCTTCTGA -p ATAAATAACATAAGCTTCTGA -p ATAAACAACATGAGCTTCTGA -p ATAAATAACATGAGCTTCTGA -p ATAAACAATATAAGCTTCTGA -p ATAAATAATATAAGCTTCTGA -p ATAAACAATATGAGCTTCTGA -p ATAAATAATATGAGCTTCTGA -p ATGAACAACATAAGCTTCTGA -p ATGAATAACATAAGCTTCTGA -p ATGAACAACATGAGCTTCTGA -p ATGAATAACATGAGCTTCTGA -p ATGAACAATATAAGCTTCTGA -p ATGAATAATATAAGCTTCTGA -p ATGAACAATATGAGCTTCTGA -p ATGAATAATATGAGCTTCTGA -m 1 | perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" '$4>=a && $6>=b' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | head -${TOP} | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}_NODE/g" > ../seqkit/coi/${SAMPLE}_coi.fasta
 done
 chmod -R g+w ../seqkit
 
@@ -218,9 +277,12 @@ cat ../seqkit/coi/*coi.fasta | grep ">" | wc -l
 #188 # -m 3 with 1/2/2 fewer bp from Mod_F/Mod_R/VertCOI_7194_F
 #188 # -m 3 with Mod only, 1/2 fewer bp from Mod_F/Mod_R
 #190 # -m 4 with Mod only, 1/2 fewer bp from Mod_F/Mod_R
-190 # -m 4 with 1/2/2 fewer bp from Mod_F/Mod_R/VertCOI_7194_F 
+# 190 # -m 4 with 1/2/2 fewer bp from Mod_F/Mod_R/VertCOI_7194_F #Note: with -m 4 too many are insects! Should we do a directional filtering to figure out which of the matches from -m 4 are vertebrates? using the top coverage is not working, but the question is if there ARE vertebrate sequences present, they are just not top (#2, #3, etc? what distinguishes them?
 
-#Note: with -m 4 too many are insects! Should we do a directional filtering to figure out which of the matches from -m 4 are vertebrates? using the top coverage is not working, but the question is if there ARE vertebrate sequences present, they are just not top (#2, #3, etc? what distinguishes them?
+# 129 # -m 1, 8 no sig match, 2 mosquitoes --> 119 identified
+# 159 # -m 2, 2 no sig match, 40 mosquitoes --> 117 identified
+# 185 # -m 3, 90 mosquitoes --> 95 identified
+
 ```
 
 ## For Ace2: 
