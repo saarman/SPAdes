@@ -20,7 +20,7 @@ Culex species identification and blood meal analysis with de novo assembly of il
 
 # Task 1: FastQC
 
-## Make output directory
+Make output directory
 ```
 # CD to working directory
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718
@@ -32,7 +32,7 @@ mkdir fastqc
 chmod -R g+w fastqc
 ```
 
-## Run command
+Run command
 ```
 # load module 
 module load fastqc
@@ -46,11 +46,7 @@ chmod -R g+w fastqc
 
 # Task 2: SPAdes
 
-## Example command
-module load spades
-spades.py -1 left.fastq.gz -2 right.fastq.gz -o output_folder
-
-## Make an directory and change permissions
+Make an output directory:
 ```
 # change directory
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718
@@ -62,14 +58,18 @@ mkdir denovo_assembly
 chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718
 ```
 
-## Run SPAdes de novo assembly with a loop
-
 List of samples to run:
 ```
 ls -l *R1_001.fastq.gz | awk '{print $NF}' | cut -d_ -f1-2
 ```
 
-SPAdes:
+Help menu:
+```
+module load spades
+spades.py --help
+```
+
+SPAdes in a loop:
 ```
 # change directory
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718
@@ -90,10 +90,9 @@ Remember to change permissions:
 chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718
 ```
 
-# Step 3: Filter and sort contigs output per sample, add sample to fasta header
+# Step 3: Filter and sort contigs output per sample, add sample ID to fasta header
 
-## Example with filters (length, coverage), sorted by coverage
-Filters, sorts, and adds name of sample to header of each contig
+Example with filters (length, coverage), sorted by coverage, adds sample ID to header of each contig
 ```
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702/denovo_assembly
 bash
