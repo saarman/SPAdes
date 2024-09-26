@@ -91,7 +91,7 @@ Remember to change permissions:
 chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718
 ```
 
-# Step 3: Filter and sort contigs output per sample, add sample ID to fasta header
+# Step 3: Filter and sort contigs
 
 Example with filters (length, coverage), sorted by coverage, adds sample ID to header of each contig
 ```
