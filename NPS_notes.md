@@ -399,24 +399,24 @@ blastn -query B002-UT-M07101-240702_S1_min150_sorted.fasta -db /scratch/general/
 
 # 09/26/2024 
 
-## Eric and I talked about using a clustering method after filtering the SPAdes contigs for length and coverage
+## Eric and I talked about using a clustering method after filtering the SPAdes contigs for length and coverage  
 
-   a. Clustering all-all: Blast/search all against all, then use e-values as the clustering statistic
-      - FASTA36 as the alignment tool --> Markov clustering in R ("MCL" package)
-      - MMSeqS2 as the alignment and clustering tool https://github.com/soedinglab/MMseqs2
-   b. Clustering references-all. Same basic options.
-   c. Using the primer sequences to find matches.
+   a. Clustering all-all: Blast/search all against all, then use e-values as the clustering statistic  
+      - FASTA36 as the alignment tool --> Markov clustering in R ("MCL" package)  
+      - MMSeqS2 as the alignment and clustering tool https://github.com/soedinglab/MMseqs2  
+   b. Clustering references-all. Same basic options.  
+   c. Using the primer sequences to find matches.  
 
 ## Steps we might need:
-  1. FASTQC
-  2. SPAdes de novo assembly
-  3. Filtering contigs with thresholds and add in references for cqm1/ace2
-  4. Clustering and identifying unique clusters
-  5. Assign clusters using the references for cqm1/ace2, but for CO1 we might need to blastn with representatives?
-  6. QC to check for paralogs, haplotype counts, how are SNPs scores/handled, allele balance, this could include mapping reads back to the contigs
+  1. FASTQC  
+  2. SPAdes de novo assembly  
+  3. Filtering contigs with thresholds and add in references for cqm1/ace2  
+  4. Clustering and identifying unique clusters  
+  5. Assign clusters using the references for cqm1/ace2, but for CO1 we might need to blastn with representatives?  
+  6. QC to check for paralogs, haplotype counts, how are SNPs scores/handled, allele balance, this could include mapping reads back to the contigs  
 
-## Assignments:
-Eric will check what we can do with the clustering 
-Norah will clean up the readme
-Catch up the other half with our new steps 1 and 2
+## Assignments:  
+Eric will check what we can do with the clustering   
+Norah will clean up the readme  
+Catch up the other half with our new steps 1 and 2  
 
