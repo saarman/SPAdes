@@ -20,18 +20,25 @@ Culex species identification and blood meal analysis with de novo assembly of il
 
 # Task 1: FastQC
 ## CD to working directory
-```cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718```
+```
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718
+```
 
 ## make dir for fastqc
-```mkdir fastqc```
+```
+mkdir fastqc
+```
 
 ## change permissions
-```chmod -R g+w fastqc```
+```
+chmod -R g+w fastqc
+```
 
 ## example command
 ```
 fastqc *.fastq.gz -o ./fastqc
 ```
+
 # Task 2: SPAdes
 
 ## Example command
