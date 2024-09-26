@@ -9,11 +9,11 @@ Culex species identification and blood meal analysis with de novo assembly of il
 3. salloc --time=72:00:00 --ntasks 1 --mem=100G --account=saarman-np --partition=saarman-shared-np
 
 ## Outline of steps:
-1. seqtk to subsample reads (tens to hundreds of 1000's?)
-2. fastqc to trim/clean/quality control
-3. SPAdes for de novo assembly, https://biomedicalhub.github.io/genomics/04-part4-denovo-assembly.html
-4. Filter contigs for min length and min coverage
-5. Blastn to identify COi match
+(Optional?) seqtk to subsample reads (tens to hundreds of 1000's?)
+1. fastqc to trim/clean/quality control
+2. SPAdes for de novo assembly, https://biomedicalhub.github.io/genomics/04-part4-denovo-assembly.html
+3. Filter contigs for min length and min coverage
+4. Blastn to identify COi match
 
 ## Manuals for seqtk, fastqc, SPades 
  - seqtk https://docs.csc.fi/apps/seqtk/#usage   
