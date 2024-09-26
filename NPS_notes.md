@@ -401,10 +401,10 @@ blastn -query B002-UT-M07101-240702_S1_min150_sorted.fasta -db /scratch/general/
 
 ## Eric and I talked about using a clustering method after filtering the SPAdes contigs for length and coverage  
 
-   a. Clustering all-all: Blast/search all against all, then use e-values as the clustering statistic  
+   a. Clustering all-vs-all: Blast/search all against all, then use e-values as the clustering statistic  
       - FASTA36 as the alignment tool --> Markov clustering in R ("MCL" package)  
       - MMSeqS2 as the alignment and clustering tool https://github.com/soedinglab/MMseqs2  
-   b. Clustering references-all. Same basic options.  
+   b. Clustering all-vs-refs. Same basic options with only reference sequences as the query end of the search. 
    c. Using the primer sequences to find matches.  
 
 ## Steps we might need:
