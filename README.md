@@ -13,6 +13,7 @@ Culex species identification and blood meal analysis with de novo assembly of il
 2. SPAdes for de novo assembly, https://biomedicalhub.github.io/genomics/04-part4-denovo-assembly.html
 3. Filter contigs for min length and min coverage
 4. Clustering/Blastn to identify ace2/cqm1 haplotypes and COi match
+5. Final QC (mapping reads, blastn, determine haplotypes, etc.)
 
 ## Manuals for fastqc, SPades 
  - fastqc https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
