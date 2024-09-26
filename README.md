@@ -5,7 +5,7 @@ Culex species identification and blood meal analysis with de novo assembly of il
 
 ## Logging onto CHPC with Terminal on a mac
 1. Open Terminal
-2. ssh u6036559@notchpeak.chpc.utah.edu        #replace with your username
+2. ssh u6036559@notchpeak.chpc.utah.edu  #replace with your username
 3. salloc --time=72:00:00 --ntasks 1 --mem=100G --account=saarman-np --partition=saarman-shared-np
 
 ## Outline of steps:
@@ -47,10 +47,8 @@ chmod -R g+w fastqc
 # Task 2: SPAdes
 
 ## Example command
-```
-module load SPAdes
+module load spades
 spades.py -1 left.fastq.gz -2 right.fastq.gz -o output_folder
-```
 
 ## Make an directory and change permissions
 ```
@@ -68,14 +66,14 @@ chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-
 
 ```
 # load module
-module load SPAdes
+module load spades
 
 # list of samples to run
-ls -l *R1_001.fastq.gz |  awk '{print $NF}' | cut -d_ -f1-2
+ls -l *R1_001.fastq.gz | awk '{print $NF}' | cut -d_ -f1-2
 
 # run loop with ls to check that inputs exist, run spades for each
 bash
-for SAMPLE in `ls -l *R1_001.fastq.gz |  awk '{print $NF}' | cut -d_ -f1-2`; do
+for SAMPLE in `ls -l *R1_001.fastq.gz | awk '{print $NF}' | cut -d_ -f1-2`; do
   echo $SAMPLE
   spades.py -1 ${SAMPLE}_L001_R1_001.fastq.gz -2	${SAMPLE}_L001_R2_001.fastq.gz -o ./denovo_assembly/${SAMPLE} --isolate
 done
