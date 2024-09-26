@@ -65,6 +65,9 @@ chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-
 ## Run SPAdes de novo assembly with a loop
 
 ```
+# change directory
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718
+
 # load module
 module load spades
 
@@ -78,7 +81,7 @@ for SAMPLE in `ls -l *R1_001.fastq.gz | awk '{print $NF}' | cut -d_ -f1-2`; do
   spades.py -1 ${SAMPLE}_L001_R1_001.fastq.gz -2	${SAMPLE}_L001_R2_001.fastq.gz -o ./denovo_assembly/${SAMPLE} --isolate
 done
 
-#Remember to change permissions:
+# Remember to change permissions:
 chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718
 ```
 
@@ -98,14 +101,15 @@ for SAMPLE in `ls -l | grep -v "total" |  grep -v "fasta" | awk '{print $NF}'`; 
  cp ./${SAMPLE}/sorted_contigs.fasta ./${SAMPLE}_sorted_contigs.fasta
 done
 
-#update permissions
+# update permissions
 chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718
 
-#list all sorted matches
+# list all sorted matches
 ls -l *sorted_contigs.fasta
 
-#concatenate all sorted matches
+# concatenate all sorted matches
 cat *sorted_contigs.fasta    
 ```
+
 # Step 4: 
 
