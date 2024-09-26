@@ -64,6 +64,12 @@ chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-
 
 ## Run SPAdes de novo assembly with a loop
 
+List of samples to run:
+```
+ls -l *R1_001.fastq.gz | awk '{print $NF}' | cut -d_ -f1-2
+```
+
+SPAdes:
 ```
 # change directory
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718
@@ -71,17 +77,16 @@ cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718
 # load module
 module load spades
 
-# list of samples to run
-ls -l *R1_001.fastq.gz | awk '{print $NF}' | cut -d_ -f1-2
-
-# run loop with ls to check that inputs exist, run spades for each
+# loop
 bash
 for SAMPLE in `ls -l *R1_001.fastq.gz | awk '{print $NF}' | cut -d_ -f1-2`; do
   echo $SAMPLE
   spades.py -1 ${SAMPLE}_L001_R1_001.fastq.gz -2	${SAMPLE}_L001_R2_001.fastq.gz -o ./denovo_assembly/${SAMPLE} --isolate
 done
+```
 
-# Remember to change permissions:
+Remember to change permissions:
+```
 chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718
 ```
 
