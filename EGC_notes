@@ -158,8 +158,8 @@ chmod: changing permissions of 'subseq': Operation not permitted
 UT-M07101-240702 ready for analysis with contig files
 UT-M70330-240718 has contig files but no seqkit performed 
 
-*Which method should I try first? 
-Start with filtering and see what hits we get sample by sample, then try other methods with samples that do not show up on BOLD/BLAST? 
+*Which method should I try first? Should I use Seqtk again to filter?
+*Start with filtering and see what hits we get sample by sample, then try other methods with samples that do not show up on BOLD/BLAST? 
 
 
 
