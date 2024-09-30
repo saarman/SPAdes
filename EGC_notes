@@ -154,6 +154,12 @@ cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles
 chmod -R g+w subseq
 chmod: changing permissions of 'subseq': Operation not permitted
 
+*Going back through trying to remember next steps - 
+UT-M07101-240702 ready for analysis with contig files
+UT-M70330-240718 has contig files but no seqkit performed 
+
+*Which method should I try first? 
+Start with filtering and see what hits we get sample by sample, then try other methods with samples that do not show up on BOLD/BLAST? 
 
 
 
