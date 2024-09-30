@@ -143,6 +143,15 @@ B522-UT-M07101-240702_S192
 chmod: cannot access 'denovo_assembly': No such file or directory
 (base) [u1055819@notch320:denovo_assembly]$ cat *sorted_contigs.fasta 
 
+
+9/30/24
+
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles
+chmod -R g+w subseq
+chmod: changing permissions of 'subseq': Operation not permitted
+
+
+
 ***Looked like it worked though - they all have sorted contigs fasta files!
 *Going through BLAST and not getting the same results - going to run above code again with the same parameters we used before - oops
 
