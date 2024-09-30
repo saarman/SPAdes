@@ -417,6 +417,6 @@ blastn -query B002-UT-M07101-240702_S1_min150_sorted.fasta -db /scratch/general/
 
 ## Assignments:  
 Eric will check what we can do with the clustering   
-Norah will clean up the readme  
-Catch up the other half with our new steps 1 and 2  
+Norah will clean up the readme, catch up the other half with our new steps 1 and 2  
+Matt will do a literature search for cqm1, think about other cluster methods (Burrows Wheeler), check out best practices and steps of Spades pipeline https://biomedicalhub.github.io/genomics/04-part4-denovo-assembly.html
 
