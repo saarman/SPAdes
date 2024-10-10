@@ -142,27 +142,29 @@ Example of the sbatch:
 #SBATCH --ntasks=20          # same as $max set in ForkManager
 #SBATCH --account=saarman-np
 #SBATCH --partition=saarman-shared-np   
-#SBATCH --job-name=bwa-mem2
+#SBATCH --job-name=MMseqs2
 #SBATCH --mail-type=BEGIN
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=norah.saarman@usu.edu
 
 # Load modules
-module load bwa/2020_03_19
-module load samtools/1.16
+module load MMseqs2  # change to module name
 
 # Change to the directory where the input data is located
-cd /uufs/chpc.utah.edu/common/home/saarman-group1/bee_ddRAD_processed
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input
+
+# Concatenate all of the input into one file
+rm all.fasta; cat *.fasta > all.fasta
 
 # Run the Perl script with the input files
-perl /uufs/chpc.utah.edu/common/home/saarman-group1/bee_ddRAD_scripts/alkalibee/5b_bwa_mem.pl *.fq.gz
+perl /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts/4a_MMseqs2.pl all.fasta
 
 # Permissions
-chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/bee_ddRAD*
+chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/
 ```
 
-Example of the perl:
+Example of the perl, still needs to be updated
 ```
 #!/usr/bin/perl
 
@@ -203,4 +205,11 @@ foreach my $fq1 (@ARGV) {  # Iterate over each file passed as an argument
 }
 
 $pm->wait_all_children;  # Wait for all child processes to finish
+```
+
+Before running, i need to make these files, and then use git to pull, then run sbatch
+```
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts/
+#clone the repo
+git pull
 ```
