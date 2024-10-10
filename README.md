@@ -97,13 +97,12 @@ Example with filters (length, coverage), sorted by coverage, adds sample ID to h
 ```
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718/denovo_assembly
 bash
-LENGTH=450 #change this to set min length
-COVERAGE=20 #change this to set min coverage
-MAXLEN=700 #change this to set max length
+LENGTH=200 #change this to set min length
+COVERAGE=2 #change this to set min coverage
+MAXLEN=3000 #change this to set max length
 for SAMPLE in `ls -l | grep -v "total" |  grep -v "fasta" | awk '{print $NF}'`; do
   echo $SAMPLE
-  perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' ./${SAMPLE}/contigs.fasta  | sed 's/_/ /g' | awk -F " " -v a="$LENGTH" -v b="$COVERAGE" -v c="$MAXLEN" '$4>=a && $6>=b && $4<=c' |  sed 's/ /_/g'  | sort -r -t_ -nk6 | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}/g" > ./${SAMPLE}/contigs.fasta
- cp ./${SAMPLE}/sorted_contigs.fasta ./${SAMPLE}_sorted_contigs.fasta
+  perl -0076 -ne 'chomp;($h,@S)=split/\n/;$s=join("",@S);print"$h\t$s\n"unless(!$h)' ./${SAMPLE}/contigs.fasta | awk -F "_" -v a="$LENGTH" -v b="$COVERAGE" -v c="$MAXLEN" '$4>=a && $6>=b && $4<=c' | sort -r -t_ -nk6 | sed 's/\t/\n/g' | sed "s/NODE/\>${SAMPLE}/g" > ./${SAMPLE}/${SAMPLE}_filt200-3k_sorted_contigs.fasta
 done
 
 # update permissions
