@@ -95,7 +95,7 @@ chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-
 
 Example with filters (length, coverage), sorted by coverage, adds sample ID to header of each contig
 ```
-cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702/denovo_assembly
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718/denovo_assembly
 bash
 LENGTH=450 #change this to set min length
 COVERAGE=20 #change this to set min coverage
