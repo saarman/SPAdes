@@ -134,7 +134,7 @@ Example of the raw code:
 
 ```
 
-Example of the sbatch:
+Example of the sbatch, named 4a_MMseqs2.slurm
 ```
 #!/bin/sh
 #SBATCH --time=336:00:00
@@ -164,7 +164,7 @@ perl /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts/4a
 chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/
 ```
 
-Example of the perl, still needs to be updated
+Example of the perl, still needs to be updated, named 4a_MMseqs2.pl
 ```
 #!/usr/bin/perl
 
@@ -210,6 +210,7 @@ $pm->wait_all_children;  # Wait for all child processes to finish
 Before running, i need to make these files, and then use git to pull, then run sbatch
 ```
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts/
-#clone the repo
+# clone the repo
 git pull
+sbatch 4a_MMseqs2.slurm
 ```
