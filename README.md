@@ -6,7 +6,7 @@ Culex species identification and blood meal analysis with de novo assembly of il
 ## Logging onto CHPC with Terminal on a mac
 1. Open Terminal
 2. ssh u6036559@notchpeak.chpc.utah.edu  #replace with your username
-3. salloc --time=72:00:00 --ntasks 1 --mem=100G --account=saarman-np --partition=saarman-shared-np
+3. salloc --time=336:00:00 --ntasks 1 --mem=100G --account=saarman-np --partition=saarman-shared-np
 
 ## Outline of steps:
 1. fastqc to trim/clean/quality control
