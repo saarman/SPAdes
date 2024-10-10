@@ -127,5 +127,19 @@ cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input/; ls -
 cat /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input/*.fasta | head -20000
 ```
 
-# Step 4: 
+# Step 4: Clustering with MMseqs2
 
+Example of the raw code:
+```
+
+```
+
+Example of the sbatch:
+```
+
+```
+
+Example of the perl:
+```
+
+```
