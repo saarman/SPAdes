@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 use Parallel::ForkManager;
+use File::Path qw(remove_tree);
 
 my $max = 1;  # Set the maximum number of parallel processes to 1 since we are managing threads within MMseqs2
 my $pm = Parallel::ForkManager->new($max);  # Create a new Parallel::ForkManager object with the specified maximum
@@ -19,11 +20,16 @@ my $fasta = "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/in
 # Number of threads to use for MMseqs2
 my $threads = 20;  # Adjust this number based on your available resources
 
-$pm->start and next if $pm->start;  # Fork a new process
-
 # Extract the identifier from the filename
 $fasta =~ m/([A-Za-z_\-0-9]+)\.fasta$/ or die "failed match for file $fasta\n";
 my $ind = $1;  # Store the identifier in $ind
+
+# Remove existing output directory if it exists
+if (-d "${output_dir}/${ind}_DB_clu") {
+    remove_tree("${output_dir}/${ind}_DB_clu") or die "Failed to remove existing directory: $!";
+}
+
+$pm->start and next;  # Fork a new process
 
 # Create MMseqs2 database
 my $cmd_createdb = "$mmseqs createdb $fasta ${output_dir}/${ind}_DB";
