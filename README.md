@@ -145,20 +145,19 @@ mmseqs --help
 mmseqs createdb ./input/file.fasta DB
 
 ## cluster with cluster or linclust (linclust run time scales linearly but is slightly less accurate)
-# mmseqs cluster DB DB_clu tmp
-# clusters can be set by adding --min-seq-id .9
 # make sure tmp folder exists
-mmseqs linclust DB DB_lin_clu /scratch/general/vast/u6036559/spades_tmp
+# mmseqs linclust DB DB_lin_clu /scratch/general/vast/u6036559/spades_tmp
+mmseqs cluster DB DB_clu tmp --min-seq-id 0.9
 
 ## outputting files
 # TSV file with representative cluster sequences on left and all members of the cluster on right
-mmseqs createtsv DB DB DB_lin_clu DB_lin_clu.tsv
+mmseqs createtsv DB DB DB_clu DB_clu.tsv
 ```
 
 ## Example of the sbatch and perl scripts with these commands: 
  - 4a_MMseqs2.slurm
  - 4a_MMseqs2.pl
- - Output on tsv format: /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/all_DB_lin_clu.tsv
+ - Output on tsv format: /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/all_DB_clu.tsv
 
 Before running, I need to make these files on github, and then use git to clone
 ```
