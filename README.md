@@ -167,7 +167,8 @@ cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2
 git clone https://github.com/saarman/SPAdes scripts
 ```
 
-## Every time need to Pull and use sbatch to run:
+## Every time need to...
+Pull and run slurm wrapper script
 ```
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts
 git pull
@@ -177,10 +178,9 @@ sbatch 4a_MMseqs2.slurm
 ## Visualize the results R script named 4b_plot_clusters.R
 ... to save network_plot.png in /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/
   
-Pull and run R script
+Pull and run slurm wrapper script
 ```
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts
 git pull
-module load R
-Rscript 4b_plot_clusters.R
+sbatch 4b_plot_clusters.slurm 
 ```
