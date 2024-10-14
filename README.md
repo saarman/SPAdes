@@ -135,6 +135,12 @@ cat /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input/*.fas
 
 Example of the raw code:
 ```
+# Load modules
+module load mmseqs2/oct24  # change to module name
+
+# Check if working by loading help menu
+mmseqs --help
+
 ## convert fasta to DB
 mmseqs createdb ./input/file.fasta DB
 
@@ -149,7 +155,7 @@ mmseqs linclust DB DB_lin_clu /scratch/general/vast/u6036559/spades_tmp
 mmseqs createtsv DB DB DB_lin_clu DB_lin_clu.tsv
 ```
 
-Example of the sbatch, named 4a_MMseqs2.slurm
+## Example of the sbatch script: 4a_MMseqs2.slurm
 ```
 #!/bin/sh
 #SBATCH --time=336:00:00
@@ -157,7 +163,7 @@ Example of the sbatch, named 4a_MMseqs2.slurm
 #SBATCH --ntasks=20          # same as $max set in ForkManager
 #SBATCH --account=saarman-np
 #SBATCH --partition=saarman-shared-np   
-#SBATCH --job-name=MMseqs2
+#SBATCH --job-name=MMseqs2_try1
 #SBATCH --mail-type=BEGIN
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
@@ -165,9 +171,6 @@ Example of the sbatch, named 4a_MMseqs2.slurm
 
 # Load modules
 module load mmseqs2/oct24  # change to module name
-
-# Check if working by loading help menu
-mmseqs --help
 
 # Change to the directory where the input data is located
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input
@@ -183,7 +186,7 @@ perl /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts/4a
 chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/
 ```
 
-Example of the perl, still needs to be updated, named 4a_MMseqs2.pl
+## Example of the perl script: 4a_MMseqs2.pl
 ```
 #!/usr/bin/perl
 
