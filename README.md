@@ -197,7 +197,7 @@ my $output_dir = "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseq
 my $mmseqs = "/uufs/chpc.utah.edu/sys/installdir/r8/mmseqs2/oct24/bin/mmseqs";  # Update this path to the actual location of MMseqs2 binary, you can get this by loading module and running: which mmseqs
 
 # Path to the input fasta file
-my $fasta = "/path/to/your/input/file.fasta";  # Update this path to your actual input file
+my $fasta = "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input/all.fasta";  # Update this path to your actual input file
 
 # Extract the identifier from the filename
 $fasta =~ m/([A-Za-z_\-0-9]+)\.fasta$/ or die "failed match for file $fasta\n";
