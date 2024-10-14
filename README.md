@@ -281,7 +281,7 @@ p <- ggplot(plot_data, aes(x = Representative, y = Sequence)) +
 output_file <- file.path(output_dir, "clustering_plot.png")
 ggsave(output_file, plot = p, width = 10, height = 8)
 ```
-... to save clustering_plot.png  
+... to save clustering_plot.png in /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/
   
 Pull and run R script
 ```
