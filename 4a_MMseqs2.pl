@@ -17,7 +17,7 @@ my $createdb_cmd = "$mmseqs createdb $fasta $db_dir";
 
 # Step 2: Cluster sequences with MMseqs2
 my $db_clu = "$output_dir/DB_clu";  # Output for the cluster
-my $tmp_dir = "$output_dir/tmp";    # Temporary directory for MMseqs2
+my $tmp_dir = "/scratch/general/vast/u6036559/spades_tmp/";    # Temporary directory for MMseqs2
 my $cluster_cmd = "$mmseqs cluster $db_dir $db_clu $tmp_dir --min-seq-id 0.9 --threads $threads";
 
 # Step 3: Generate a TSV file for the clusters
