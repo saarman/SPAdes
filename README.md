@@ -235,11 +235,16 @@ $pm->wait_all_children;  # Wait for all child processes to finish
 
 ```
 
-Before running, i need to make these files, and then use git to pull, then run sbatch
+Before running, I need to make these files on github, and then use git to clone
 ```
-cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts/
-git clone https://github.com/saarman/SPAdes
-cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts/SPAdes
+# Just once:
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2
+git clone https://github.com/saarman/SPAdes scripts
+```
+
+## Every time need to Pull and use sbatch to run:
+```
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts
 git pull
 sbatch 4a_MMseqs2.slurm
 ```
