@@ -219,7 +219,6 @@ my $cmd_createtsv = "$mmseqs createtsv ${output_dir}/${ind}_DB ${output_dir}/${i
 system($cmd_createtsv) == 0 or die "system $cmd_createtsv failed: $?";
 
 print "Clustering completed for $ind\n";
-
 ```
 
 Before running, i need to make these files, and then use git to pull, then run sbatch
