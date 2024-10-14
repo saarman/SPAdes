@@ -29,7 +29,7 @@ if (-d "${output_dir}/${ind}_DB_clu") {
     remove_tree("${output_dir}/${ind}_DB_clu") or die "Failed to remove existing directory: $!";
 }
 
-$pm->start and next;  # Fork a new process
+$pm->start and return;  # Fork a new process
 
 # Create MMseqs2 database
 my $cmd_createdb = "$mmseqs createdb $fasta ${output_dir}/${ind}_DB";
