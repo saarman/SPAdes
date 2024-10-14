@@ -5,7 +5,7 @@ library(igraph)
 library(ggraph)
 
 # Define the input file path
-input_file <- "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/all_DB_lin_clu.tsv"
+input_file <- "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/all_DB_clu.tsv"
 
 # Define the output directory
 output_dir <- "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/"  # Update this path to your desired output directory
