@@ -8,6 +8,10 @@ Culex species identification and blood meal analysis with de novo assembly of il
 2. ssh u6036559@notchpeak.chpc.utah.edu  #replace with your username
 3. salloc --time=336:00:00 --ntasks 1 --mem=100G --account=saarman-np --partition=saarman-shared-np
 
+## Logging onto CHPC with command line on a Windows
+1. Go to Interactive Desktop at https://ondemand.chpc.utah.edu/pun/sys/dashboard/batch_connect/sys/desktop_expert/session_contexts/new
+2. Cluster: notchpeak, Account and partition: saarman-np:saarman-shared-np, number of cores: 1, number of hours: 72-336, memory per job in GB: 128
+
 ## Outline of steps:
 1. fastqc to trim/clean/quality control
 2. SPAdes for de novo assembly, https://biomedicalhub.github.io/genomics/04-part4-denovo-assembly.html
