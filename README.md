@@ -131,7 +131,18 @@ cat /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input/*.fas
 
 Example of the raw code:
 ```
+## convert fasta to DB
+mmseqs createdb ./input/file.fasta DB
 
+## cluster with cluster or linclust (linclust run time scales linearly but is slightly less accurate)
+# mmseqs cluster DB DB_clu tmp
+# clusters can be set by adding --min-seq-id .9
+# make sure tmp folder exists
+mmseqs linclust DB DB_lin_clu /scratch/general/vast/u6036559/spades_tmp
+
+## outputting files
+# TSV file with representative cluster sequences on left and all members of the cluster on right
+mmseqs createtsv DB DB DB_lin_clu DB_lin_clu.tsv
 ```
 
 Example of the sbatch, named 4a_MMseqs2.slurm
