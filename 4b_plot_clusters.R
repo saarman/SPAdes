@@ -27,7 +27,7 @@ layout <- create_layout(network_graph, layout = "fr")
 
 # Plot the network without any labeling
 p <- ggraph(layout) +  # Use the layout with coordinates
-  geom_edge_link(width = 1) +  # Edges without color
+  geom_edge_link(col = "black", width = 0.5) +  # Edges in black
   geom_node_point(size = 2) +  # Size of nodes
   theme_minimal() +  # Minimal theme
   ggtitle("Clustering Network")
