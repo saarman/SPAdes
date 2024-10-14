@@ -17,7 +17,7 @@ data <- fread(input_file, header = FALSE)
 colnames(data) <- c("Representative", "ClusterMember")
 
 # Create an edge list for the network graph
-edge_list <- data[, .(Representative, ClusterMember)]
+edge_list <- data[, c("Representative", "ClusterMember")]
 
 # Create an igraph object from the edge list
 network_graph <- graph_from_data_frame(edge_list, directed = FALSE)
