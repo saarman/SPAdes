@@ -255,6 +255,8 @@ Output on tsv format: /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/M
 # Load required libraries
 library(ggplot2)
 library(data.table)
+library(igraph)
+library(ggraph)
 
 # Define the input file path
 input_file <- "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/all_DB_lin_clu.tsv"
@@ -268,20 +270,31 @@ data <- fread(input_file, header = FALSE)
 # Assign column names (assuming the format is representative sequence and cluster members)
 colnames(data) <- c("Representative", "ClusterMember")
 
-# Create a data frame for plotting
-plot_data <- data.table::melt(data, id.vars = "Representative", variable.name = "Type", value.name = "Sequence")
+# Create an edge list for the network graph
+edge_list <- data[, .(Representative, ClusterMember)]
 
-# Generate the plot
-p <- ggplot(plot_data, aes(x = Representative, y = Sequence)) +
-  geom_point() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  labs(title = "Clustering Results", x = "Representative Sequence", y = "Cluster Members")
+# Create an igraph object from the edge list
+network_graph <- graph_from_data_frame(edge_list, directed = FALSE)
+
+# Generate layout coordinates
+layout <- create_layout(network_graph, layout = "fr")
+
+# Identify representative nodes
+representative_nodes <- unique(edge_list$Representative)
+
+# Plot the network with only representative nodes labeled
+p <- ggraph(layout) +  # Use the layout with coordinates
+  geom_edge_link(width = 1) +  # Edges without color
+  geom_node_point(size = 2) +  # Size of nodes
+  geom_node_text(aes(label = ifelse(name %in% representative_nodes, name, "")), vjust = 1, hjust = 1) +  # Label only representative nodes
+  theme_minimal() +  # Minimal theme
+  ggtitle("Clustering Network")
 
 # Save the plot to a file in the specified output directory
-output_file <- file.path(output_dir, "clustering_plot.png")
-ggsave(output_file, plot = p, width = 10, height = 8)
+output_file <- file.path(output_dir, "network_plot.png")
+ggsave(output_file, plot = p, width = 10, height = 7)
 ```
-... to save clustering_plot.png in /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/
+... to save network_plot.png in /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/
   
 Pull and run R script
 ```
