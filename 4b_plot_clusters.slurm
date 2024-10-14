@@ -15,5 +15,11 @@
 # Load R module (adjust this if you need to load a specific version)
 module load R  # Update with the correct R version if needed
 
+# Permissions
+chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2
+
 # Run the R script
 Rscript /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts/4b_plot_clusters.R
+
+# Permissions
+chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2
