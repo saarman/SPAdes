@@ -248,3 +248,8 @@ cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts
 git pull
 sbatch 4a_MMseqs2.slurm
 ```
+
+## Visualize the results
+```
+/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output
+
