@@ -1,1 +1,28 @@
+Eric Notebook
+
+----------------------------------------------
+10/14/2024
+Using MMseqs2
+
+## convert fasta to DB
+mmseqs createdb ./input/file.fasta DB
+
+## cluster with cluster or linclust (linclust run time scales linearly but is slightly less accurate)
+mmseqs cluster DB DB_clu tmp
+or
+mmseqs linclust DB DB_lin_clu tmp
+# ALTERNATE - minimum sequence identity for clusters can be set by adding --min-seq-id [value] as below
+mmseqs linclust DB DB_lin_clu tmp --min-seq-id 0.9
+
+## outputting files
+# TSV file with representative cluster sequences on left and all members of the cluster on right
+mmseqs createtsv DB DB DB_clu DB_clu.tsv
+# a (pseudo?)FASTA format with the representative name of cluster and then all cluster sequences in fasta format, and the rep of next cluster etc.
+mmseqs createseqfiledb DB DB_clu DB_clu_seq
+mmseqs result2flat DB DB DB_clu_seq DB_clu_seq.fasta
+# export only the representative sequence of each cluster
+mmseqs createsubdb DB_clu DB DB_clu_rep
+mmseqs convert2fasta DB_clu_rep DB_clu_rep.fasta
+
+
 
