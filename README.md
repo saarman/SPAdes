@@ -285,9 +285,6 @@ ggsave(output_file, plot = p, width = 10, height = 8)
   
 Pull and run R script
 ```
-
-Run in command line:
-```
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts
 git pull
 Rscript 4b_plot_clusters.R
