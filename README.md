@@ -238,7 +238,7 @@ $pm->wait_all_children;  # Wait for all child processes to finish
 Before running, i need to make these files, and then use git to pull, then run sbatch
 ```
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts/
-# clone the repo
+git clone https://github.com/saarman/SPAdes
 git pull
 sbatch 4a_MMseqs2.slurm
 ```
