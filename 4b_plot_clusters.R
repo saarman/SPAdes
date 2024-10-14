@@ -29,11 +29,18 @@ network_graph <- graph_from_data_frame(edge_list, directed = FALSE)
 print(summary(network_graph))
 print(network_graph, e = TRUE, v = TRUE)
 
+# Prepare the edge data for plotting
+edge_data <- as_data_frame(network_graph, what = "edges")
+edge_data$Representative <- edge_list$Representative
+
+# Prepare the vertex data for plotting
+vertex_data <- as_data_frame(network_graph, what = "vertices")
+
 # Plot the network with edges colored by representative sequence
 p <- ggraph(network_graph, layout = "fr") +  # "fr" is the Fruchterman-Reingold layout
-  geom_edge_link(aes(color = as.factor(Representative)), width = 1, data = edge_list) +  # Color edges by representative sequence
-  geom_node_point(size = 2) +  # Size of nodes
-  geom_node_text(aes(label = name), vjust = 1, hjust = 1) +  # Label nodes
+  geom_edge_link(aes(color = Representative), data = edge_data, width = 1) +  # Color edges by representative sequence
+  geom_node_point(aes(), data = vertex_data, size = 2) +  # Size of nodes
+  geom_node_text(aes(label = name), data = vertex_data, vjust = 1, hjust = 1) +  # Label nodes
   scale_edge_color_manual(values = rainbow(length(unique(data$Representative)))) +  # Color palette
   theme_minimal() +  # Minimal theme
   ggtitle("Clustering Network")
