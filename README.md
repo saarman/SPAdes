@@ -250,7 +250,7 @@ sbatch 4a_MMseqs2.slurm
 ```
 Output on tsv format: /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/all_DB_lin_clu.tsv
 
-## Visualize the results R script named plot_clusters.R
+## Visualize the results R script named 4b_plot_clusters.R
 ```
 # Load required libraries
 library(ggplot2)
@@ -281,9 +281,14 @@ p <- ggplot(plot_data, aes(x = Representative, y = Sequence)) +
 output_file <- file.path(output_dir, "clustering_plot.png")
 ggsave(output_file, plot = p, width = 10, height = 8)
 ```
-... to save clustering_plot.png
+... to save clustering_plot.png  
+  
+Pull and run R script
+```
 
 Run in command line:
 ```
-Rscript plot_clusters.R
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts
+git pull
+Rscript 4b_plot_clusters.R
 ```
