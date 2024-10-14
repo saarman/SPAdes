@@ -164,7 +164,10 @@ Example of the sbatch, named 4a_MMseqs2.slurm
 #SBATCH --mail-user=norah.saarman@usu.edu
 
 # Load modules
-module load MMseqs2  # change to module name
+module load mmseqs2/oct24  # change to module name
+
+# Check if working by loading help menu
+mmseqs --help
 
 # Change to the directory where the input data is located
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input
