@@ -287,5 +287,6 @@ Pull and run R script
 ```
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts
 git pull
+module load R
 Rscript 4b_plot_clusters.R
 ```
