@@ -279,14 +279,10 @@ network_graph <- graph_from_data_frame(edge_list, directed = FALSE)
 # Generate layout coordinates
 layout <- create_layout(network_graph, layout = "fr")
 
-# Identify representative nodes
-representative_nodes <- unique(edge_list$Representative)
-
-# Plot the network with only representative nodes labeled
+# Plot the network without any labeling
 p <- ggraph(layout) +  # Use the layout with coordinates
   geom_edge_link(width = 1) +  # Edges without color
   geom_node_point(size = 2) +  # Size of nodes
-  geom_node_text(aes(label = ifelse(name %in% representative_nodes, name, "")), vjust = 1, hjust = 1) +  # Label only representative nodes
   theme_minimal() +  # Minimal theme
   ggtitle("Clustering Network")
 
