@@ -251,5 +251,5 @@ sbatch 4a_MMseqs2.slurm
 
 ## Visualize the results
 ```
-/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output
-
+/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/all_DB_lin_clu.tsv
+```
