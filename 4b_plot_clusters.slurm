@@ -16,4 +16,4 @@
 module load R  # Update with the correct R version if needed
 
 # Run the R script
-Rscript /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts/network_graph.R
+Rscript /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts/4b_plot_clusters.R
