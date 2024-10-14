@@ -29,12 +29,12 @@ my $ind = $1;  # Store the identifier in $ind
 my $cmd_createdb = "$mmseqs createdb $fasta ${output_dir}/${ind}_DB";
 system($cmd_createdb) == 0 or die "system $cmd_createdb failed: $?";
 
-# Run MMseqs2 linclust with specified number of threads
-my $cmd_linclust = "$mmseqs linclust ${output_dir}/${ind}_DB ${output_dir}/${ind}_DB_lin_clu /scratch/general/vast/u6036559/spades_tmp --threads $threads";
-system($cmd_linclust) == 0 or die "system $cmd_linclust failed: $?";
+# Run MMseqs2 cluster with specified number of threads and minimum seq identity
+my $cmd_cluster = "$mmseqs cluster ${output_dir}/${ind}_DB ${output_dir}/${ind}_DB_clu /scratch/general/vast/u6036559/spades_tmp --threads $threads --min-seq-id .9";
+system($cmd_cluster) == 0 or die "system $cmd_cluster failed: $?";
 
 # Create TSV file with cluster information
-my $cmd_createtsv = "$mmseqs createtsv ${output_dir}/${ind}_DB ${output_dir}/${ind}_DB ${output_dir}/${ind}_DB_lin_clu ${output_dir}/${ind}_DB_lin_clu.tsv";
+my $cmd_createtsv = "$mmseqs createtsv ${output_dir}/${ind}_DB ${output_dir}/${ind}_DB ${output_dir}/${ind}_DB_clu ${output_dir}/${ind}_DB_clu.tsv";
 system($cmd_createtsv) == 0 or die "system $cmd_createtsv failed: $?";
 
 print "Clustering completed for $ind\n";
