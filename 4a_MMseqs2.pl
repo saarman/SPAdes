@@ -2,49 +2,36 @@
 
 use strict;
 use warnings;
-use Parallel::ForkManager;
-use File::Path qw(remove_tree);
 
-my $max = 1;  # Set the maximum number of parallel processes to 1 since we are managing threads within MMseqs2
-my $pm = Parallel::ForkManager->new($max);  # Create a new Parallel::ForkManager object with the specified maximum
+# Number of threads to use with MMseqs2
+my $threads = 20;  # Adjust this based on your SLURM settings and system
 
-# Output directory
+# Paths to the input, output, and MMseqs2 binary
 my $output_dir = "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output";
+my $mmseqs = "/uufs/chpc.utah.edu/sys/installdir/r8/mmseqs2/oct24/bin/mmseqs";
+my $fasta = "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input/all.fasta";
 
-# Path to MMseqs2 binary
-my $mmseqs = "/uufs/chpc.utah.edu/sys/installdir/r8/mmseqs2/oct24/bin/mmseqs";  # Update this path to the actual location of MMseqs2 binary
+# Step 1: Create MMseqs2 database from the input FASTA file
+my $db_dir = "$output_dir/DB";  # Directory to store the database
+my $createdb_cmd = "$mmseqs createdb $fasta $db_dir";
 
-# Path to the input fasta file
-my $fasta = "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input/all.fasta";  # Update this path to your actual input file
+# Step 2: Cluster sequences with MMseqs2
+my $db_clu = "$output_dir/DB_clu";  # Output for the cluster
+my $tmp_dir = "$output_dir/tmp";    # Temporary directory for MMseqs2
+my $cluster_cmd = "$mmseqs cluster $db_dir $db_clu $tmp_dir --min-seq-id 0.9 --threads $threads";
 
-# Number of threads to use for MMseqs2
-my $threads = 20;  # Adjust this number based on your available resources
+# Step 3: Generate a TSV file for the clusters
+my $tsv_file = "$output_dir/DB_clu.tsv";
+my $createtsv_cmd = "$mmseqs createtsv $db_dir $db_dir $db_clu $tsv_file";
 
-# Extract the identifier from the filename
-$fasta =~ m/([A-Za-z_\-0-9]+)\.fasta$/ or die "failed match for file $fasta\n";
-my $ind = $1;  # Store the identifier in $ind
+# Step 4: Execute the commands
+print "Running MMseqs2 createdb...\n";
+system($createdb_cmd) == 0 or die "MMseqs2 createdb command failed: $?";
 
-# Remove existing output directory if it exists
-if (-d "${output_dir}/${ind}_DB_clu") {
-    remove_tree("${output_dir}/${ind}_DB_clu") or die "Failed to remove existing directory: $!";
-}
+print "Running MMseqs2 cluster...\n";
+system($cluster_cmd) == 0 or die "MMseqs2 cluster command failed: $?";
 
-$pm->start and return;  # Fork a new process
+print "Running MMseqs2 createtsv...\n";
+system($createtsv_cmd) == 0 or die "MMseqs2 createtsv command failed: $?";
 
-# Create MMseqs2 database
-my $cmd_createdb = "$mmseqs createdb $fasta ${output_dir}/${ind}_DB";
-system($cmd_createdb) == 0 or die "system $cmd_createdb failed: $?";
-
-# Run MMseqs2 cluster with specified number of threads and minimum sequence identity threshold
-my $cmd_cluster = "$mmseqs cluster ${output_dir}/${ind}_DB ${output_dir}/${ind}_DB_clu /scratch/general/vast/u6036559/spades_tmp --threads $threads --min-seq-id 0.9";
-system($cmd_cluster) == 0 or die "system $cmd_cluster failed: $?";
-
-# Create TSV file with cluster information
-my $cmd_createtsv = "$mmseqs createtsv ${output_dir}/${ind}_DB ${output_dir}/${ind}_DB ${output_dir}/${ind}_DB_clu ${output_dir}/${ind}_DB_clu.tsv";
-system($cmd_createtsv) == 0 or die "system $cmd_createtsv failed: $?";
-
-print "Clustering completed for $ind\n";
-
-$pm->finish;  # End the child process
-
-$pm->wait_all_children;  # Wait for all child processes to finish
+print "MMseqs2 tasks completed successfully.\n";
