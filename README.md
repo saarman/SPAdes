@@ -189,41 +189,34 @@ Example of the perl, still needs to be updated, named 4a_MMseqs2.pl
 
 use strict;
 use warnings;
-use Parallel::ForkManager;
-
-my $max = 20;  # Set the maximum number of parallel processes to 1 for testing, target is 20
-my $pm = Parallel::ForkManager->new($max);  # Create a new Parallel::ForkManager object with the specified maximum
-
-# Path to the reference genome file
-my $genome = "/uufs/chpc.utah.edu/common/home/saarman-group1/bee_ddRAD_bwa/ref/GCF_003710045.2_USU_Nmel_1.3_genomic.fna";
 
 # Output directory
-my $output_dir = "/uufs/chpc.utah.edu/common/home/saarman-group1/bee_ddRAD_bwa";
+my $output_dir = "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output";
 
-# Path to samtools
-my $samtools = "/uufs/chpc.utah.edu/sys/installdir/samtools/1.16/bin/samtools";
+# Path to MMseqs2 binary
+my $mmseqs = "/uufs/chpc.utah.edu/sys/installdir/r8/mmseqs2/oct24/bin/mmseqs";  # Update this path to the actual location of MMseqs2 binary, you can get this by loading module and running: which mmseqs
 
-# Path to bwa-mem2 binary
-my $bwa = "/uufs/chpc.utah.edu/sys/installdir/bwa/2020_03_19/bin/bwa";  
+# Path to the input fasta file
+my $fasta = "/path/to/your/input/file.fasta";  # Update this path to your actual input file
 
-FILES:
-foreach my $fq1 (@ARGV) {  # Iterate over each file passed as an argument
-    $pm->start and next FILES;  # Fork a new process and move to the next file if in the parent process
+# Extract the identifier from the filename
+$fasta =~ m/([A-Za-z_\-0-9]+)\.fasta$/ or die "failed match for file $fasta\n";
+my $ind = $1;  # Store the identifier in $ind
 
-    # Extract the identifier from the filename
-    $fq1 =~ m/([A-Za-z_\-0-9]+)\.fq\.gz$/ or die "failed match for file $fq1\n";
-    my $ind = $1;  # Store the identifier in $ind
+# Create MMseqs2 database
+my $cmd_createdb = "$mmseqs createdb $fasta ${output_dir}/${ind}_DB";
+system($cmd_createdb) == 0 or die "system $cmd_createdb failed: $?";
 
-    # Run the BWA-MEM2 alignment and process with samtools, could add -K 1000000 -c 1000 to reduce mem?
-    my $cmd = "$bwa mem -M -t 1 $genome $fq1 | $samtools view -b | $samtools sort --threads 1 > ${output_dir}/${ind}.bam";
-    system($cmd) == 0 or die "system $cmd failed: $?";
+# Run MMseqs2 linclust
+my $cmd_linclust = "$mmseqs linclust ${output_dir}/${ind}_DB ${output_dir}/${ind}_DB_lin_clu /scratch/general/vast/u6036559/spades_tmp";
+system($cmd_linclust) == 0 or die "system $cmd_linclust failed: $?";
 
-    print "Alignment completed for $ind\n";
+# Create TSV file with cluster information
+my $cmd_createtsv = "$mmseqs createtsv ${output_dir}/${ind}_DB ${output_dir}/${ind}_DB ${output_dir}/${ind}_DB_lin_clu ${output_dir}/${ind}_DB_lin_clu.tsv";
+system($cmd_createtsv) == 0 or die "system $cmd_createtsv failed: $?";
 
-    $pm->finish;  # End the child process
-}
+print "Clustering completed for $ind\n";
 
-$pm->wait_all_children;  # Wait for all child processes to finish
 ```
 
 Before running, i need to make these files, and then use git to pull, then run sbatch
