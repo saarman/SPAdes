@@ -155,85 +155,10 @@ mmseqs linclust DB DB_lin_clu /scratch/general/vast/u6036559/spades_tmp
 mmseqs createtsv DB DB DB_lin_clu DB_lin_clu.tsv
 ```
 
-## Example of the sbatch script: 4a_MMseqs2.slurm
-```
-#!/bin/sh
-#SBATCH --time=336:00:00
-#SBATCH --nodes=1
-#SBATCH --ntasks=20          # same as $max set in ForkManager
-#SBATCH --account=saarman-np
-#SBATCH --partition=saarman-shared-np   
-#SBATCH --job-name=MMseqs2_try1
-#SBATCH --mail-type=BEGIN
-#SBATCH --mail-type=END
-#SBATCH --mail-type=FAIL
-#SBATCH --mail-user=norah.saarman@usu.edu
-
-# Load modules
-module load mmseqs2/oct24  # change to module name
-
-# Change to the directory where the input data is located
-cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input
-
-# Concatenate all of the input into one file
-rm all.fasta; cat *.fasta > all.fasta
-chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/
-
-# Run the Perl script with the input files
-perl /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts/4a_MMseqs2.pl all.fasta
-
-# Permissions
-chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/
-```
-
-## Example of the perl script: 4a_MMseqs2.pl
-```
-#!/usr/bin/perl
-
-use strict;
-use warnings;
-use Parallel::ForkManager;
-
-my $max = 1;  # Set the maximum number of parallel processes to 1 since we are managing threads within MMseqs2
-my $pm = Parallel::ForkManager->new($max);  # Create a new Parallel::ForkManager object with the specified maximum
-
-# Output directory
-my $output_dir = "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output";
-
-# Path to MMseqs2 binary
-my $mmseqs = "/uufs/chpc.utah.edu/sys/installdir/r8/mmseqs2/oct24/bin/mmseqs";  # Update this path to the actual location of MMseqs2 binary
-
-# Path to the input fasta file
-my $fasta = "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input/all.fasta";  # Update this path to your actual input file
-
-# Number of threads to use for MMseqs2
-my $threads = 20;  # Adjust this number based on your available resources
-
-$pm->start and next if $pm->start;  # Fork a new process
-
-# Extract the identifier from the filename
-$fasta =~ m/([A-Za-z_\-0-9]+)\.fasta$/ or die "failed match for file $fasta\n";
-my $ind = $1;  # Store the identifier in $ind
-
-# Create MMseqs2 database
-my $cmd_createdb = "$mmseqs createdb $fasta ${output_dir}/${ind}_DB";
-system($cmd_createdb) == 0 or die "system $cmd_createdb failed: $?";
-
-# Run MMseqs2 linclust with specified number of threads
-my $cmd_linclust = "$mmseqs linclust ${output_dir}/${ind}_DB ${output_dir}/${ind}_DB_lin_clu /scratch/general/vast/u6036559/spades_tmp --threads $threads";
-system($cmd_linclust) == 0 or die "system $cmd_linclust failed: $?";
-
-# Create TSV file with cluster information
-my $cmd_createtsv = "$mmseqs createtsv ${output_dir}/${ind}_DB ${output_dir}/${ind}_DB ${output_dir}/${ind}_DB_lin_clu ${output_dir}/${ind}_DB_lin_clu.tsv";
-system($cmd_createtsv) == 0 or die "system $cmd_createtsv failed: $?";
-
-print "Clustering completed for $ind\n";
-
-$pm->finish;  # End the child process
-
-$pm->wait_all_children;  # Wait for all child processes to finish
-
-```
+## Example of the sbatch and perl scripts with these commands: 
+ - 4a_MMseqs2.slurm
+ - 4a_MMseqs2.pl
+ - Output on tsv format: /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/all_DB_lin_clu.tsv
 
 Before running, I need to make these files on github, and then use git to clone
 ```
@@ -248,48 +173,8 @@ cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts
 git pull
 sbatch 4a_MMseqs2.slurm
 ```
-Output on tsv format: /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/all_DB_lin_clu.tsv
 
 ## Visualize the results R script named 4b_plot_clusters.R
-```
-# Load required libraries
-library(ggplot2)
-library(data.table)
-library(igraph)
-library(ggraph)
-
-# Define the input file path
-input_file <- "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/all_DB_lin_clu.tsv"
-
-# Define the output directory
-output_dir <- "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/"  # Update this path to your desired output directory
-
-# Read the TSV file
-data <- fread(input_file, header = FALSE)
-
-# Assign column names (assuming the format is representative sequence and cluster members)
-colnames(data) <- c("Representative", "ClusterMember")
-
-# Create an edge list for the network graph
-edge_list <- data[, .(Representative, ClusterMember)]
-
-# Create an igraph object from the edge list
-network_graph <- graph_from_data_frame(edge_list, directed = FALSE)
-
-# Generate layout coordinates
-layout <- create_layout(network_graph, layout = "fr")
-
-# Plot the network without any labeling
-p <- ggraph(layout) +  # Use the layout with coordinates
-  geom_edge_link(width = 1) +  # Edges without color
-  geom_node_point(size = 2) +  # Size of nodes
-  theme_minimal() +  # Minimal theme
-  ggtitle("Clustering Network")
-
-# Save the plot to a file in the specified output directory
-output_file <- file.path(output_dir, "network_plot.png")
-ggsave(output_file, plot = p, width = 10, height = 7)
-```
 ... to save network_plot.png in /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/
   
 Pull and run R script
