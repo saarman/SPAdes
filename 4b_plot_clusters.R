@@ -31,7 +31,7 @@ print(network_graph, e = TRUE, v = TRUE)
 
 # Plot the network with edges colored by representative sequence
 p <- ggraph(network_graph, layout = "fr") +  # "fr" is the Fruchterman-Reingold layout
-  geom_edge_link(aes(color = as.factor(Representative)), width = 1) +  # Color edges by representative sequence
+  geom_edge_link(aes(color = as.factor(Representative)), width = 1, data = edge_list) +  # Color edges by representative sequence
   geom_node_point(size = 2) +  # Size of nodes
   geom_node_text(aes(label = name), vjust = 1, hjust = 1) +  # Label nodes
   scale_edge_color_manual(values = rainbow(length(unique(data$Representative)))) +  # Color palette
