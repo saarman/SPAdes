@@ -3,6 +3,8 @@ Eric Notebook
 ----------------------------------------------
 10/14/2024
 Using MMseqs2
+https://mmseqs.com/latest/userguide.pdf
+
 
 ## convert fasta to DB
 mmseqs createdb ./input/file.fasta DB
