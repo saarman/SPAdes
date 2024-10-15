@@ -167,7 +167,7 @@ cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2
 git clone https://github.com/saarman/SPAdes scripts
 ```
 
-## Every time need to...
+**Every time need to...**
 Pull and run slurm wrapper script
 ```
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts
