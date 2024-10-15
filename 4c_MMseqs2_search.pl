@@ -44,7 +44,7 @@ system($createindex_cmd) == 0 or die "MMseqs2 createindex command failed: $?";
 print "Running MMseqs2 search...\n";
 system($search_cmd) == 0 or die "MMseqs2 search command failed: $?";
 
-print "Running MMseqs2 []...\n";
+print "Running MMseqs2 convertalis...\n";
 system($convertalis_cmd) == 0 or die "MMseqs2 convertalis command failed: $?";
 
 print "MMseqs2 search tasks completed successfully.\n";
