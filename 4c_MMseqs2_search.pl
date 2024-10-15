@@ -20,7 +20,7 @@ my $out_m8 = "$output_dir/easyReps.m8"; # Search m8 output
 my $easy-search_cmd = "$mmseqs easy-search $ref_fasta $rep_fasta $out_m8 $tmp_dir"; # Search
 
 # Step 2: Generate a search db output from search with ref seqs against representatives for each cluster
-my $resultsDB = "$output_dir/searchRepsDB"; # Search results DB
+my $resultDB = "$output_dir/searchRepsDB"; # Search results DB
 my $results_m8 = "$output_dir/searchReps.m8"; # Search results m8 out
 my $queryDB= "$output_dir/DB_refs"; # DB for query
 my $targetDB= "$output_dir/DB_rep"; # DB for subject, already exists!!!
