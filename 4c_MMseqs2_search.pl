@@ -17,7 +17,7 @@ my $rep_fasta = "$output_dir/clu_rep.fasta"; # Target
 
 # Step 1: Generate a m8 from easy-search with ref seqs against representatives for each cluster
 my $out_m8 = "$output_dir/easyReps.m8"; # Search m8 output
-my $easy_search_cmd = "$mmseqs easy-search $ref_fasta $rep_fasta $out_m8 $tmp_dir"; # Search
+my $easy_search_cmd = "$mmseqs easy-search $ref_fasta $rep_fasta $out_m8 $tmp_dir --search-type 3"; # Search
 
 # Step 2: Generate a search db output from search with ref seqs against representatives for each cluster
 my $resultsDB = "$output_dir/searchRepsDB"; # Search results DB
