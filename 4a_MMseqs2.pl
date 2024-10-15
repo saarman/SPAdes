@@ -18,22 +18,19 @@ my $createdb_cmd = "$mmseqs createdb $fasta $db_dir";
 # Step 2: Cluster sequences with MMseqs2
 my $db_clu = "$output_dir/DB_clu";  # Output for the cluster
 my $tmp_dir = "/scratch/general/vast/u6036559/spades_tmp/";    # Temporary directory for MMseqs2
-my $cluster_cmd = "$mmseqs cluster $db_dir $db_clu $tmp_dir --min-seq-id 0.90 --threads $threads";
+my $cluster_cmd = "$mmseqs cluster $db_dir $db_clu $tmp_dir --min-seq-id 0.90 --threads $threads --greedy";
 
 # Step 3: Generate a TSV file for the clusters
 my $tsv_file = "$output_dir/DB_clu.tsv";
 my $createtsv_cmd = "$mmseqs createtsv $db_dir $db_dir $db_clu $tsv_file";
 
-# Step 4: Generate a pseudo FASTA file for the clusters
-# 4a: create database
-my $db_seq= "$output_dir/DB_fsa";
-my $createseqfiledb_cmd = "$mmseqs createseqfiledb $db_dir $db_clu $db_seq"; 
-# 4b: create fasta
+# Step 4: Generate a pseudo-FASTA file for the clusters
+my $db_seq= "$output_dir/DB_fsa"; 
 my $out_fasta= "$output_dir/clu_all.fasta";
-my $result2flat_cmd = "$mmseqs result2flat $db_dir $db_dir $out_fasta";
+my $createseqfiledb_cmd = "$mmseqs createseqfiledb $db_dir $db_clu $db_seq";  # create database
+my $result2flat_cmd = "$mmseqs result2flat $db_dir $db_dir $out_fasta"; # create fasta
 
 # Step 5: Generate a FASTA file for the representatives seqs for each cluster
-# 5a: create database
 my $db_rep= "$output_dir/DB_rep";
 my $createsubdb_cmd = "$mmseqs createsubdb $db_clu $db_dir $db_rep"; 
 # 5b: create fasta
