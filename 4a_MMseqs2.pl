@@ -28,7 +28,7 @@ my $createtsv_cmd = "$mmseqs createtsv $db_dir $db_dir $db_clu $tsv_file"; # Cre
 my $db_seq= "$output_dir/DB_fsa"; # Output for the database
 my $out_fasta= "$output_dir/clu_all.fasta"; # Output for the fasta
 my $createseqfiledb_cmd = "$mmseqs createseqfiledb $db_dir $db_clu $db_seq"; # Create database
-my $result2flat_cmd = "$mmseqs result2flat $db_dir $db_dir $out_fasta"; # Create fasta
+my $result2flat_cmd = "$mmseqs result2flat $db_dir $db_dir $db_seq $out_fasta"; # Create fasta
 
 # Step 5: Generate a FASTA file for the representatives seqs for each cluster
 my $db_rep= "$output_dir/DB_rep"; # Output for the database
