@@ -24,11 +24,21 @@ my $cluster_cmd = "$mmseqs cluster $db_dir $db_clu $tmp_dir --min-seq-id 0.90 --
 my $tsv_file = "$output_dir/DB_clu.tsv";
 my $createtsv_cmd = "$mmseqs createtsv $db_dir $db_dir $db_clu $tsv_file";
 
-# Step 4: Generate a FASTA file for the clusters
+# Step 4: Generate a pseudo FASTA file for the clusters
+# 4a: create database
 my $db_seq= "$output_dir/DB_fsa";
-my $out_fasta= "$output_dir/clu_fasta.fasta";
 my $createseqfiledb_cmd = "$mmseqs createseqfiledb $db_dir $db_clu $db_seq"; 
+# 4b: create fasta
+my $out_fasta= "$output_dir/clu_all.fasta";
 my $result2flat_cmd = "$mmseqs result2flat $db_dir $db_dir $out_fasta";
+
+# Step 5: Generate a FASTA file for the representatives seqs for each cluster
+# 5a: create database
+my $db_rep= "$output_dir/DB_rep";
+my $createsubdb_cmd = "$mmseqs createsubdb $db_clu $db_dir $db_rep"; 
+# 5b: create fasta
+my $out_repfasta= "$output_dir/clu_rep.fasta";
+my $convert2fasta_cmd = "$mmseqs convert2fasta $db_rep $out_repfasta";
 
 # Step 5: Execute the commands
 print "Running MMseqs2 createdb...\n";
@@ -40,7 +50,16 @@ system($cluster_cmd) == 0 or die "MMseqs2 cluster command failed: $?";
 print "Running MMseqs2 createtsv...\n";
 system($createtsv_cmd) == 0 or die "MMseqs2 createtsv command failed: $?";
 
-print "Running MMseqs2 createtsv...\n";
-system($createfasta_cmd) == 0 or die "MMseqs2 createfasta command failed: $?";
+print "Running MMseqs2 createseqfiledb...\n";
+system($createseqfiledb_cmd) == 0 or die "MMseqs2 createseqfiledb command failed: $?";
+
+print "Running MMseqs2 result2flat...\n";
+system($result2flat_cmd) == 0 or die "MMseqs2 result2flat command failed: $?";
+
+print "Running MMseqs2 createsubdb...\n";
+system($createsubdb_cmd) == 0 or die "MMseqs2 createsubdb command failed: $?";
+
+print "Running MMseqs2 convert2fasta...\n";
+system($convert2fasta_cmd) == 0 or die "MMseqs2 convert2fasta command failed: $?";
 
 print "MMseqs2 tasks completed successfully.\n";
