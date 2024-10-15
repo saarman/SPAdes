@@ -27,10 +27,8 @@ my $createtsv_cmd = "$mmseqs createtsv $db_dir $db_dir $db_clu $tsv_file";
 # Step 4: Generate a FASTA file for the clusters
 my $db_seq= "$output_dir/DB_fsa";
 my $out_fasta= "$output_dir/clu_fasta.fasta";
-my $createtsv_cmd = "$mmseqs createseqfiledb $db_dir $db_clu $db_seq; $mmseqs result2flat $db_dir $db_dir $out_fasta";
-
-mmseqs createseqfiledb DB clu clu_seq 
-mmseqs result2flat DB DB clu_seq clu_seq.fasta
+my $createseqfiledb_cmd = "$mmseqs createseqfiledb $db_dir $db_clu $db_seq"; 
+my $result2flat_cmd = "$mmseqs result2flat $db_dir $db_dir $out_fasta";
 
 # Step 5: Execute the commands
 print "Running MMseqs2 createdb...\n";
