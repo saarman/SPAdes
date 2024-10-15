@@ -159,6 +159,7 @@ mmseqs createtsv DB DB DB_clu DB_clu.tsv
  - 4a_MMseqs2.pl
  - Output on tsv format: /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/all_DB_clu.tsv
 
+## Connect to Git, Clone/Pull
 Before running, I need to make these files on github, and then use git to clone
 ```
 # Just once:
