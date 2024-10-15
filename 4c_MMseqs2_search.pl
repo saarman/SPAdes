@@ -27,7 +27,7 @@ my $targetDB = "$output_dir/DB_rep"; # DB for subject, already exists!!!
 my $createdb1_cmd = "$mmseqs createdb $ref_fasta $queryDB"; # Create query DB
 my $createdb2_cmd = "$mmseqs createdb $rep_fasta $targetDB"; # Create target DB, already exists!!!
 my $createindex_cmd = "$mmseqs createindex $targetDB $tmp_dir"; # Index
-my $search_cmd = "$mmseqs search $queryDB $targetDB $resultsDB $tmp_dir"; # Search
+my $search_cmd = "$mmseqs search $queryDB $targetDB $resultsDB $tmp_dir --search-type 3"; # Search
 my $convertalis_cmd = "$mmseqs convertalis $queryDB $targetDB $resultsDB $results_m8"; # M8 output
 
 # Step 3: Execute the commands
