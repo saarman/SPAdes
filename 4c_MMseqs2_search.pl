@@ -29,7 +29,7 @@ my $createdb1_cmd = "$mmseqs createdb $ref_fasta $queryDB"; # Create query DB
 my $createdb2_cmd = "$mmseqs createdb $rep_fasta $targetDB"; # Create target DB, already exists!!!
 my $createindex_cmd = "$mmseqs createindex $targetDB $tmp_dir" # Index
 my $search_cmd = "$mmseqs search $queryDB $targetDB $resultDB $tmp_dir"; # Search
-my $convertalis_cmd = "$mmseqs convertalis $queryDB $targetDB $resultDB resultDB.m8
+my $convertalis_cmd = "$mmseqs convertalis $queryDB $targetDB $resultDB $results_m8"; # M8 output
 
 # Step 3: Execute the commands
 print "Running MMseqs2 easy-search...\n";
