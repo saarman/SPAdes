@@ -18,13 +18,21 @@ my $createdb_cmd = "$mmseqs createdb $fasta $db_dir";
 # Step 2: Cluster sequences with MMseqs2
 my $db_clu = "$output_dir/DB_clu";  # Output for the cluster
 my $tmp_dir = "/scratch/general/vast/u6036559/spades_tmp/";    # Temporary directory for MMseqs2
-my $cluster_cmd = "$mmseqs cluster $db_dir $db_clu $tmp_dir --min-seq-id 0.95 --threads $threads";
+my $cluster_cmd = "$mmseqs cluster $db_dir $db_clu $tmp_dir --min-seq-id 0.90 --threads $threads";
 
 # Step 3: Generate a TSV file for the clusters
 my $tsv_file = "$output_dir/DB_clu.tsv";
 my $createtsv_cmd = "$mmseqs createtsv $db_dir $db_dir $db_clu $tsv_file";
 
-# Step 4: Execute the commands
+# Step 4: Generate a FASTA file for the clusters
+my $db_seq= "$output_dir/DB_fsa";
+my $out_fasta= "$output_dir/clu_fasta.fasta";
+my $createtsv_cmd = "$mmseqs createseqfiledb $db_dir $db_clu $db_seq; $mmseqs result2flat $db_dir $db_dir $out_fasta";
+
+mmseqs createseqfiledb DB clu clu_seq 
+mmseqs result2flat DB DB clu_seq clu_seq.fasta
+
+# Step 5: Execute the commands
 print "Running MMseqs2 createdb...\n";
 system($createdb_cmd) == 0 or die "MMseqs2 createdb command failed: $?";
 
@@ -33,5 +41,8 @@ system($cluster_cmd) == 0 or die "MMseqs2 cluster command failed: $?";
 
 print "Running MMseqs2 createtsv...\n";
 system($createtsv_cmd) == 0 or die "MMseqs2 createtsv command failed: $?";
+
+print "Running MMseqs2 createtsv...\n";
+system($createfasta_cmd) == 0 or die "MMseqs2 createfasta command failed: $?";
 
 print "MMseqs2 tasks completed successfully.\n";
