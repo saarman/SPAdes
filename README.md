@@ -133,31 +133,39 @@ cat /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input/*.fas
 
 # Step 4: Search and Clustering with MMseqs2
 
-Example of the raw code:
+## Step 4a Easy-Search with mmRef.fasta vs each .fasta
+Example of easy-search commands
 ```
+#!/bin/sh
+#SBATCH --time=336:00:00
+#SBATCH --nodes=1
+#SBATCH --ntasks=20          # same as $max set in ForkManager
+#SBATCH --account=saarman-np
+#SBATCH --partition=saarman-shared-np   
+#SBATCH --job-name=MMseqs2_try4
+#SBATCH --mail-type=BEGIN
+#SBATCH --mail-type=END
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-user=norah.saarman@usu.edu
+
 # Load modules
 module load mmseqs2/oct24  # change to module name
 
-# Check if working by loading help menu
-mmseqs --help
+# Assign variables – inputs and outputs
+bash
+INDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input"
+OUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output"
+REF="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input/mmREF.fasta"
+TEMP="/scratch/general/vast/u6036559/spades_tmp/"
 
-## convert fasta to DB
-mmseqs createdb ./input/file.fasta DB
-
-## cluster with cluster or linclust (linclust run time scales linearly but is slightly less accurate)
-# make sure tmp folder exists
-# mmseqs linclust DB DB_lin_clu /scratch/general/vast/u6036559/spades_tmp
-mmseqs cluster DB DB_clu tmp --min-seq-id 0.9
-
-## outputting files
-# TSV file with representative cluster sequences on left and all members of the cluster on right
-mmseqs createtsv DB DB DB_clu DB_clu.tsv
+# Run Command in a loop:
+cd $INDIR
+for SAMPLE in `ls *filt200-3k_sorted_contigs.fasta`; do
+   NAME=`echo $SAMPLE | sed s/_filt200-3k_sorted_contigs.fasta//g`
+   echo $NAME
+   mmseqs easy-search $REF $SAMPLE ${OUTDIR}/${NAME}.m8 $TEMP --search-type 3 --threads 20
+done
 ```
-
-## Example of the sbatch and perl scripts with these commands: 
- - 4a_MMseqs2.slurm
- - 4a_MMseqs2.pl
- - Output on tsv format: /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/all_DB_clu.tsv
 
 ## Connect to Git, Clone/Pull
 Before running, I need to make these files on github, and then use git to clone
