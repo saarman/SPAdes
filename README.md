@@ -155,7 +155,7 @@ module load mmseqs2/oct24  # change to module name
 bash
 INDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input"
 OUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output"
-REF="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input/mmREF.fasta"
+REF="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts/mmREF.fasta"
 TEMP="/scratch/general/vast/u6036559/spades_tmp/"
 
 # Run Command in a loop:
