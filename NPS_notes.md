@@ -446,9 +446,306 @@ mmseqs createtsv DB DB DB_clu DB_clu.tsv
 ```
 
 ## Example of the sbatch and perl scripts with these commands: 
- - 4a_MMseqs2.slurm
- - 4a_MMseqs2.pl
- - Output on tsv format: /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/all_DB_clu.tsv
+
+### 4a_MMseqs2.slurm
+```
+#!/bin/sh
+#SBATCH --time=336:00:00
+#SBATCH --nodes=1
+#SBATCH --ntasks=20          # same as $max set in ForkManager
+#SBATCH --account=saarman-np
+#SBATCH --partition=saarman-shared-np   
+#SBATCH --job-name=MMseqs2_try4
+#SBATCH --mail-type=BEGIN
+#SBATCH --mail-type=END
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-user=norah.saarman@usu.edu
+
+# Load modules
+module load mmseqs2/oct24  # change to module name
+
+# Change to the directory where the input data is located
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input
+
+# Concatenate all of the input into one file
+rm all.fasta; cat *.fasta > all.fasta
+chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/
+
+# Run the Perl script with the input files
+perl /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts/4a_MMseqs2.pl all.fasta
+
+# Permissions
+chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/
+```
+
+### 4a_MMseqs2.pl
+```
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+# Number of threads to use with MMseqs2
+my $threads = 20;  # Adjust this based on your SLURM settings and system
+
+# Paths to the input, output, and MMseqs2 binary
+my $output_dir = "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output";
+my $mmseqs = "/uufs/chpc.utah.edu/sys/installdir/r8/mmseqs2/oct24/bin/mmseqs";
+my $fasta = "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input/all.fasta";
+
+# Step 1: Create MMseqs2 database from the input FASTA file
+my $db_dir = "$output_dir/DB";  # Directory to store the database
+my $createdb_cmd = "$mmseqs createdb $fasta $db_dir";
+
+# Step 2: Cluster sequences with MMseqs2
+my $db_clu = "$output_dir/DB_clu";  # Output for the cluster
+my $tmp_dir = "/scratch/general/vast/u6036559/spades_tmp/";    # Temporary directory for MMseqs2
+my $cluster_cmd = "$mmseqs cluster $db_dir $db_clu $tmp_dir --min-seq-id 0.90 --threads $threads";
+
+# Step 3: Generate a TSV file for the clusters
+my $tsv_file = "$output_dir/DB_clu.tsv"; # Output for tsv
+my $createtsv_cmd = "$mmseqs createtsv $db_dir $db_dir $db_clu $tsv_file"; # Create tsv
+
+# Step 4: Generate a pseudo-FASTA file for the clusters
+my $db_seq= "$output_dir/DB_fsa"; # Output for the database
+my $out_fasta= "$output_dir/clu_all.fasta"; # Output for the fasta
+my $createseqfiledb_cmd = "$mmseqs createseqfiledb $db_dir $db_clu $db_seq"; # Create database
+my $result2flat_cmd = "$mmseqs result2flat $db_dir $db_dir $db_seq $out_fasta"; # Create fasta
+
+# Step 5: Generate a FASTA file for the representatives seqs for each cluster
+my $db_rep= "$output_dir/DB_rep"; # Output for the database
+my $out_repfasta= "$output_dir/clu_rep.fasta"; # Output for the fasta
+my $createsubdb_cmd = "$mmseqs createsubdb $db_clu $db_dir $db_rep"; # Create database
+my $convert2fasta_cmd = "$mmseqs convert2fasta $db_rep $out_repfasta"; # Create fasta
+
+# Step 5: Execute the commands
+print "Running MMseqs2 createdb...\n";
+system($createdb_cmd) == 0 or die "MMseqs2 createdb command failed: $?";
+
+print "Running MMseqs2 cluster...\n";
+system($cluster_cmd) == 0 or die "MMseqs2 cluster command failed: $?";
+
+print "Running MMseqs2 createtsv...\n";
+system($createtsv_cmd) == 0 or die "MMseqs2 createtsv command failed: $?";
+
+print "Running MMseqs2 createseqfiledb...\n";
+system($createseqfiledb_cmd) == 0 or die "MMseqs2 createseqfiledb command failed: $?";
+
+print "Running MMseqs2 result2flat...\n";
+system($result2flat_cmd) == 0 or die "MMseqs2 result2flat command failed: $?";
+
+print "Running MMseqs2 createsubdb...\n";
+system($createsubdb_cmd) == 0 or die "MMseqs2 createsubdb command failed: $?";
+
+print "Running MMseqs2 convert2fasta...\n";
+system($convert2fasta_cmd) == 0 or die "MMseqs2 convert2fasta command failed: $?";
+
+print "MMseqs2 tasks completed successfully.\n";
+```
+Output on tsv format: /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/all_DB_clu.tsv
+
+### 4b_plot_clusters.slurm 
+```
+#!/bin/sh
+#SBATCH --time=24:00:00                # Set the time limit for the job
+#SBATCH --nodes=1                      # Number of nodes
+#SBATCH --ntasks=1                     # Number of tasks
+#SBATCH --cpus-per-task=4              # Number of CPU cores per task (adjust based on your needs)
+#SBATCH --mem=128G                      # Memory allocation (adjust based on your needs)
+#SBATCH --account=saarman-np           # Your account
+#SBATCH --partition=saarman-shared-np  # Partition to run the job
+#SBATCH --job-name=network_plot        # Job name
+#SBATCH --mail-type=BEGIN              # Send email when the job starts
+#SBATCH --mail-type=END                # Send email when the job ends
+#SBATCH --mail-type=FAIL               # Send email if the job fails
+#SBATCH --mail-user=norah.saarman@usu.edu  # Your email for notifications
+
+# Load R module (adjust this if you need to load a specific version)
+module load R  # Update with the correct R version if needed
+
+# Permissions
+chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2
+
+# Run the R script
+Rscript /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts/4b_plot_clusters.R
+
+# Permissions
+chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2
+```
+### 4b_plot_clusters.R
+```
+# Load required libraries
+library(ggplot2)
+library(data.table)
+library(igraph)
+library(ggraph)
+
+# Define the input file path
+input_file <- "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/DB_clu.tsv"
+
+# Define the output directory
+output_dir <- "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/"  # Update this path to your desired output directory
+
+# Read the TSV file
+data <- fread(input_file, header = FALSE)
+
+# Assign column names (assuming the format is representative sequence and cluster members)
+colnames(data) <- c("Representative", "ClusterMember")
+
+# Create an edge list for the network graph
+edge_list <- data[, .(Representative, ClusterMember)]
+
+# Create an igraph object from the edge list
+network_graph <- graph_from_data_frame(edge_list, directed = FALSE)
+
+# Generate layout coordinates
+layout <- create_layout(network_graph, layout = "fr")
+
+# Plot the network without any labeling
+p <- ggraph(layout) +  # Use the layout with coordinates
+  geom_edge_link(col = "black", width = 0.5) +  # Edges in black
+  #geom_node_point(size = 2) +  # Size of nodes
+  #theme_minimal() +  # Minimal theme
+  ggtitle("Clustering Network")
+
+# Save the plot to a file in the specified output directory
+output_file <- file.path(output_dir, "network_plot.png")
+ggsave(output_file, plot = p, width = 10, height = 7)
+```
+
+### 4c_MMseqs2_search.slurm
+```
+#!/bin/sh
+#SBATCH --time=336:00:00
+#SBATCH --nodes=1
+#SBATCH --ntasks=20          # same as $max set in ForkManager
+#SBATCH --account=saarman-np
+#SBATCH --partition=saarman-shared-np   
+#SBATCH --job-name=MMseqs2_try4
+#SBATCH --mail-type=BEGIN
+#SBATCH --mail-type=END
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-user=norah.saarman@usu.edu
+
+# Load modules
+module load mmseqs2/oct24  # change to module name
+
+# Change to the directory where the input data is located
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input
+
+# Permissions
+chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/
+
+# Run the Perl script with the input files
+perl /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts/4c_MMseqs2_search.pl mmRefs.fasta
+
+# Permissions
+chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/
+```
+### 4c_MMseqs2_search.pl
+```
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+# Number of threads to use with MMseqs2
+my $threads = 20;  # Adjust this based on your SLURM settings and system
+
+# Paths to the output directory and MMseqs2 binary and temp dir
+my $output_dir = "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output";
+my $mmseqs = "/uufs/chpc.utah.edu/sys/installdir/r8/mmseqs2/oct24/bin/mmseqs";
+my $tmp_dir = "/scratch/general/vast/u6036559/spades_tmp/";    # Temporary directory for MMseqs2
+
+# Paths to inputs query and target
+my $ref_fasta = "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input/mmRefs.fasta"; # Query
+my $rep_fasta = "$output_dir/clu_rep.fasta"; # Target
+
+# Step 1: Generate a m8 from easy-search with ref seqs against representatives for each cluster
+my $out_m8 = "$output_dir/easyReps.m8"; # Search m8 output
+my $easy_search_cmd = "$mmseqs easy-search $ref_fasta $rep_fasta $out_m8 $tmp_dir --search-type 3"; # Search
+
+# Step 2: Execute the commands
+print "Running MMseqs2 easy-search...\n";
+system($easy_search_cmd) == 0 or die "MMseqs2 easy-search command failed: $?";
+
+print "MMseqs2 search tasks completed successfully.\n";
+```
+### 4d_search.slurm
+```
+#!/bin/sh
+#SBATCH --time=336:00:00
+#SBATCH --nodes=1
+#SBATCH --ntasks=20          # same as $max set in ForkManager
+#SBATCH --account=saarman-np
+#SBATCH --partition=saarman-shared-np   
+#SBATCH --job-name=search
+#SBATCH --mail-type=BEGIN
+#SBATCH --mail-type=END
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-user=norah.saarman@usu.edu
+
+# Load modules
+module load mmseqs2/oct24  # change to module name
+
+# Change to the directory where the input data is located
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input
+
+# Permissions
+chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/
+
+# Run the Perl script with the input files
+perl /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts/4d_search.pl mmRefs.fasta
+
+# Permissions
+chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/
+```
+### 4d_search.pl
+```
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+# Number of threads to use with MMseqs2
+my $threads = 20;  # Adjust this based on your SLURM settings and system
+
+# Paths to the output directory and MMseqs2 binary and temp dir
+my $output_dir = "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output";
+my $mmseqs = "/uufs/chpc.utah.edu/sys/installdir/r8/mmseqs2/oct24/bin/mmseqs";
+my $tmp_dir = "/scratch/general/vast/u6036559/spades_tmp/";    # Temporary directory for MMseqs2
+
+# Paths to inputs query and target
+my $ref_fasta = "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input/mmRefs.fasta"; # Query
+my $rep_fasta = "$output_dir/clu_rep.fasta"; # Target
+
+# Step 1: Generate a search db output from search with ref seqs against representatives for each cluster
+my $resultsDB = "$output_dir/searchRepsDB"; # Search results DB
+my $results_m8 = "$output_dir/searchReps.m8"; # Search results m8 out
+my $queryDB = "$output_dir/DB_refs"; # DB for query
+my $targetDB = "$output_dir/DB_rep"; # DB for subject, already exists!!!
+my $createdb1_cmd = "$mmseqs createdb $ref_fasta $queryDB"; # Create query DB
+my $createdb2_cmd = "$mmseqs createdb $rep_fasta $targetDB"; # Create target DB, already exists!!!
+my $createindex_cmd = "$mmseqs createindex $targetDB $tmp_dir --search-type 3"; # Index
+my $search_cmd = "$mmseqs search $queryDB $targetDB $resultsDB $tmp_dir --search-type 3"; # Search
+my $convertalis_cmd = "$mmseqs convertalis $queryDB $targetDB $resultsDB $results_m8"; # M8 output
+
+# Step 2: Execute the commands
+
+print "Running MMseqs2 createdb1_cmd...\n";
+system($createdb1_cmd) == 0 or die "MMseqs2 createdb1_cmd command failed: $?";
+
+print "Running MMseqs2 createindex...\n";
+system($createindex_cmd) == 0 or die "MMseqs2 createindex command failed: $?";
+
+print "Running MMseqs2 search...\n";
+system($search_cmd) == 0 or die "MMseqs2 search command failed: $?";
+
+print "Running MMseqs2 convertalis...\n";
+system($convertalis_cmd) == 0 or die "MMseqs2 convertalis command failed: $?";
+
+print "MMseqs2 search tasks completed successfully.\n";
+```
 
 ## Connect to Git, Clone/Pull
 Before running, I need to make these files on github, and then use git to clone
