@@ -135,6 +135,7 @@ cat /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input/*.fas
 
 ## Step 4a Easy-Search with mmRef.fasta vs each .fasta
 Example of easy-search commands
+### 4a_MMseqs2_easy.slurm
 ```
 #!/bin/sh
 #SBATCH --time=336:00:00
@@ -167,28 +168,18 @@ for SAMPLE in `ls *filt200-3k_sorted_contigs.fasta`; do
 done
 ```
 
-## Connect to Git, Clone/Pull
+## Github
+***Run just ONCE: Clone from Github***
 Before running, I need to make these files on github, and then use git to clone
 ```
 # Just once:
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2
 git clone https://github.com/saarman/SPAdes scripts
 ```
-
-**Every time need to...**
-Pull and run slurm wrapper script
+***Need to run every time: Pull from Github and run with Sbatch***
+Pull and run with sbatch
 ```
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts
 git pull
 sbatch 4a_MMseqs2.slurm
-```
-
-## Visualize the results R script named 4b_plot_clusters.R
-... to save network_plot.png in /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/
-  
-Pull and run slurm wrapper script
-```
-cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts
-git pull
-sbatch 4b_plot_clusters.slurm 
 ```
