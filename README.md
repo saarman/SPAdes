@@ -134,8 +134,7 @@ cat /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input/*.fas
 # Step 4: Search and Clustering with MMseqs2
 
 ## Step 4a Easy-Search with mmRef.fasta vs each .fasta
-Example of easy-search commands
-### 4a_MMseqs2_easy.slurm
+Example of easy-search commands in 4a_MMseqs2_easy.slurm
 ```
 #!/bin/sh
 #SBATCH --time=336:00:00
@@ -168,6 +167,36 @@ for SAMPLE in `ls *filt200-3k_sorted_contigs.fasta`; do
 done
 ```
 
+Example of Cluster commands in 4b_MMseqs2_cluster.slurm
+```
+#!/bin/sh
+#SBATCH --time=336:00:00
+#SBATCH --nodes=1
+#SBATCH --ntasks=20          # same as $max set in ForkManager
+#SBATCH --account=saarman-np
+#SBATCH --partition=saarman-shared-np   
+#SBATCH --job-name=MMseqs2_try4
+#SBATCH --mail-type=BEGIN
+#SBATCH --mail-type=END
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-user=norah.saarman@usu.edu
+
+# Load modules
+module load mmseqs2/oct24  # change to module name
+
+# Assign variables – inputs and outputs
+bash
+INDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input"
+OUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output"
+REF="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input/mmREF.fasta"
+TEMP="/scratch/general/vast/u6036559/spades_tmp/"
+
+# Run Command in a loop? Here we would be clustering across samples from all results that match each ref?
+## for COI
+## for Ace2
+## for cqm1
+```
+
 ## Github
 ***Run just ONCE: Clone from Github***
 Before running, I need to make these files on github, and then use git to clone
@@ -181,5 +210,6 @@ Pull and run with sbatch
 ```
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts
 git pull
-sbatch 4a_MMseqs2.slurm
+sbatch 4a_MMseqs2_easy.slurm
+sbatch 4b_MMseqs2_cluster.slurm
 ```
