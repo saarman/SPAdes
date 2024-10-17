@@ -198,14 +198,14 @@ TEMP="/scratch/general/vast/u6036559/spades_tmp/"
 ```
 
 ## Github
-***Run just ONCE: Clone from Github***
+***Run just ONCE: Clone from Github***  
 Before running, I need to make these files on github, and then use git to clone
 ```
 # Just once:
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2
 git clone https://github.com/saarman/SPAdes scripts
 ```
-***Need to run every time: Pull from Github and run with Sbatch***
+***Need to run every time: Pull from Github and run with Sbatch***  
 Pull and run with sbatch
 ```
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts
