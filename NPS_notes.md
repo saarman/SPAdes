@@ -420,3 +420,59 @@ Eric will check what we can do with the clustering
 Norah will clean up the readme, catch up the other half with our new steps 1 and 2  
 Matt will do a literature search for cqm1, think about other cluster methods (Burrows Wheeler), check out best practices and steps of Spades pipeline https://biomedicalhub.github.io/genomics/04-part4-denovo-assembly.html
 
+# 10/17/2024 MMseqs2
+
+## Step 4: Clustering with MMseqs2
+_filt200-3k_sorted_contigs.fasta
+Example of the raw code:
+```
+# Load modules
+module load mmseqs2/oct24  # change to module name
+
+# Check if working by loading help menu
+mmseqs --help
+
+## convert fasta to DB
+mmseqs createdb ./input/file.fasta DB
+
+## cluster with cluster or linclust (linclust run time scales linearly but is slightly less accurate)
+# make sure tmp folder exists
+# mmseqs linclust DB DB_lin_clu /scratch/general/vast/u6036559/spades_tmp
+mmseqs cluster DB DB_clu tmp --min-seq-id 0.9
+
+## outputting files
+# TSV file with representative cluster sequences on left and all members of the cluster on right
+mmseqs createtsv DB DB DB_clu DB_clu.tsv
+```
+
+## Example of the sbatch and perl scripts with these commands: 
+ - 4a_MMseqs2.slurm
+ - 4a_MMseqs2.pl
+ - Output on tsv format: /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/all_DB_clu.tsv
+
+## Connect to Git, Clone/Pull
+Before running, I need to make these files on github, and then use git to clone
+```
+# Just once:
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2
+git clone https://github.com/saarman/SPAdes scripts
+```
+
+**Every time need to...**
+Pull and run slurm wrapper script
+```
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts
+git pull
+sbatch 4a_MMseqs2.slurm
+```
+
+## Visualize the results R script named 4b_plot_clusters.R
+... to save network_plot.png in /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output/
+  
+Pull and run slurm wrapper script
+```
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts
+git pull
+sbatch 4b_plot_clusters.slurm 
+```
+
