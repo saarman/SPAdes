@@ -18,6 +18,7 @@ Culex species identification and blood meal analysis with de novo assembly of il
 3. Filter and sort contigs for min length and min coverage
 4. Clustering/Blastn to identify ace2/cqm1 haplotypes and COi match
 5. Final QC (mapping reads, blastn, determine haplotypes, etc.)
+6. Blastn or BOLD
 
 ## Manuals for fastqc, SPades 
  - fastqc https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
@@ -230,8 +231,12 @@ Pull and run with sbatch
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts
 git pull
 sbatch 4a_MMseqs2_easy.slurm
-sbatch 4b_MMseqs2_cluster.slurm
 ```
 
+# Step 5. QC and map reads to de novo contigs
+Placeholder for now
 
+# Step 6. Blastn or BOLD
+First I ran blastn with the coi_matches.fasta file created above in **Step 4b** 
+Then I placed it on chpc in this location: 
 
