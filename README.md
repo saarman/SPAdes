@@ -237,7 +237,7 @@ sbatch 4a_MMseqs2_easy.slurm
 Placeholder for now
 
 # Step 6. Blastn or BOLD Systems
-NOTE: I tried using the BOLD Systems search engine, but this requires forward strand, not convenient.
+NOTE: I tried using the BOLD Systems search engine, but this accepts only forward strand, you would need to reverse-complement a random assortment before searching... not convenient.
 
 First I ran online ncbi blastn with the coi_matches.fasta file created above in **Step 4b** 
 Then I placed results on chpc in these locations: 
