@@ -173,12 +173,12 @@ AY666266.1 + GU130589.1 COi
 
 Example of extract commands in step 4b:
 ```
+salloc --time=336:00:00 --ntasks 1 --mem=100G --account=saarman-np --partition=saarman-shared-np
+
 # Assign variables – inputs and outputs
 bash
 INDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input"
 OUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output"
-REF="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input/mmREF.fasta"
-TEMP="/scratch/general/vast/u6036559/spades_tmp/"
 
 # Run Command in a loop:
 cd $OUTDIR
@@ -186,7 +186,7 @@ for SAMPLE in `ls B*.m8`; do
    NAME=`echo $SAMPLE | sed s/.m8//g`
    echo $NAME
    SEQ=`cat ${SAMPLE}.m8 | grep -m 1 "EF061759.1" | awk '{print $2}'`
-   cat ../input/${SAMPLE}*.fasta | grep $SEQ -A 1 >> cqm1_matches.fasta
+   cat ${INDIR}/${SAMPLE}*.fasta | grep $SEQ -A 1 >> cqm1_matches.fasta
 done
 ```
 
