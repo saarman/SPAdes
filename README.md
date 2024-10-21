@@ -188,6 +188,16 @@ for SAMPLE in `ls B*.m8`; do
    SEQ=`cat ${NAME}.m8 | grep -m 1 "EF061759.1" | awk '{print $2}'`
    cat ${INDIR}/${NAME}*.fasta | grep $SEQ -A 1 >> cqm1_matches.fasta
 done
+
+# Run Command in a loop for ace2:
+cd $OUTDIR
+for SAMPLE in `ls B*.m8`; do
+   NAME=`echo $SAMPLE | sed s/.m8//g`
+   echo $NAME
+   SEQ=`cat ${NAME}.m8 | grep -m 1 "AY497524.1" | awk '{print $2}'`
+   cat ${INDIR}/${NAME}*.fasta | grep $SEQ -A 1 >> ace2_matches.fasta
+done
+
 ```
 
 ## Github
