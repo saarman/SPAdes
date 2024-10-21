@@ -198,6 +198,22 @@ for SAMPLE in `ls B*.m8`; do
    cat ${INDIR}/${NAME}*.fasta | grep $SEQ -A 1 >> ace2_matches.fasta
 done
 
+# Run Command in a loop for COi:
+cd $OUTDIR
+for SAMPLE in `ls B*.m8`; do
+   NAME=`echo $SAMPLE | sed s/.m8//g`
+   echo $NAME
+   SEQ1=`cat ${NAME}.m8 | grep -m 1 "AY666266.1"| awk '{print $2}'`
+   SEQ2=`cat ${NAME}.m8 | grep -m 1 "GU130589.1"| awk '{print $2}'`
+   if [[ $SEQ1 == $SEQ2 ]]; then
+      cat ${INDIR}/${NAME}*.fasta | grep $SEQ1 -A 1 >> coi_matches.fasta
+   else
+      cat ${INDIR}/${NAME}*.fasta | grep $SEQ1 -A 1 >> coi_matches.fasta
+      cat ${INDIR}/${NAME}*.fasta | grep $SEQ2 -A 1 >> coi_matches.fasta
+   fi
+done
+
+
 ```
 
 ## Github
