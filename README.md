@@ -236,7 +236,38 @@ sbatch 4a_MMseqs2_easy.slurm
 # Step 5. QC and map reads to de novo contigs
 Placeholder for now
 
-# Step 6. Blastn or BOLD
-First I ran blastn with the coi_matches.fasta file created above in **Step 4b** 
-Then I placed it on chpc in this location: 
+# Step 6. Blastn or BOLD Systems
+NOTE: I tried using the BOLD Systems search engine, but this requires forward strand, not convenient.
+
+First I ran online ncbi blastn with the coi_matches.fasta file created above in **Step 4b** 
+Then I placed results on chpc in these locations: 
+/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/blastn/bloodmeal-coi-HDAWWRMX016-HitTable.csv
+/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/blastn/HDAWWRMX016-Alignment.txt
+FORMAT: https://www.metagenomics.wiki/tools/blast/blastn-output-format-6
+
+## Filter blastn results for top hit for each sequence plus scientific name
+```
+# update scripts
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts
+git pull
+
+# change permissions
+chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/blastn/
+
+# take only top hit for each sample
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/blastn/
+for SEQ in `cat bloodmeal-coi-HDAWWRMX016-HitTable.csv | awk -F"," '{print $1}' | uniq`; do
+   grep ${SEQ} -m 1 bloodmeal-coi-HDAWWRMX016-HitTable.csv >> bloodmeal-coi-HDAWWRMX016-HitTable-top1.csv
+done
+
+# write top hit and scientific name to file 
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/blastn/
+for SEQ in `cat bloodmeal-coi-HDAWWRMX016-HitTable.csv | awk -F"," '{print $1}' | uniq`; do
+   HIT=`grep ${SEQ} -A 5 HDAWWRMX016-Alignment.txt | tail -1 | awk '{print $1 " " $2}'`
+   TAB=`grep ${SEQ} -m 1 bloodmeal-coi-HDAWWRMX016-HitTable.csv`
+   echo ${TAB}, $HIT >> bloodmeal-coi-HDAWWRMX016-HitTable-top1-readable.csv
+done
+```
+
+
 
