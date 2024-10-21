@@ -239,11 +239,12 @@ Placeholder for now
 # Step 6. Blastn or BOLD Systems
 NOTE: I tried using the BOLD Systems search engine, but this accepts only forward strand, you would need to reverse-complement a random assortment before searching... not convenient.
 
-First I ran online ncbi blastn with the coi_matches.fasta file created above in **Step 4b** 
-Then I placed results on chpc in these locations: 
-/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/blastn/bloodmeal-coi-HDAWWRMX016-HitTable.csv
-/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/blastn/HDAWWRMX016-Alignment.txt
-FORMAT: https://www.metagenomics.wiki/tools/blast/blastn-output-format-6
+First I ran online ncbi blastn with the coi_matches.fasta file created above in **Step 4b**   
+
+Then I placed results on chpc in these locations:   
+/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/blastn/bloodmeal-coi-HDAWWRMX016-HitTable.csv  
+/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/blastn/HDAWWRMX016-Alignment.txt  
+FORMAT: https://www.metagenomics.wiki/tools/blast/blastn-output-format-6, as well as the alignments that give the scientific name of the top hit.  
 
 ## Filter blastn results for top hit for each sequence plus scientific name
 ```
