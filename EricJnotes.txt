@@ -5,6 +5,8 @@ Eric Notebook
 Using MMseqs2
 https://mmseqs.com/latest/userguide.pdf
 
+export PATH=$(pwd)/bin/:$PATH
+
 
 ## convert fasta to DB
 mmseqs createdb ./input/file.fasta DB
