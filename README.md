@@ -272,9 +272,11 @@ done
   
 # Step 7: Deal with  multiple feedings... unclear what is the best method 
 
-Top several hits?
-Threshold percent identity? 
-Run step 4b again with birds/mammal ref separately first? Then take top hit(s) and apply threshold? 
+Top several hits?  
+Threshold percent identity?   
+Run step 4b again with birds/mammal ref separately first? Then take top hit(s) and apply threshold?   
+
+
 
 
 
