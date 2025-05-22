@@ -214,7 +214,7 @@ Pull and run with sbatch
 ```
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts
 git pull
-sbatch 4a_MMseqs2_easy.slurm
+sbatch 4a_MMseqs2_easyBOLD.slurm
 ```
 
 # Step 5. QC and map reads to de novo contigs
