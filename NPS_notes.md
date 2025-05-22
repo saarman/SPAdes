@@ -805,3 +805,11 @@ B120-UT-M70330-240718_S117_1536_length_345_cov_2.567164
 cat ${INDIR}/${NAME}*.fasta | grep B120-UT-M70330-240718_S117_1536_length_345_cov_2.567164 -A 1 
 cat ${INDIR}/${NAME}*.fasta | grep B120-UT-M70330-240718_S117_1770_length_328_cov_3.147410 -A 1
 cat ${INDIR}/${NAME}*.fasta | grep B120-UT-M70330-240718_S117_1536_length_345_cov_2.567164 -A 1
+
+This got both hits on Bold...
+
+## Edit Step 4 to use full BOLD database... then can use top hits directly... but would still need to filter for chordata.
+
+Trying this by downloading BOLD database from https://bench.boldsystems.org/index.php/datapackages/Latest  
+BOLD_Public.16-May-2025.fasta.gz
+
