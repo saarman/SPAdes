@@ -871,27 +871,33 @@ chmod -R g+w "$OUTDIR"
 chmod -R g+w "$INDIR"
 ```
 
-## Test with just one sample
+### Test with just one sample
 ```
-
-
-# Load MMseqs2
-module load mmseqs2/oct24
 bash
 
-# Define paths
-INDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input"
-OUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/outputBOLD"
-REF="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/.fasta"
-TEMP="/scratch/general/vast/u6036559/spades_tmp/"
+# Load MMseqs2 module
+module load mmseqs2/oct24
 
-# Make sure output directory exists and is writable
+# Set input and output paths
+INDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input"    # Directory with sample fasta files
+OUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/outputBOLD"  # Where to write output
+REF="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/ref/BOLD_Public.16-May-2025.fasta"  # Reference fasta file with known sequences
+TEMP="/scratch/general/vast/u6036559/spades_tmp/"  # Temporary directory for MMseqs2 runtime files
+
+# Make sure output directory exists
 mkdir -p "$OUTDIR"
 chmod -R g+w "$OUTDIR"
+chmod -R g+w "$INDIR"
+chmod -R g+w "../MMseqs2/"
+
+# Make sure the temp directory exists
+TEMP="${OUTDIR}/mmseqs_tmp_${NAME}"
+mkdir -p "$TEMP"
+chmod -R g+w "$TEMP"
 
 # Define single sample
-SAMPLE="ABC123_filt200-3k_sorted_contigs.fasta"
-NAME="ABC123"
+SAMPLE="B120-UT-M70330-240718_S117_filt200-3k_sorted_contigs.fasta"
+NAME="B120-UT-M70330-240718_S117"
 
 # Run MMseqs2 easy-search with sample as query and COI ref as target
 mmseqs easy-search "${INDIR}/${SAMPLE}" "$REF" "${OUTDIR}/${NAME}.m8" "$TEMP" \
