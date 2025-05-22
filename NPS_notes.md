@@ -856,7 +856,7 @@ for SAMPLE in `ls *filt200-3k_sorted_contigs.fasta`; do
    # - TEMP = temporary folder for intermediate files
    # --search-type 3 = nucleotide vs nucleotide
    # --max-seqs 1 = return only the best match per query sequence
-   mmseqs easy-search $REF $SAMPLE ${OUTDIR}/${NAME}.m8 $TEMP \
+   mmseqs easy-search $SAMPLE $REF ${OUTDIR}/${NAME}.m8 $TEMP \
        --search-type 3 \
        --threads 20 \
        --max-seqs 1
@@ -865,3 +865,9 @@ done
 chmod -R g+w "$OUTDIR"
 chmod -R g+w "$INDIR"
 ```
+# Step 4b: Filter for e-val threshold, percent identity, alignment length
+
+These are quality control steps to make sure the hit is a good COI hit, not just the “least bad” one:  
+- E-value threshold (e.g., E < 1e-5 or stricter like 1e-20). Helps remove weak, possibly spurious matches. Even the “top hit” could be a poor match if the contig is junk
+- Percent identity (e.g., ≥ 85–90%) Indicates how similar your contig is to a known COI. Useful to exclude poor alignments, pseudogenes, or sequencing errors
+- Alignment length or coverage. Short matches may not be biologically meaningful. Filtering for alignment length >100 bp (or % of COI length) can help
