@@ -134,7 +134,9 @@ cat /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input/*.fas
 
 # Step 4: Search and Clustering with MMseqs2
 
-## Step 4a Easy-Search with mmRef.fasta vs each .fasta
+## Step 4a Easy-Search with mmRef.fasta vs each .fasta  
+### An idea to improve this step is to use one primer per sequence as the reference?
+
 Example of easy-search commands in 4a_MMseqs2_easy.slurm
 ```
 #!/bin/sh
