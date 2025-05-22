@@ -813,6 +813,10 @@ This got both hits on Bold...
 Trying this by downloading BOLD database from https://bench.boldsystems.org/index.php/datapackages/Latest  
 BOLD_Public.16-May-2025.fasta.gz
 
+```
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/ref/
+gunzip -c BOLD_Public.16-May-2025.fasta.gz > BOLD_Public.16-May-2025.fasta
+```
 ## Step 4a: MMseqs2 Search with BOLD as reference to Get Top Match per ref
 
 ```
@@ -832,13 +836,14 @@ module load mmseqs2/oct24
 # Set input and output paths
 INDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input"    # Directory with sample fasta files
 OUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/outputBOLD"  # Where to write output
-REF="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts/mmRefs.fasta"  # Reference fasta file with known sequences
+REF="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/ref/BOLD_Public.16-May-2025.fasta"  # Reference fasta file with known sequences
 TEMP="/scratch/general/vast/u6036559/spades_tmp/"  # Temporary directory for MMseqs2 runtime files
 
 # Make sure output directory exists
 mkdir -p "$OUTDIR"
 chmod -R g+w "$OUTDIR"
 chmod -R g+w "$INDIR"
+chmod -R g+w "../MMseqs2/"
 
 # Change to input directory
 cd "$INDIR"
@@ -864,6 +869,35 @@ done
 
 chmod -R g+w "$OUTDIR"
 chmod -R g+w "$INDIR"
+```
+
+## Test with just one sample
+```
+
+
+# Load MMseqs2
+module load mmseqs2/oct24
+bash
+
+# Define paths
+INDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input"
+OUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/outputBOLD"
+REF="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/.fasta"
+TEMP="/scratch/general/vast/u6036559/spades_tmp/"
+
+# Make sure output directory exists and is writable
+mkdir -p "$OUTDIR"
+chmod -R g+w "$OUTDIR"
+
+# Define single sample
+SAMPLE="ABC123_filt200-3k_sorted_contigs.fasta"
+NAME="ABC123"
+
+# Run MMseqs2 easy-search with sample as query and COI ref as target
+mmseqs easy-search "${INDIR}/${SAMPLE}" "$REF" "${OUTDIR}/${NAME}.m8" "$TEMP" \
+    --search-type 3 \
+    --threads 20 \
+    --max-seqs 1
 ```
 # Step 4b: Filter for e-val threshold, percent identity, alignment length
 
