@@ -808,7 +808,93 @@ cat ${INDIR}/${NAME}*.fasta | grep B120-UT-M70330-240718_S117_1536_length_345_co
 ```
 This got both hits on Bold...
 
-# Edit Step 4 to use full BOLD database... then can use top hits directly... but would still need to filter for chordata.
+## Below I will echo the original step 4scripts, and then the updated... for my records:
+
+### Original Step 4a Easy-Search with mmRef.fasta vs each .fasta  
+Example of easy-search commands in 4a_MMseqs2_easy.slurm
+```
+#!/bin/sh
+#SBATCH --time=336:00:00
+#SBATCH --nodes=1
+#SBATCH --ntasks=20          # same as $max set in ForkManager
+#SBATCH --account=saarman-np
+#SBATCH --partition=saarman-shared-np   
+#SBATCH --job-name=MMseqs2_try4
+#SBATCH --mail-type=BEGIN
+#SBATCH --mail-type=END
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-user=norah.saarman@usu.edu
+
+# Load modules
+module load mmseqs2/oct24  # change to module name
+
+# Assign variables – inputs and outputs
+bash
+INDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input"
+OUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output"
+REF="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts/mmRefs.fasta"
+TEMP="/scratch/general/vast/u6036559/spades_tmp/"
+
+# Run Command in a loop:
+cd $INDIR
+for SAMPLE in `ls *filt200-3k_sorted_contigs.fasta`; do
+   NAME=`echo $SAMPLE | sed s/_filt200-3k_sorted_contigs.fasta//g`
+   echo $NAME
+   mmseqs easy-search $REF $SAMPLE ${OUTDIR}/${NAME}.m8 $TEMP --search-type 3 --threads 20
+done
+```
+
+
+### Original Step 4b Pull out best e-val for each reference for each .fasta 
+  
+EF061759.1 cqm1   
+AY497524.1 ace2    
+AY666266.1 + GU130589.1 COi (house finch, cow)    
+
+Example of extract commands in step 4b:
+```
+salloc --time=336:00:00 --ntasks 1 --mem=100G --account=saarman-np --partition=saarman-shared-np
+
+# Assign variables – inputs and outputs
+bash
+INDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input"
+OUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output"
+
+# Run Command in a loop for cqm1:
+cd $OUTDIR
+for SAMPLE in `ls B*.m8`; do
+   NAME=`echo $SAMPLE | sed s/.m8//g`
+   echo $NAME
+   SEQ=`cat ${NAME}.m8 | grep -m 1 "EF061759.1" | awk '{print $2}'`
+   cat ${INDIR}/${NAME}*.fasta | grep $SEQ -A 1 >> cqm1_matches.fasta
+done
+
+# Run Command in a loop for ace2:
+cd $OUTDIR
+for SAMPLE in `ls B*.m8`; do
+   NAME=`echo $SAMPLE | sed s/.m8//g`
+   echo $NAME
+   SEQ=`cat ${NAME}.m8 | grep -m 1 "AY497524.1" | awk '{print $2}'`
+   cat ${INDIR}/${NAME}*.fasta | grep $SEQ -A 1 >> ace2_matches.fasta
+done
+
+# Run Command in a loop for COi:
+cd $OUTDIR
+for SAMPLE in `ls B*.m8`; do
+   NAME=`echo $SAMPLE | sed s/.m8//g`
+   echo $NAME
+   SEQ1=`cat ${NAME}.m8 | grep -m 1 "AY666266.1"| awk '{print $2}'`
+   SEQ2=`cat ${NAME}.m8 | grep -m 1 "GU130589.1"| awk '{print $2}'`
+   if [[ $SEQ1 == $SEQ2 ]]; then
+      cat ${INDIR}/${NAME}*.fasta | grep $SEQ1 -A 1 >> coi_matches.fasta
+   else
+      cat ${INDIR}/${NAME}*.fasta | grep $SEQ1 -A 1 >> coi_matches.fasta
+      cat ${INDIR}/${NAME}*.fasta | grep $SEQ2 -A 1 >> coi_matches.fasta
+   fi
+done
+```
+
+# Updated Step 4 to use full BOLD database... then can use top hits directly... but would still need to filter for chordata.
 
 Trying this by downloading BOLD database from https://bench.boldsystems.org/index.php/datapackages/Latest  
 BOLD_Public.16-May-2025.fasta.gz
@@ -816,59 +902,6 @@ BOLD_Public.16-May-2025.fasta.gz
 ```
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/ref/
 gunzip -c BOLD_Public.16-May-2025.fasta.gz > BOLD_Public.16-May-2025.fasta
-```
-## Step 4a: MMseqs2 Search with BOLD as reference to Get Top Match per ref
-
-```
-#!/bin/sh
-#SBATCH --time=336:00:00                  # Maximum run time (14 days)
-#SBATCH --nodes=1                         # Run on a single node
-#SBATCH --ntasks=20                       # Use 20 CPU threads
-#SBATCH --account=saarman-np              # CHPC account
-#SBATCH --partition=saarman-shared-np     # Partition/queue to submit job
-#SBATCH --job-name=MMseqs2_try4           # Job name for queue tracking
-#SBATCH --mail-type=BEGIN,END,FAIL        # Email notifications for job events
-#SBATCH --mail-user=norah.saarman@usu.edu # Your email address for notifications
-
-# Load MMseqs2 module (update if newer version becomes available)
-module load mmseqs2/oct24
-
-# Set input and output paths
-INDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input"    # Directory with sample fasta files
-OUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/outputBOLD"  # Where to write output
-REF="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/ref/BOLD_Public.16-May-2025.fasta"  # Reference fasta file with known sequences
-TEMP="/scratch/general/vast/u6036559/spades_tmp/"  # Temporary directory for MMseqs2 runtime files
-
-# Make sure output directory exists
-mkdir -p "$OUTDIR"
-chmod -R g+w "$OUTDIR"
-chmod -R g+w "$INDIR"
-chmod -R g+w "../MMseqs2/"
-
-# Change to input directory
-cd "$INDIR"
-
-# Loop over all filtered contig fasta files in the input directory
-for SAMPLE in `ls *filt200-3k_sorted_contigs.fasta`; do
-   # Strip suffix to create a short name for output files
-   NAME=`echo $SAMPLE | sed s/_filt200-3k_sorted_contigs.fasta//g`
-   echo "Processing $NAME"
-
-   # Run MMseqs2 easy-search:
-   # - Query = reference database (REF)
-   # - Target = sample sequence file
-   # - Output = .m8 BLAST tabular format file
-   # - TEMP = temporary folder for intermediate files
-   # --search-type 3 = nucleotide vs nucleotide
-   # --max-seqs 1 = return only the best match per query sequence
-   mmseqs easy-search $SAMPLE $REF ${OUTDIR}/${NAME}.m8 $TEMP \
-       --search-type 3 \
-       --threads 20 \
-       --max-seqs 1
-done
-
-chmod -R g+w "$OUTDIR"
-chmod -R g+w "$INDIR"
 ```
 
 ### Test with just one sample
@@ -905,7 +938,67 @@ mmseqs easy-search "${INDIR}/${SAMPLE}" "$REF" "${OUTDIR}/${NAME}.m8" "$TEMP" \
     --threads 20 \
     --max-seqs 1
 ```
-# Step 4b: Filter for e-val threshold, percent identity, alignment length
+
+### Step 4a: MMseqs2 Search with BOLD as reference to Get Top Match per ref
+4a_MMseqs2_easyBOLD.slurm
+```
+#!/bin/sh
+#SBATCH --time=336:00:00                  # Maximum run time (14 days)
+#SBATCH --nodes=1                         # Run on a single node
+#SBATCH --ntasks=20                       # Use 20 CPU threads
+#SBATCH --account=saarman-np              # CHPC account
+#SBATCH --partition=saarman-shared-np     # Partition/queue to submit job
+#SBATCH --job-name=MMseqs2_try4           # Job name for queue tracking
+#SBATCH --mail-type=BEGIN,END,FAIL        # Email notifications for job events
+#SBATCH --mail-user=norah.saarman@usu.edu # Your email address for notifications
+
+# Load MMseqs2 module (update if newer version becomes available)
+module load mmseqs2/oct24
+
+# Set input and output paths
+INDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input"    # Directory with sample fasta files
+OUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/outputBOLD"  # Where to write output
+REF="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/ref/BOLD_Public.16-May-2025.fasta"  # Reference fasta file with known sequences
+TEMP="/scratch/general/vast/u6036559/spades_tmp/"  # Temporary directory for MMseqs2 runtime files
+
+# Make sure output directory exists
+mkdir -p "$OUTDIR"
+chmod -R g+w "$OUTDIR"
+chmod -R g+w "$INDIR"
+chmod -R g+w "../MMseqs2/"
+
+# Make sure the temp directory exists
+TEMP="${OUTDIR}/mmseqs_tmp_${NAME}"
+mkdir -p "$TEMP"
+chmod -R g+w "$TEMP"
+
+# Change to input directory
+cd "$INDIR"
+
+# Loop over all filtered contig fasta files in the input directory
+for SAMPLE in `ls *filt200-3k_sorted_contigs.fasta`; do
+   # Strip suffix to create a short name for output files
+   NAME=`echo $SAMPLE | sed s/_filt200-3k_sorted_contigs.fasta//g`
+   echo "Processing $NAME"
+
+   # Run MMseqs2 easy-search:
+   # - Query = reference database (REF)
+   # - Target = sample sequence file
+   # - Output = .m8 BLAST tabular format file
+   # - TEMP = temporary folder for intermediate files
+   # --search-type 3 = nucleotide vs nucleotide
+   # --max-seqs 1 = return only the best match per query sequence
+   mmseqs easy-search $REF $SAMPLE ${OUTDIR}/${NAME}.m8 $TEMP \
+       --search-type 3 \
+       --threads 20 \
+       --max-seqs 1
+done
+
+chmod -R g+w "$OUTDIR"
+chmod -R g+w "$INDIR"
+```
+
+Still need to update Step 4b: Filter for e-val threshold, percent identity, alignment length
 
 These are quality control steps to make sure the hit is a good COI hit, not just the “least bad” one:  
 - E-value threshold (e.g., E < 1e-5 or stricter like 1e-20). Helps remove weak, possibly spurious matches. Even the “top hit” could be a poor match if the contig is junk
