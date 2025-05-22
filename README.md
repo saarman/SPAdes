@@ -168,9 +168,10 @@ for SAMPLE in `ls *filt200-3k_sorted_contigs.fasta`; do
 done
 ```
 ## Step 4b Pull out best e-val for each reference for each .fasta 
+
 EF061759.1 cqm1 
 AY497524.1 ace2 
-AY666266.1 + GU130589.1 COi 
+AY666266.1 + GU130589.1 COi (house finch, cow) 
 
 Example of extract commands in step 4b:
 ```
