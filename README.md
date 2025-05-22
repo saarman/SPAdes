@@ -167,10 +167,10 @@ for SAMPLE in `ls *filt200-3k_sorted_contigs.fasta`; do
    mmseqs easy-search $REF $SAMPLE ${OUTDIR}/${NAME}.m8 $TEMP --search-type 3 --threads 20
 done
 ```
-## Step 4b Pull out best e-val for each reference for each .fasta
-EF061759.1 cqm1
-AY497524.1 ace2
-AY666266.1 + GU130589.1 COi
+## Step 4b Pull out best e-val for each reference for each .fasta 
+EF061759.1 cqm1 
+AY497524.1 ace2 
+AY666266.1 + GU130589.1 COi 
 
 Example of extract commands in step 4b:
 ```
