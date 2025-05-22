@@ -773,3 +773,35 @@ git pull
 sbatch 4b_plot_clusters.slurm 
 ```
 
+
+# May 22, 2025
+
+Trying to take more than top one hit to see if I can get more results back...
+```
+
+salloc --time=336:00:00 --ntasks 1 --mem=100G --account=saarman-np --partition=saarman-shared-np
+
+# Assign variables – inputs and outputs
+bash
+INDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input"
+OUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output"
+
+# Run Command in a loop for COi:
+cd $OUTDIR
+for SAMPLE in `ls B120*.m8`; do
+   NAME=`echo $SAMPLE | sed s/.m8//g`
+   echo $NAME
+   cat ${NAME}.m8 | grep -m 3 "AY666266.1"| awk '{print $2}'
+   cat ${NAME}.m8 | grep -m 3 "GU130589.1"| awk '{print $2}'
+done
+```
+
+Returns three sequences that I need to print:  
+B120-UT-M70330-240718_S117_1536_length_345_cov_2.567164
+B120-UT-M70330-240718_S117_1770_length_328_cov_3.147410
+B120-UT-M70330-240718_S117_1536_length_345_cov_2.567164
+
+```
+cat ${INDIR}/${NAME}*.fasta | grep B120-UT-M70330-240718_S117_1536_length_345_cov_2.567164 -A 1 
+cat ${INDIR}/${NAME}*.fasta | grep B120-UT-M70330-240718_S117_1770_length_328_cov_3.147410 -A 1
+cat ${INDIR}/${NAME}*.fasta | grep B120-UT-M70330-240718_S117_1536_length_345_cov_2.567164 -A 1
