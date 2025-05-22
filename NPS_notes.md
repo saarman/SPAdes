@@ -805,7 +805,7 @@ B120-UT-M70330-240718_S117_1536_length_345_cov_2.567164
 cat ${INDIR}/${NAME}*.fasta | grep B120-UT-M70330-240718_S117_1536_length_345_cov_2.567164 -A 1 
 cat ${INDIR}/${NAME}*.fasta | grep B120-UT-M70330-240718_S117_1770_length_328_cov_3.147410 -A 1
 cat ${INDIR}/${NAME}*.fasta | grep B120-UT-M70330-240718_S117_1536_length_345_cov_2.567164 -A 1
-
+```
 This got both hits on Bold...
 
 # Edit Step 4 to use full BOLD database... then can use top hits directly... but would still need to filter for chordata.
@@ -814,7 +814,6 @@ Trying this by downloading BOLD database from https://bench.boldsystems.org/inde
 BOLD_Public.16-May-2025.fasta.gz
 
 ## Step 4a: MMseqs2 Search with BOLD as reference to Get Top Match per ref
-
 
 ```
 #!/bin/sh
@@ -832,12 +831,17 @@ module load mmseqs2/oct24
 
 # Set input and output paths
 INDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input"    # Directory with sample fasta files
-OUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/output"  # Where to write output
+OUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/outputBOLD"  # Where to write output
 REF="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/scripts/mmRefs.fasta"  # Reference fasta file with known sequences
 TEMP="/scratch/general/vast/u6036559/spades_tmp/"  # Temporary directory for MMseqs2 runtime files
 
+# Make sure output directory exists
+mkdir -p "$OUTDIR"
+chmod -R g+w "$OUTDIR"
+chmod -R g+w "$INDIR"
+
 # Change to input directory
-cd $INDIR
+cd "$INDIR"
 
 # Loop over all filtered contig fasta files in the input directory
 for SAMPLE in `ls *filt200-3k_sorted_contigs.fasta`; do
@@ -857,4 +861,7 @@ for SAMPLE in `ls *filt200-3k_sorted_contigs.fasta`; do
        --threads 20 \
        --max-seqs 1
 done
+
+chmod -R g+w "$OUTDIR"
+chmod -R g+w "$INDIR"
 ```
