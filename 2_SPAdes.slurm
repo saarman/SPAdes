@@ -21,6 +21,23 @@ module load spades
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles
 
 # Define your input folders 
-input_folders=("UT-M70330-240718/fastqfiles" "UT-M70331-240719/fastqfiles")
+input_folder=("UT-M70330-240718/fastqfiles")  #"UT-M70331-240719/fastqfiles"
+output_folder=("UT-M70330-240718/denovo")     #"UT-M70331-240719/denovo"
+
+# Create the output folder if it doesn't exist
+mkdir -p "$ouput_folder"
+
+# Permissions
+chmod -R g+w ../*  
+
+bash
+for SAMPLE in `ls -l *R1_001.fastq.gz | awk '{print $NF}' | cut -d_ -f1-2`; do
+  echo $SAMPLE
+  spades.py -1 ${SAMPLE}_L001_R1_001.fastq.gz -2	${SAMPLE}_L001_R2_001.fastq.gz -o ./denovo/${SAMPLE} --isolate
+done
+
+# Permissions
+chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718
+
 
 
