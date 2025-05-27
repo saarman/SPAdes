@@ -24,7 +24,7 @@ cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles
 
 # Input folder(s) - must run for twice, once for each directory
 input_folder=("/UT-M70330-240718")         # also "UT-M07101-240702"
-output_folder=("/UT-M70330-240718/fastqc")
+output_folder=("/UT-M70330-240718/fastqc_files")
 
 # Create the output folder if it doesn't exist
 mkdir -p ${output_folder}
