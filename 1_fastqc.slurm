@@ -22,23 +22,15 @@ module load fastqc/0.12.1
 # CD to working directory
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles
 
-# Input folders
-input_folders=("UT-M70330-240718" "UT-M07101-240702")
+# Input folder(s) - must run for twice, once for each directory
+input_folder=("/UT-M70330-240718")         # also "UT-M07101-240702"
+output_folder=("/UT-M70330-240718/fastqc")
 
-# Loop over each input folder
-for input_folder in "${input_folders[@]}"; do
-    echo "Processing folder: $input_folder"
+# Create the output folder if it doesn't exist
+mkdir -p ${output_folder}
 
-    output_folder="${input_folder}/fastqfiles"
-    mkdir -p "$output_folder"
-    chmod -R g+w "$output_folder"
-
-    # Use 'find' to get all .fastq or .fastq.gz files recursively
-    find "$input_folder" -type f \( -name "*.fastq" -o -name "*.fastq.gz" \) | while read file; do
-        echo "Running FastQC on $file"
-        fastqc "$file" -o "$output_folder"
-    done
-done
+# run fastqc for all .fastq.gz files in directory
+fastqc *.fastq.gz -o ./fastqc
 
 #change permissions
 chmod -R g+w "$output_folder"
