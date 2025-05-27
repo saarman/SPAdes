@@ -20,7 +20,7 @@ module load spades
 # change directory
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles
 
-# Define your input folders 
+# Define your input folders, have to run once for each directory
 input_folder=("UT-M70330-240718/fastqfiles")  #"UT-M70331-240719/fastqfiles"
 output_folder=("UT-M70330-240718/denovo")     #"UT-M70331-240719/denovo"
 
