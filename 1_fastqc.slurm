@@ -26,11 +26,10 @@ output_folder=("/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_
 # Create the output folder if it doesn't exist
 mkdir -p ${output_folder}
 
-# run fastqc for all .fastq.gz files in directory
-fastqc *.fastq.gz -o ./fastqc_files
+# Run FastQC on all .fastq.gz files in the input folder
+fastqc "$input_folder"/*.fastq.gz -o "$output_folder"
 
-#change permissions
+# Change permissions
 chmod -R g+w "$output_folder"
-
 
 
