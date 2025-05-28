@@ -18,6 +18,7 @@ Culex species identification and blood meal analysis with de novo assembly of il
 
 ## Need to run everytime 
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts
+
 git pull
 
 ## Outline of steps:
