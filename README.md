@@ -12,6 +12,14 @@ Culex species identification and blood meal analysis with de novo assembly of il
 1. Go to Interactive Desktop at https://ondemand.chpc.utah.edu/pun/sys/dashboard/batch_connect/sys/desktop_expert/session_contexts/new
 2. Cluster: notchpeak, Account and partition: saarman-np:saarman-shared-np, number of cores: 1, number of hours: 72-336, memory per job in GB: 128
 
+## Using Git in CHPC (do this once)
+1. cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles
+2. git clone https://github.com/saarman/SPAdes SPAdes_scripts
+
+## Need to run everytime 
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts
+git pull
+
 ## Outline of steps:
 1. fastqc to trim/clean/quality control
 2. SPAdes for de novo assembly, https://biomedicalhub.github.io/genomics/04-part4-denovo-assembly.html
