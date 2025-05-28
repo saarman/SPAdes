@@ -19,9 +19,6 @@
 # Load Module
 module load fastqc/0.12.1
 
-# CD to working directory
-cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles
-
 # Input folder(s) - must run for twice, once for each directory
 input_folder=("/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702")         # also "UT-M70330-240718"
 output_folder=("/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/fastqc_files")
