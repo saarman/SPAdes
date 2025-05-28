@@ -45,10 +45,7 @@ for SAMPLE in `ls ./input/*filt200-3k_sorted_contigs.fasta`; do
    # - TEMP = temporary folder for intermediate files
    # --search-type 3 = nucleotide vs nucleotide
    # --max-seqs 1 = return only the best match per query sequence
-   mmseqs easy-search $coiREF $SAMPLE ${OUTDIR}/${NAME}.m8 $TEMP \
-       --search-type 3 \
-       --threads 20 \
-       -m 8 \
+   mmseqs easy-search $coiREF $SAMPLE ${OUTDIR}/${NAME}.m8 $TEMP -m 8 --search-type 3 --threads 20 \
 done
 
 chmod -R g+w "$OUTDIR"
