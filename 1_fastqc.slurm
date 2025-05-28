@@ -27,7 +27,7 @@ output_folder=("/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_
 mkdir -p ${output_folder}
 
 # run fastqc for all .fastq.gz files in directory
-fastqc *.fastq.gz -o ./fastqc
+fastqc *.fastq.gz -o ./fastqc_files
 
 #change permissions
 chmod -R g+w "$output_folder"
