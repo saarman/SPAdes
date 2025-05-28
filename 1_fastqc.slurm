@@ -20,7 +20,7 @@
 module load fastqc/0.12.1
 
 # Input folder(s) - must run for twice, once for each directory
-input_folder=("/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702")         # also "UT-M70330-240718"
+input_folder=("/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718")         # also "UT-M07101-240702"
 output_folder=("/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/fastqc_files")
 
 # Create the output folder if it doesn't exist
