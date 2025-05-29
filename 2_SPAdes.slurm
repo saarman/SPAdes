@@ -17,12 +17,9 @@
 # LOAD MODULES, INSERT CODE, AND RUN YOUR PROGRAMS HERE
 module load spades
 
-# change directory
-cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles
-
-# Define your input folders, have to run once for each directory
-input_folder=("UT-M70330-240718/fastqfiles")  #"UT-M70331-240719/fastqfiles"
-output_folder=("UT-M70330-240718/denovo")     #"UT-M70331-240719/denovo"
+# Define  input folders, have to run once for each directory
+input_folder=("/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/fastqc_files")
+output_folder=("/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/denovo_assembly")
 
 # Create the output folder if it doesn't exist
 mkdir -p "$ouput_folder"
@@ -37,7 +34,7 @@ for SAMPLE in `ls -l *R1_001.fastq.gz | awk '{print $NF}' | cut -d_ -f1-2`; do
 done
 
 # Permissions
-chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718
+chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles
 
 
 
