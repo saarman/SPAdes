@@ -17,28 +17,31 @@
 # LOAD MODULES, INSERT CODE, AND RUN YOUR PROGRAMS HERE
 module load spades
 
-# Define input and output folders
-input_folder="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/fastqc_files"
+# Define array of input folders
+input_folders=(
+  "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718"
+  "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702"
+)
+
 output_folder="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/denovo_assembly"
 
-# Create the output folder if it doesn't exist
 mkdir -p "$output_folder"
 
-# Change to input directory
-cd "$input_folder" || exit 1
-
-# Loop over sample names
-for SAMPLE in $(ls -l *R1_001.fastq.gz | awk '{print $NF}' | cut -d_ -f1-2); do
-  echo "Running SPAdes for sample: $SAMPLE"
-  spades.py \
-    -1 "${SAMPLE}_L001_R1_001.fastq.gz" \
-    -2 "${SAMPLE}_L001_R2_001.fastq.gz" \
-    -o "${output_folder}/${SAMPLE}" \
-    --isolate
+for input_folder in "${input_folders[@]}"; do
+  cd "$input_folder" || { echo "Cannot enter $input_folder"; continue; }
+  
+  for SAMPLE in $(ls -1 *R1_001.fastq.gz | cut -d_ -f1-2); do
+    echo "Running SPAdes for sample: $SAMPLE in $input_folder"
+    spades.py \
+      -1 "${SAMPLE}_L001_R1_001.fastq.gz" \
+      -2 "${SAMPLE}_L001_R2_001.fastq.gz" \
+      -o "${output_folder}/${SAMPLE}" \
+      --isolate
+  done
 done
 
-# Set permissions on the output folder
 chmod -R g+w "$output_folder"
+
 
 
 
