@@ -25,7 +25,7 @@ output_folder=("/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_
 mkdir -p "$output_folder"
 
 # Permissions
-chmod -R g+w ../*  
+chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles  
 
 bash
 for SAMPLE in `ls -l *R1_001.fastq.gz | awk '{print $NF}' | cut -d_ -f1-2`; do
