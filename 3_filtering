@@ -13,7 +13,7 @@
 # #SBATCH --mail-type=FAIL
 
 # Loop through all files in each denovo directory
-cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718/denovo
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/denovo_assembly
 bash
 LENGTH=200 #change this to set min length
 COVERAGE=2 #change this to set min coverage
