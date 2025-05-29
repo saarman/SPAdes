@@ -22,7 +22,7 @@ input_folder=("/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_s
 output_folder=("/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/denovo_assembly")
 
 # Create the output folder if it doesn't exist
-mkdir -p "$ouput_folder"
+mkdir -p "$output_folder"
 
 # Permissions
 chmod -R g+w ../*  
@@ -30,7 +30,11 @@ chmod -R g+w ../*
 bash
 for SAMPLE in `ls -l *R1_001.fastq.gz | awk '{print $NF}' | cut -d_ -f1-2`; do
   echo $SAMPLE
-  spades.py -1 ${SAMPLE}_L001_R1_001.fastq.gz -2	${SAMPLE}_L001_R2_001.fastq.gz -o ./denovo/${SAMPLE} --isolate
+  spades.py 
+-1 ${SAMPLE}_L001_R1_001.fastq.gz 
+-2	${SAMPLE}_L001_R2_001.fastq.gz 
+-o "${output_folder}/${SAMPLE}" \
+ --isolate
 done
 
 # Permissions
