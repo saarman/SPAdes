@@ -169,3 +169,14 @@ Made new directory so I could use the same code for Colony samples (Colony-UT-10
 chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718/Colony-UT-10-30
 
 
+
+
+
+5/29/25
+
+1. Fastqc was fast and worked well, put all fastqc for both folders into the Fastqcfiles directory in SPADES scripts
+2. SPAdes is taking forever! Probably should do in parallel next time...
+ 4573731 saarman-s   SPAdes u1055819  R    1:24:35      1 notch320
+
+
+
