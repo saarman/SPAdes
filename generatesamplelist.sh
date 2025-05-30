@@ -1,33 +1,43 @@
 #!/bin/bash
 
-# Directories to scan for FASTQ files — update this list as needed
-INPUT_DIRS=(
-    "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702"
-)
+# Set your project directory here (update this to your real project folder name)
+PROJECT_DIR="/uufs/chpc.utah.edu/common/home/saarman-group1/YOUR_PROJECT_DIR"
+INPUT_DIR_1="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718"
+INPUT_DIR_2="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702"
 
-# Where to save the final list of sample names
-SAMPLES_FILE="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/samples.txt"
+SAMPLES_FILE="$PROJECT_DIR/samples.txt"
 
-# Make sure the output directory exists
-mkdir -p "$(dirname "$SAMPLES_FILE")"
+# Make sure the project directory exists
+mkdir -p "$PROJECT_DIR"
 
-# Clear the file if it already exists
+# Clear the samples.txt file
 > "$SAMPLES_FILE"
 
-# Loop through each input directory
-for dir in "${INPUT_DIRS[@]}"; do
-    if [[ -d "$dir" ]]; then
-        echo "Scanning $dir ..."
-        find "$dir" -type f -name "*_R1_001.fastq.gz" | while read -r f; do
-            filename=$(basename "$f")
-            # Get everything before the first underscore
-            sample=$(echo "$filename" | cut -d_ -f1)
-            echo "$sample" >> "$SAMPLES_FILE"
-        done
-    else
-        echo "❌ Directory does not exist: $dir"
+# Function to process input directory
+process_dir() {
+  local INPUT_DIR="$1"
+  if [ ! -d "$INPUT_DIR" ]; then
+    echo "❌ ERROR: Directory does not exist: $INPUT_DIR"
+    return
+  fi
+
+  echo "🔍 Processing directory: $INPUT_DIR"
+  for R1 in "$INPUT_DIR"/*_R1_001.fastq.gz; do
+    if [ -f "$R1" ]; then
+      R2="${R1/_R1_001.fastq.gz/_R2_001.fastq.gz}"
+      if [ -f "$R2" ]; then
+        SAMPLE_NAME=$(basename "$R1" | cut -d'_' -f1)
+        echo -e "${SAMPLE_NAME}\t${R1}\t${R2}" >> "$SAMPLES_FILE"
+      else
+        echo "⚠️ WARNING: R2 file missing for $R1"
+      fi
     fi
-done
+  done
+}
+
+# Process both directories
+process_dir "$INPUT_DIR_1"
+process_dir "$INPUT_DIR_2"
 
 echo "✅ samples.txt written to: $SAMPLES_FILE"
 wc -l "$SAMPLES_FILE"
