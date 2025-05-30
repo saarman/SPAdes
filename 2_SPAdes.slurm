@@ -14,34 +14,39 @@
 # #SBATCH --mail-type=END
 # #SBATCH --mail-type=FAIL
 
-# LOAD MODULES, INSERT CODE, AND RUN YOUR PROGRAMS HERE
+# Load SPAdes
 module load spades
 
-# Define array of input folders
-input_folders=(
-  "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718"
-  "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702"
-)
+# Define paths
+SAMPLES_FILE="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdesscripts/samples.txt"
+OUTPUT_BASE="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdesscripts/denovo_assembly"
 
-output_folder="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/denovo_assembly"
+# Get this task's line from samples.txt
+LINE=$(sed -n "$((SLURM_ARRAY_TASK_ID + 1))p" "$SAMPLES_FILE")
+INPUT_DIR=$(echo "$LINE" | awk '{print $1}')
+SAMPLE=$(echo "$LINE" | awk '{print $2}')
+OUTPUT_DIR="$OUTPUT_BASE/${SAMPLE}"
+mkdir -p "$OUTPUT_DIR"
 
-mkdir -p "$output_folder"
+# Skip if output already exists
+if [[ -f "$OUTPUT_DIR/contigs.fasta" ]]; then
+  echo "[$SAMPLE] Already complete. Skipping."
+  exit 0
+fi
 
-for input_folder in "${input_folders[@]}"; do
-  cd "$input_folder" || { echo "Cannot enter $input_folder"; continue; }
-  
-  for SAMPLE in $(ls -1 *R1_001.fastq.gz | cut -d_ -f1-2); do
-    echo "Running SPAdes for sample: $SAMPLE in $input_folder"
-    spades.py \
-      -1 "${SAMPLE}_L001_R1_001.fastq.gz" \
-      -2 "${SAMPLE}_L001_R2_001.fastq.gz" \
-      -o "${output_folder}/${SAMPLE}" \
-      --isolate
-  done
-done
+# Run SPAdes
+echo "[$SAMPLE] Running SPAdes..."
+cd "$INPUT_DIR" || exit 1
 
-chmod -R g+w "$output_folder"
+spades.py \
+  -1 "${SAMPLE}_L001_R1_001.fastq.gz" \
+  -2 "${SAMPLE}_L001_R2_001.fastq.gz" \
+  -o "$OUTPUT_DIR" \
+  --isolate \
+  -t 8 -m 32
 
+chmod -R g+w "$OUTPUT_DIR"
+echo "[$SAMPLE] Done."
 
 
 
