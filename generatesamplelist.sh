@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set your project directory here (update this to your real project folder name)
-PROJECT_DIR="/uufs/chpc.utah.edu/common/home/saarman-group1/YOUR_PROJECT_DIR"
+PROJECT_DIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts"
 INPUT_DIR_1="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718"
 INPUT_DIR_2="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702"
 
