@@ -6,7 +6,7 @@ INPUT_DIRS=(
 )
 
 # Where to save the final list of sample names
-SAMPLES_FILE="/uufs/chpc.utah.edu/common/home/saarman-group1/projects/bulkfastq/samples.txt"
+SAMPLES_FILE="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/samples.txt"
 
 # Make sure the output directory exists
 mkdir -p "$(dirname "$SAMPLES_FILE")"
