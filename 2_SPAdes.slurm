@@ -18,8 +18,8 @@
 module load spades
 
 # Define paths
-SAMPLES_FILE="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdesscripts/samples.txt"
-OUTPUT_BASE="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdesscripts/denovo_assembly"
+SAMPLES_FILE="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/samples.txt"
+OUTPUT_BASE="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/denovo_assembly"
 
 # Get this task's line from samples.txt
 LINE=$(sed -n "$((SLURM_ARRAY_TASK_ID + 1))p" "$SAMPLES_FILE")
