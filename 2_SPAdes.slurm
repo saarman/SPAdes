@@ -17,25 +17,29 @@
 # LOAD MODULES, INSERT CODE, AND RUN YOUR PROGRAMS HERE
 module load spades
 
-# change directory
-cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles
+# Define array of input folders
+input_folders=(
+  "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-240718"
+  "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M07101-240702"
+)
 
-# Define your input folders, have to run once for each directory
-input_folder=("UT-M70330-240718/fastqfiles")  #"UT-M70331-240719/fastqfiles"
-output_folder=("/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/denovo_assembly"
+output_folder="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/denovo_assembly"
 
-# Create the output folder if it doesn't exist
+# Make folder if doesn't exist
 mkdir -p "$output_folder"
 
-# Permissions
-chmod -R g+w ../*  
-
-bash
-for SAMPLE in `ls -l *R1_001.fastq.gz | awk '{print $NF}' | cut -d_ -f1-2`; do
-  echo $SAMPLE
-  spades.py -1 ${SAMPLE}_L001_R1_001.fastq.gz -2	${SAMPLE}_L001_R2_001.fastq.gz -o ./denovo/${SAMPLE} --isolate
+for input_folder in "${input_folders[@]}"; do
+  cd "$input_folder" || { echo "Cannot enter $input_folder"; continue; }
+  
+  for SAMPLE in $(ls -1 *R1_001.fastq.gz | cut -d_ -f1-2); do
+    echo "Running SPAdes for sample: $SAMPLE in $input_folder"
+    spades.py \
+      -1 "${SAMPLE}_L001_R1_001.fastq.gz" \
+      -2 "${SAMPLE}_L001_R2_001.fastq.gz" \
+      -o "${output_folder}/${SAMPLE}" \
+      --isolate
+  done
 done
 
-# Permissions
-chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles
+chmod -R g+w "$output_folder"
 
