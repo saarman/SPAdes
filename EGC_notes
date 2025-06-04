@@ -178,7 +178,19 @@ chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-
 2. SPAdes is taking forever! Probably should do in parallel next time...
  4573731 saarman-s   SPAdes u1055819  R    1:24:35      1 notch320
 Stopped at 24 hour cut off. Moved files to spades_assembly_test and reran with 300 hour limit and put into denovo_assembly output
-3. Filtering 
+3. Filtering - asking chat... thinking of raising min coverage to ~5
 
+Typical considerations for de novo SPAdes assemblies:
+Filter	Your Value	Typical Use Cases	Comments
+Min Length =	200 bp	200–500 bp	✅ Reasonable — 200 is a common threshold to remove short, likely spurious contigs.
+Min Coverage = 2x	5–10x (often)	⚠️ Low — 2x may allow in low-confidence contigs with poor support.
+Max Length	= 3000 bp	Rarely filtered	⚠️ Unusual — SPAdes often assembles useful contigs >3kb (including entire genes or plasmids).
 
+🔧 Recommendations:
+Min Length (LENGTH=200) ✅ Good default. Go higher (e.g. 500) if you want stricter quality or are not worried about losing small plasmids or fragments.
+Min Coverage (COVERAGE=2) ⚠️ Too permissive — SPAdes can produce low-coverage artifacts.
+💡 Consider raising to COVERAGE=5 or COVERAGE=10, depending on your dataset and sequencing depth.
+If coverage is uneven (e.g., metagenomics), you can stick with 2–5 but be aware of noise.
+Max Length (MAXLEN=3000) ❌ Usually not needed. Larger contigs are often more informative.
+💡 Unless you're specifically targeting short sequences (like viral genomes), consider removing this filter or increasing it significantly (e.g., 50,000 or no max).
 
