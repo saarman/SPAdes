@@ -2,7 +2,7 @@
 
 #SBATCH --partition=saarman-shared-np   
 #SBATCH --account=saarman-np
-#SBATCH --time=24:00:00   # walltime limit (HH:MM:SS)
+#SBATCH --time=300:00:00   # walltime limit (HH:MM:SS)
 #SBATCH --mem=24576 # memory given in MB
 #SBATCH --nodes=1   # number of nodes
 # #SBATCH --ntasks-per-node=16   # 20 processor core(s) per node X 2 threads per core
@@ -12,11 +12,11 @@
 # #SBATCH --mail-type=END
 # #SBATCH --mail-type=FAIL
 
-# Loop through all files in each denovo directory
+# Loop through all files in the directory
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/denovo_assembly
 bash
 LENGTH=200 #change this to set min length
-COVERAGE=2 #change this to set min coverage
+COVERAGE= #change this to set min coverage
 MAXLEN=3000 #change this to set max length
 for SAMPLE in `ls -l | grep -v "total" |  grep -v "fasta" | awk '{print $NF}'`; do
   echo $SAMPLE
@@ -26,7 +26,7 @@ done
 
 
 # update permissions
-chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/
+chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts
 
 # list all sorted matches
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input/; ls -l *.fasta
