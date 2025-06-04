@@ -174,9 +174,11 @@ chmod -R g+w /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/UT-M70330-
 
 5/29/25
 
-1. Fastqc was fast and worked well, put all fastqc for both folders into the Fastqcfiles directory in SPADES scripts
+1. Fastqc was fast and worked well, put all fastqc for both folders into the Fastqcfiles directory in SPADES_scripts
 2. SPAdes is taking forever! Probably should do in parallel next time...
  4573731 saarman-s   SPAdes u1055819  R    1:24:35      1 notch320
+Stopped at 24 hour cut off. Moved files to spades_assembly_test and reran with 300 hour limit and put into denovo_assembly output
+3. Filtering 
 
 
 
