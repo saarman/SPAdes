@@ -16,7 +16,7 @@
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/denovo_assembly
 bash
 LENGTH=200 #change this to set min length
-COVERAGE=5 #change this to set min coverage
+COVERAGE=2 #change this to set min coverage
 MAXLEN=3000 #change this to set max length
 for SAMPLE in `ls -l | grep -v "total" |  grep -v "fasta" | awk '{print $NF}'`; do
   echo $SAMPLE
