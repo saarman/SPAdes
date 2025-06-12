@@ -31,7 +31,7 @@ mkdir -p "$DBDIR"
 chmod -R g+w "$OUTDIR"
 chmod -R g+w "$INDIR"
 chmod -R g+w "$DBDIR"
-chmod -R g+w "../denovo_assembly/"
+chmod -R g+w "../SPAdes_scripts/"
 chmod -R g+w "../blast_result/"
 
 # Loop over all filtered contig fasta files in the input directory
