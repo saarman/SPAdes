@@ -21,7 +21,7 @@ INDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/d
 inOUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/ej-spades-scripts/blast_result/unfiltered"
 OUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/ej-spades-scripts/blast_result/filtered_coi_out"  # Where to write output
 DBDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/ej-spades-scripts/blast_result/blast_DB"
-COIref="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/blast_refs/coi-ref/sparrow-coi-ref.fasta"  # Reference fasta file with known sequences
+COIref="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/blast_refs/coi-refs/sparrow-coi-ref.fasta"  # Reference fasta file with known sequences
 
 # Make sure output directory exists
 mkdir -p "$OUTDIR"
