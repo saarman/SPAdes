@@ -34,20 +34,41 @@ chmod -R g+w "$DBDIR"
 
 
 # Loop over all filtered contig fasta files in the input directory
-for SAMPLE in `ls ./*/contigs.fasta`; do
+#for SAMPLE in `ls ./*/contigs.fasta`; do
    # Strip suffix to create a short name for output files
    # NAME=`echo $SAMPLE | sed s/_filt200-3k_sorted_contigs.fasta//g`
    # BASENAME=$(basename "$SAMPLE")  # Strip path like ./input/
    # NAME="${BASENAME%_filt200-3k_sorted_contigs.fasta}"  # Remove suffix
+   # DIRNAME=$(dirname "$SAMPLE")
+   # NAME=$(basename "$DIRNAME")
+   # echo "Processing $NAME"
+   # mkdir -p "${DBDIR}/${NAME}"
+
+   # makeblastdb -in "$SAMPLE" -dbtype nucl
+   # blastn -query "$COIref" -db ./${NAME}/contigs.fasta -out ${inOUTDIR}/${NAME}.m8 -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' -evalue 0.05 -word_size 7 -num_threads $SLURM_CPUS_ON_NODE
+   # awk '{ if ($13 > 0 && ($4 / $13) >= 0.12) print }' ${inOUTDIR}/${NAME}.m8 > ${OUTDIR}/${NAME}.m8
+# done
+
+for SAMPLE in ./*/contigs.fasta; do
    DIRNAME=$(dirname "$SAMPLE")
    NAME=$(basename "$DIRNAME")
    echo "Processing $NAME"
-   mkdir -p "${DBDIR}/${NAME}"
 
-    makeblastdb -in "$SAMPLE" -dbtype nucl -out ${DBDIR}/${NAME}/${NAME}_db
-   blastn -query "$COIref" -db ${DBDIR}/${NAME}/${NAME}_db -out ${inOUTDIR}/${NAME}.m8 -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' -evalue 0.05 -word_size 7 -num_threads $SLURM_CPUS_ON_NODE
-   awk '{ if ($13 > 0 && ($4 / $13) >= 0.12) print }' ${inOUTDIR}/${NAME}.m8 > ${OUTDIR}/${NAME}.m8
+   # Create DB in same directory as the fasta input (required for default file name resolution)
+   makeblastdb -in "$SAMPLE" -dbtype nucl -out "${DIRNAME}/contigs"
+
+   blastn -query "$COIref" \
+          -db "${DIRNAME}/contigs" \
+          -out "${inOUTDIR}/${NAME}.m8" \
+          -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' \
+          -evalue 0.05 \
+          -word_size 7 \
+          -num_threads "$SLURM_CPUS_ON_NODE"
+
+   awk '{ if ($13 > 0 && ($4 / $13) >= 0.12) print }' "${inOUTDIR}/${NAME}.m8" > "${OUTDIR}/${NAME}.m8"
 done
+
+
 
 chmod -R g+w "$inOUTDIR"
 chmod -R g+w "$OUTDIR"
