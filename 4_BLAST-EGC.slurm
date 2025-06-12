@@ -31,20 +31,22 @@ mkdir -p "$DBDIR"
 chmod -R g+w "$OUTDIR"
 chmod -R g+w "$INDIR"
 chmod -R g+w "$DBDIR"
-chmod -R g+w "../SPAdes_scripts/"
+chmod -R g+w "../denovo_assembly/"
 chmod -R g+w "../blast_result/"
 
 # Loop over all filtered contig fasta files in the input directory
-for SAMPLE in `ls ./input/*filt200-3k_sorted_contigs.fasta`; do
+for SAMPLE in `ls ./*/contigs.fasta`; do
    # Strip suffix to create a short name for output files
    # NAME=`echo $SAMPLE | sed s/_filt200-3k_sorted_contigs.fasta//g`
-   BASENAME=$(basename "$SAMPLE")  # Strip path like ./input/
-   NAME="${BASENAME%_filt200-3k_sorted_contigs.fasta}"  # Remove suffix
+   # BASENAME=$(basename "$SAMPLE")  # Strip path like ./input/
+   # NAME="${BASENAME%_filt200-3k_sorted_contigs.fasta}"  # Remove suffix
+   DIRNAME=$(dirname "$SAMPLE")
+   NAME=$(basename "$DIRNAME")
    echo "Processing $NAME"
    mkdir -p "${DBDIR}/${NAME}"
 
-   makeblastdb -in $SAMPLE -dbtype nucl -out ${DBDIR}/${NAME}/${NAME}_db
-   blastn -query ./rawinput/mmRefs.fasta -db ${DBDIR}/${NAME}_db -out ${inOUTDIR}/${NAME}.m8 -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' -max_target_seqs 10 -num_threads $SLURM_CPUS_ON_NODE
+   makeblastdb -in "$SAMPLE" -dbtype nucl -out ${DBDIR}/${NAME}/${NAME}_db
+   blastn -query ./rawinput/mmRefs.fasta -db ${DBDIR}/${NAME}/${NAME}_db -out ${inOUTDIR}/${NAME}.m8 -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' -max_target_seqs 10 -num_threads $SLURM_CPUS_ON_NODE
    awk '{ if ($13 > 0 && ($4 / $13) >= 0.25) print }' ${inOUTDIR}/${NAME}.m8 > ${OUTDIR}/${NAME}.m8
 done
 
