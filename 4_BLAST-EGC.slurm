@@ -31,7 +31,6 @@ mkdir -p "$DBDIR"
 chmod -R g+w "$OUTDIR"
 chmod -R g+w "$INDIR"
 chmod -R g+w "$DBDIR"
-chmod -R g+w "../SPAdes_scripts/"
 
 
 # Loop over all filtered contig fasta files in the input directory
@@ -54,3 +53,4 @@ chmod -R g+w "$inOUTDIR"
 chmod -R g+w "$OUTDIR"
 chmod -R g+w "$INDIR"
 chmod -R g+w "../blast_result/"
+chmod -R g+w "../SPAdes_scripts/"
