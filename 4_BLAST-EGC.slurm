@@ -11,7 +11,7 @@
 #SBATCH --mail-user=emily.calhoun@usu.edu
 
 # Change to BLAST directory
-# cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/denovo_assembly
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/spades_assembly-test
 
 # Load BLAST module (update if newer version becomes available)
 module load blast/2.11.0
@@ -32,7 +32,7 @@ chmod -R g+w "$OUTDIR"
 chmod -R g+w "$INDIR"
 chmod -R g+w "$DBDIR"
 chmod -R g+w "../SPAdes_scripts/"
-chmod -R g+w "../blast_result/"
+
 
 # Loop over all filtered contig fasta files in the input directory
 for SAMPLE in `ls ./*/contigs.fasta`; do
@@ -53,3 +53,4 @@ done
 chmod -R g+w "$inOUTDIR"
 chmod -R g+w "$OUTDIR"
 chmod -R g+w "$INDIR"
+chmod -R g+w "../blast_result/"
