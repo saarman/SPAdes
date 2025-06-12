@@ -18,19 +18,20 @@ module load blast/2.11.0
 
 # Set input and output paths
 INDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input"    # Directory with sample fasta files
+inOUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/inoutputCOI"
 OUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/outputCOI"  # Where to write output
+DBDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/blastdbs"
 COIref="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/ref/COIref.fasta"  # Reference fasta file with known sequences
-TEMP="/scratch/general/vast/u6036559/spades_tmp"  # Temporary directory for MMseqs2 runtime files
 
 # Make sure output directory exists
 mkdir -p "$OUTDIR"
+mkdir -p "$DBDIR"
+
 chmod -R g+w "$OUTDIR"
 chmod -R g+w "$INDIR"
+chmod -R g+w "$DBDIR"
 chmod -R g+w "../MMseqs2/"
 
-# Make sure the temp directory exists
-mkdir -p "$TEMP"
-chmod -R g+w "$TEMP"
 
 # Loop over all filtered contig fasta files in the input directory
 for SAMPLE in `ls ./input/*filt200-3k_sorted_contigs.fasta`; do
@@ -45,9 +46,12 @@ for SAMPLE in `ls ./input/*filt200-3k_sorted_contigs.fasta`; do
    # - TEMP = temporary folder for intermediate files
    # --search-type 3 = nucleotide vs nucleotide
    # --max-seqs 1 = return only the best match per query sequence
-   mmseqs easy-search $coiREF $SAMPLE ${OUTDIR}/${NAME}.m8 $TEMP -m 8 --search-type 3 --threads 20 \
+   makeblastdb -in $SAMPLE -dbtype nucl -out ${DBDIR}/${NAME}_db
+   blastn -query ./rawinput/mmRefs.fasta -db ${DBDIR}/${NAME}_db -out ${inOUTDIR}/${NAME}.m8 -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' -max_target_seqs 10 -num_threads $(nproc)
+   awk '{ if ($13 > 0 && ($4 / $13) >= 0.25) print }' ${inOUTDIR}/${NAME}.m8 > ${OUTDIR}/${NAME}.m8
 done
 
+chomd -R g+w "$inOUTDIR"
 chmod -R g+w "$OUTDIR"
 chmod -R g+w "$INDIR"
 
