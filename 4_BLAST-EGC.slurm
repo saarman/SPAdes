@@ -17,10 +17,10 @@
 module load blast/2.11.0
 
 # Set input and output paths
-INDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/denovo_assembly"    # Directory with sample fasta files
-inOUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/blast_result/unfiltered"
-OUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/blast_result/filtered_coi_out"  # Where to write output
-DBDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/blast_result/blast_DB"
+INDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/spades_assembly-test"    # Directory with sample fasta files
+inOUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/spades_assembly-test/blast_result/unfiltered"
+OUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/spades_assembly-test/blast_result/filtered_coi_out"  # Where to write output
+DBDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/spades_assembly-test/blast_result/blast_DB"
 COIref="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/blast_refs/coi-ref/sparrow-coi-ref.fasta"  # Reference fasta file with known sequences
 
 # Make sure output directory exists
@@ -31,7 +31,7 @@ mkdir -p "$DBDIR"
 chmod -R g+w "$OUTDIR"
 chmod -R g+w "$INDIR"
 chmod -R g+w "$DBDIR"
-chmod -R g+w "../denovo_assembly/"
+chmod -R g+w "../SPAdes_scripts/"
 chmod -R g+w "../blast_result/"
 
 # Loop over all filtered contig fasta files in the input directory
