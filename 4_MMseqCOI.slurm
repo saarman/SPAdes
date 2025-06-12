@@ -10,11 +10,11 @@
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=norah.saarman@usu.edu
 
-# Change to MMSeqs2 directory
+# Change to BLAST directory
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2
 
-# Load MMseqs2 module (update if newer version becomes available)
-module load mmseqs2/oct24
+# Load BLAST module (update if newer version becomes available)
+module load blast/2.11.0
 
 # Set input and output paths
 INDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/input"    # Directory with sample fasta files
