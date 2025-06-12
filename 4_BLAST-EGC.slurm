@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #SBATCH --time=336:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=20          # same as $max set in ForkManager
