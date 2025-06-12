@@ -45,8 +45,8 @@ for SAMPLE in `ls ./*/contigs.fasta`; do
    echo "Processing $NAME"
    mkdir -p "${DBDIR}/${NAME}"
 
-   makeblastdb -in "$SAMPLE" -dbtype nucl -out ${DBDIR}/${NAME}/${NAME}_db
-   blastn -query ./rawinput/mmRefs.fasta -db ${DBDIR}/${NAME}/${NAME}_db -out ${inOUTDIR}/${NAME}.m8 -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' -max_target_seqs 10 -num_threads $SLURM_CPUS_ON_NODE
+    makeblastdb -in "$SAMPLE" -dbtype nucl -out ${DBDIR}/${NAME}/${NAME}_db
+   blastn -query "$COIref" -db ${DBDIR}/${NAME}/${NAME}_db -out ${inOUTDIR}/${NAME}.m8 -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' -max_target_seqs 10 -num_threads $SLURM_CPUS_ON_NODE
    awk '{ if ($13 > 0 && ($4 / $13) >= 0.25) print }' ${inOUTDIR}/${NAME}.m8 > ${OUTDIR}/${NAME}.m8
 done
 
