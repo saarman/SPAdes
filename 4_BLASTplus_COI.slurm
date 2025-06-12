@@ -39,13 +39,6 @@ for SAMPLE in `ls ./input/*filt200-3k_sorted_contigs.fasta`; do
    NAME=`echo $SAMPLE | sed s/_filt200-3k_sorted_contigs.fasta//g`
    echo "Processing $NAME"
 
-   # Run MMseqs2 easy-search:
-   # - Query = reference database (COIref)
-   # - Target = sample sequence file
-   # - Output = .m8 BLAST tabular format file
-   # - TEMP = temporary folder for intermediate files
-   # --search-type 3 = nucleotide vs nucleotide
-   # --max-seqs 1 = return only the best match per query sequence
    makeblastdb -in $SAMPLE -dbtype nucl -out ${DBDIR}/${NAME}_db
    blastn -query ./rawinput/mmRefs.fasta -db ${DBDIR}/${NAME}_db -out ${inOUTDIR}/${NAME}.m8 -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' -max_target_seqs 10 -num_threads $(nproc)
    awk '{ if ($13 > 0 && ($4 / $13) >= 0.25) print }' ${inOUTDIR}/${NAME}.m8 > ${OUTDIR}/${NAME}.m8
