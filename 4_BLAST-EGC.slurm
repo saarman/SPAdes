@@ -61,9 +61,13 @@ for SAMPLE in ./*/contigs.fasta; do
           -db "${DIRNAME}/contigs" \
           -out "${inOUTDIR}/${NAME}.m8" \
           -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' \
-          -evalue 0.05 \
-          -word_size 7 \
+          -evalue 10 \
+          -word_size 5 \
+          -task blastn \
+          -soft_masking false \
+          -dust no \
           -num_threads "$SLURM_CPUS_ON_NODE"
+
 
    awk '{ if ($13 > 0 && ($4 / $13) >= 0.12) print }' "${inOUTDIR}/${NAME}.m8" > "${OUTDIR}/${NAME}.m8"
 done
