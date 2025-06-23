@@ -28,47 +28,50 @@ COIref="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/ref/BOL
 mkdir -p "$OUTDIR" "$inOUTDIR" "$DBDIR"
 chmod -R g+w "$OUTDIR" "$INDIR" "$DBDIR"
 
-# Step 1: Create BLAST database from COI reference (Only needs to be done once)
+# Loop over all filtered contig fasta files in the input directory
+#for SAMPLE in `ls ./*/contigs.fasta`; do
+   # Strip suffix to create a short name for output files
+   # NAME=`echo $SAMPLE | sed s/_filt200-3k_sorted_contigs.fasta//g`
+   # BASENAME=$(basename "$SAMPLE")  # Strip path like ./input/
+   # NAME="${BASENAME%_filt200-3k_sorted_contigs.fasta}"  # Remove suffix
+   # DIRNAME=$(dirname "$SAMPLE")
+   # NAME=$(basename "$DIRNAME")
+   # echo "Processing $NAME"
+   # mkdir -p "${DBDIR}/${NAME}"
 
-REF_DB="$DBDIR/coi_bold"
+   # makeblastdb -in "$SAMPLE" -dbtype nucl
+   # blastn -query "$COIref" -db ./${NAME}/contigs.fasta -out ${inOUTDIR}/${NAME}.m8 -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' -evalue 0.05 -word_size 7 -num_threads $SLURM_CPUS_ON_NODE
+   # awk '{ if ($13 > 0 && ($4 / $13) >= 0.12) print }' ${inOUTDIR}/${NAME}.m8 > ${OUTDIR}/${NAME}.m8
+# done
 
-if [ ! -f "${REF_DB}.nin" ]; then
-    echo "Creating BLAST database from COI reference..."
-    makeblastdb -in "$COIref" -dbtype nucl -out "$REF_DB"
-else
-    echo "BLAST database already exists. Skipping creation."
-fi
+for SAMPLE in ./*/contigs.fasta; do
+   DIRNAME=$(dirname "$SAMPLE")
+   NAME=$(basename "$DIRNAME")
+   echo "Processing $NAME"
 
-# Step 2: Loop over SPAdes contigs and BLAST them
+   # Create DB in same directory as the fasta input (required for default file name resolution)
+   makeblastdb -in "$SAMPLE" -dbtype nucl -out "${DIRNAME}/contigs"
 
-for SAMPLE in "$INDIR"/*/contigs.fasta; do
-    if [ ! -f "$SAMPLE" ]; then
-        echo "No contigs.fasta files found in $INDIR. Exiting."
-        exit 1
-    fi
+   blastn -query "$COIref" \
+          -db "${DIRNAME}/contigs" \
+          -out "${inOUTDIR}/${NAME}.m8" \
+          -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' \
+          -evalue 10 \
+          -word_size 5 \
+          -task blastn \
+          -soft_masking false \
+          -dust no \
+          -num_threads "$SLURM_CPUS_ON_NODE"
 
-    DIRNAME=$(dirname "$SAMPLE")
-    NAME=$(basename "$DIRNAME")
-    echo "Processing sample: $NAME"
 
-    # Run BLAST: contigs (query) vs COI reference DB (target)
-    blastn -query "$SAMPLE" \
-           -db "$REF_DB" \
-           -out "${inOUTDIR}/${NAME}.m8" \
-           -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' \
-           -evalue 1e-5 \
-           -word_size 5 \
-           -task blastn \
-           -soft_masking false \
-           -dust no \
-           -num_threads "${SLURM_CPUS_ON_NODE:-4}"
-
-    # Filter hits: require alignment length ≥100 and percent identity ≥90
-    awk '$4 >= 100 && $3 >= 90' "${inOUTDIR}/${NAME}.m8" > "${OUTDIR}/${NAME}.m8"
+   awk '{ if ($13 > 0 && ($4 / $13) >= 0.12) print }' "${inOUTDIR}/${NAME}.m8" > "${OUTDIR}/${NAME}.m8"
 done
 
-# Step 3: Final permissions
 
-chmod -R g+w "$inOUTDIR" "$OUTDIR" "$INDIR"
 
-echo "✅ BLAST search complete. Results in $OUTDIR"
+chmod -R g+w "$inOUTDIR"
+chmod -R g+w "$OUTDIR"
+chmod -R g+w "$INDIR"
+chmod -R g+w "../blast_result/"
+chmod -R g+w "../SPAdes_scripts/"
+
