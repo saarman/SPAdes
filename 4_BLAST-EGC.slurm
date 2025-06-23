@@ -18,64 +18,57 @@ module load blast/2.11.0
 
 # Set input and output paths
 INDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/spades_assembly-test"    # Directory with sample fasta files
-inOUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/spades_assembly-test/blast_result/unfiltered"
-OUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/spades_assembly-test/blast_result/filtered_coi_out"  # Where to write output
-DBDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/spades_assembly-test/blast_result/blast_DB"
-COIref="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/blast_refs/coi-ref/sparrow-coi-ref.fasta"  # Reference fasta file with known sequences
+inOUTDIR="$INDIR/blast_result/unfiltered"     # Raw BLAST output
+OUTDIR="$INDIR/blast_result/filtered_coi_out" # Filtered output
+DBDIR="$INDIR/blast_result/blast_DB"          # BLAST DB directory
+COIref="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/ref/BOLD_Public.16-May-2025.fasta" #using all of BOLD as reference?
+# "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/blast_refs/coi-ref/sparrow-coi-ref.fasta"  # Reference fasta file with known sequences
 
-# Make sure output directory exists
-mkdir -p "$OUTDIR"
-mkdir -p "$inOUTDIR"
-mkdir -p "$DBDIR"
+# Make sure directories exist
+mkdir -p "$OUTDIR" "$inOUTDIR" "$DBDIR"
+chmod -R g+w "$OUTDIR" "$INDIR" "$DBDIR"
 
-chmod -R g+w "$OUTDIR"
-chmod -R g+w "$INDIR"
-chmod -R g+w "$DBDIR"
+# Step 1: Create BLAST database from COI reference (Only needs to be done once)
 
+REF_DB="$DBDIR/coi_bold"
 
-# Loop over all filtered contig fasta files in the input directory
-#for SAMPLE in `ls ./*/contigs.fasta`; do
-   # Strip suffix to create a short name for output files
-   # NAME=`echo $SAMPLE | sed s/_filt200-3k_sorted_contigs.fasta//g`
-   # BASENAME=$(basename "$SAMPLE")  # Strip path like ./input/
-   # NAME="${BASENAME%_filt200-3k_sorted_contigs.fasta}"  # Remove suffix
-   # DIRNAME=$(dirname "$SAMPLE")
-   # NAME=$(basename "$DIRNAME")
-   # echo "Processing $NAME"
-   # mkdir -p "${DBDIR}/${NAME}"
+if [ ! -f "${REF_DB}.nin" ]; then
+    echo "Creating BLAST database from COI reference..."
+    makeblastdb -in "$COIref" -dbtype nucl -out "$REF_DB"
+else
+    echo "BLAST database already exists. Skipping creation."
+fi
 
-   # makeblastdb -in "$SAMPLE" -dbtype nucl
-   # blastn -query "$COIref" -db ./${NAME}/contigs.fasta -out ${inOUTDIR}/${NAME}.m8 -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' -evalue 0.05 -word_size 7 -num_threads $SLURM_CPUS_ON_NODE
-   # awk '{ if ($13 > 0 && ($4 / $13) >= 0.12) print }' ${inOUTDIR}/${NAME}.m8 > ${OUTDIR}/${NAME}.m8
-# done
+# Step 2: Loop over SPAdes contigs and BLAST them
 
-for SAMPLE in ./*/contigs.fasta; do
-   DIRNAME=$(dirname "$SAMPLE")
-   NAME=$(basename "$DIRNAME")
-   echo "Processing $NAME"
+for SAMPLE in "$INDIR"/*/contigs.fasta; do
+    if [ ! -f "$SAMPLE" ]; then
+        echo "No contigs.fasta files found in $INDIR. Exiting."
+        exit 1
+    fi
 
-   # Create DB in same directory as the fasta input (required for default file name resolution)
-   makeblastdb -in "$SAMPLE" -dbtype nucl -out "${DIRNAME}/contigs"
+    DIRNAME=$(dirname "$SAMPLE")
+    NAME=$(basename "$DIRNAME")
+    echo "Processing sample: $NAME"
 
-   blastn -query "$COIref" \
-          -db "${DIRNAME}/contigs" \
-          -out "${inOUTDIR}/${NAME}.m8" \
-          -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' \
-          -evalue 10 \
-          -word_size 5 \
-          -task blastn \
-          -soft_masking false \
-          -dust no \
-          -num_threads "$SLURM_CPUS_ON_NODE"
+    # Run BLAST: contigs (query) vs COI reference DB (target)
+    blastn -query "$SAMPLE" \
+           -db "$REF_DB" \
+           -out "${inOUTDIR}/${NAME}.m8" \
+           -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' \
+           -evalue 1e-5 \
+           -word_size 5 \
+           -task blastn \
+           -soft_masking false \
+           -dust no \
+           -num_threads "${SLURM_CPUS_ON_NODE:-4}"
 
-
-   awk '{ if ($13 > 0 && ($4 / $13) >= 0.12) print }' "${inOUTDIR}/${NAME}.m8" > "${OUTDIR}/${NAME}.m8"
+    # Filter hits: require alignment length ≥100 and percent identity ≥90
+    awk '$4 >= 100 && $3 >= 90' "${inOUTDIR}/${NAME}.m8" > "${OUTDIR}/${NAME}.m8"
 done
 
+# Step 3: Final permissions
 
+chmod -R g+w "$inOUTDIR" "$OUTDIR" "$INDIR"
 
-chmod -R g+w "$inOUTDIR"
-chmod -R g+w "$OUTDIR"
-chmod -R g+w "$INDIR"
-chmod -R g+w "../blast_result/"
-chmod -R g+w "../SPAdes_scripts/"
+echo "✅ BLAST search complete. Results in $OUTDIR"
