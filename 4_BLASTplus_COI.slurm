@@ -20,13 +20,12 @@ module load blast/2.11.0
 INDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/denovo_assembly"    # Directory with sample fasta files
 inOUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/blast_result/unfiltered" # Raw BLAST output
 OUTDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/blast_result/filtered_coi_out"  # Filtered output
-DBDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/blast_result/blast_DB" # BLAST DB directory
 COIref="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/blast_refs/coi-ref/sparrow-coi-ref.fasta"  # Reference fasta file with sparrow sequence passer domesticus
 
 
 # Make sure directories exist
-mkdir -p "$OUTDIR" "$inOUTDIR" "$DBDIR"
-chmod -R g+w "$OUTDIR" "$INDIR" "$DBDIR"
+mkdir -p "$OUTDIR" "$inOUTDIR"
+chmod -R g+w "$OUTDIR" "$INDIR"
 
 
 for SAMPLE in ./*/contigs.fasta; do
@@ -57,6 +56,5 @@ done
 chmod -R g+w "$inOUTDIR"
 chmod -R g+w "$OUTDIR"
 chmod -R g+w "$INDIR"
-chmod -R g+w "$DBDIR"
 chmod -R g+w "../blast_result/"
 chmod -R g+w "../SPAdes_scripts/"
