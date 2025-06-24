@@ -50,7 +50,7 @@ for SAMPLE in ./*/contigs.fasta; do
           -num_threads "$SLURM_CPUS_ON_NODE"
 
    # filter blast results by coverage (0.125)
-   awk '{ if ($13 > 0 && ($4 / $13) >= 0.125) print }' "${inOUTDIR}/${NAME}.m8" > "${OUTDIR}/${NAME}.m8"
+   awk '{ if ($13 > 0 && ($4 / $13) >= 0.125 && $3 > 74) print }' "${inOUTDIR}/${NAME}.m8" > "${OUTDIR}/${NAME}.m8"
 done
 
 
