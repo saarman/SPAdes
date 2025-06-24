@@ -4,7 +4,7 @@
 #SBATCH --ntasks=20          # same as $max set in ForkManager
 #SBATCH --account=saarman-np
 #SBATCH --partition=saarman-shared-np   
-#SBATCH --job-name=MMseqs2_try4
+#SBATCH --job-name=MakeBOLDdb
 #SBATCH --mail-type=BEGIN
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
