@@ -13,7 +13,7 @@
 module load blast/2.11.0
 
 COIref="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/ref/BOLD_Public.16-May-2025.fasta"
-DBDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/blast_refs/BOLD_db"
+DBDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/spades_assembly-test/BOLD_db"
 REF_DB="${DBDIR}/coi_bold"
 
 mkdir -p "$DBDIR"
