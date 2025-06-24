@@ -4,11 +4,11 @@
 #SBATCH --ntasks=20          # same as $max set in ForkManager
 #SBATCH --account=saarman-np
 #SBATCH --partition=saarman-shared-np   
-#SBATCH --job-name=MMseqs2_try4
+#SBATCH --job-name=BLAST-IT!
 #SBATCH --mail-type=BEGIN
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
-#SBATCH --mail-user=norah.saarman@usu.edu
+#SBATCH --mail-user=A02353507@usu.edu
 
 # Change to BLAST directory
 cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/denovo_assembly
