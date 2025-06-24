@@ -21,8 +21,8 @@ INDIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/s
 inOUTDIR="$INDIR/blast_result/unfiltered"     # Raw BLAST output
 OUTDIR="$INDIR/blast_result/filtered_coi_out" # Filtered output
 DBDIR="$INDIR/blast_result/blast_DB"          # BLAST DB directory
-COIref="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/MMseqs2/ref/BOLD_Public.16-May-2025.fasta" #using all of BOLD as reference?
-# "/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/blast_refs/coi-ref/sparrow-coi-ref.fasta"  # Reference fasta file with known sequences
+COIref="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/blast_refs/coi-ref/sparrow-coi-ref.fasta"  # Reference fasta file with known sequences
+ 
 
 # Make sure directories exist
 mkdir -p "$OUTDIR" "$inOUTDIR" "$DBDIR"
