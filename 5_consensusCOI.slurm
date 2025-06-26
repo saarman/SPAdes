@@ -46,13 +46,6 @@ for FILE in "$BLAST_DIR"/*.m8; do
         # Calculate query coverage as a percentage
         QCOV=$(awk "BEGIN { printf \"%.2f\", (${LENGTH} / ${QLEN}) * 100 }")
 
-        # Try to get the scientific name from optional alignment summary file
-        SCI_NAME="Unknown"
-        if [[ -f "$ALIGN_FILE" ]]; then
-            SCI_NAME_LINE=$(grep -A 5 "$SSEQID" "$ALIGN_FILE" | tail -1)
-            SCI_NAME=$(echo "$SCI_NAME_LINE" | awk '{print $1 " " $2}')
-        fi
-
         # Extract the corresponding contig sequence from contigs.fasta using SSEQID
         SEQ=$(awk -v id="$SSEQID" '
             BEGIN { found=0; seq="" }
