@@ -76,3 +76,5 @@ done
 echo "✅ Done! Output written to:"
 echo "   - $CSV_OUT"
 echo "   - $FASTA_OUT"
+
+chmod -R g+w "$BLAST_DIR" "$FASTA_BASE" "$CSV_OUT" "$FASTA_OUT"
