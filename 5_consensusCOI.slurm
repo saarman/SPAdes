@@ -10,58 +10,69 @@
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=emily.calhoun@usu.edu
 
-# Define paths
+# Load any needed modules 
+module load blast/2.10.1
+
+# Paths
 FILTERED_DIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/blast_result/filtered_coi_out"
 ASSEMBLY_DIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/denovo_assembly"
-OUTPUT_FILE="consensus_top_hits_with_sequences.csv"
+CSV_OUT="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/blast_result/consensus_top_hits.csv"
+FASTA_OUT="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/blast_result/consensus_top_hits.fasta"
 
-# Write header
-echo "SampleID,ContigID,TopHitAccession,PercentIdentity,Evalue,QueryCoverage,ScientificName,ContigSequence" > "$OUTPUT_FILE"
+# Init output files
+echo "SampleID,ContigID,TopHitAccession,PercentIdentity,Evalue,QueryCoverage,ScientificName,ContigSequence" > "$CSV_OUT"
+> "$FASTA_OUT"
 
-# Loop through filtered BLAST result files
-for file in "$FILTERED_DIR"/*.filteredcoioutput; do
-    FILENAME=$(basename "$file")
-    SAMPLEID="${FILENAME%%.filteredcoioutput}"
-
-    # Read top hit
-    TOPHIT=$(head -n 1 "$file")
+# Loop through filtered BLAST results
+for FILE in "$FILTERED_DIR"/*.filteredcoioutput; do
+    SAMPLEID=$(basename "$FILE" .filteredcoioutput)
+    TOPHIT=$(head -n 1 "$FILE")
 
     if [[ -z "$TOPHIT" ]]; then
-        echo "Skipping $SAMPLEID (no top hit)"
+        echo "Skipping $SAMPLEID: no top hit"
         continue
     fi
 
-    # Parse BLAST fields
+    # Parse top hit
     CONTIGID=$(echo "$TOPHIT" | cut -f1)
     ACCESSION=$(echo "$TOPHIT" | cut -f2)
     PID=$(echo "$TOPHIT" | cut -f3)
     ALIGNLEN=$(echo "$TOPHIT" | cut -f4)
     EVAL=$(echo "$TOPHIT" | cut -f11)
     QLEN=$(echo "$TOPHIT" | cut -f13)
-    QCOV=$(awk -v len="$ALIGNLEN" -v qlen="$QLEN" 'BEGIN {printf "%.2f", (len/qlen)*100}')
+    QCOV=$(awk -v a="$ALIGNLEN" -v q="$QLEN" 'BEGIN {printf "%.2f", (a/q)*100}')
 
-    # Get scientific name
+    # Get scientific name from *_Alignment.txt
     SCI_NAME=$(grep "$ACCESSION" "$FILTERED_DIR"/../*_Alignment.txt | tail -1 | awk '{print $1 " " $2}')
     [[ -z "$SCI_NAME" ]] && SCI_NAME="Unknown"
 
-    # Locate contigs.fasta and extract matching contig sequence
+    # Get contig path
     CONTIG_PATH="$ASSEMBLY_DIR/$SAMPLEID/contigs.fasta"
     if [[ ! -f "$CONTIG_PATH" ]]; then
-        echo "Contigs file missing for $SAMPLEID"
+        echo "Missing contigs.fasta for $SAMPLEID"
         continue
     fi
 
-    # Extract FASTA sequence for matching contig
-    SEQUENCE=$(awk -v id=">${CONTIGID}" '
-        $0 ~ id {flag=1; next} 
-        /^>/ {flag=0} 
-        flag {seq=seq $0} 
+    # Extract contig sequence
+    SEQ=$(awk -v id=">${CONTIGID}" '
+        $0 ~ id {flag=1; next}
+        /^>/ {flag=0}
+        flag {seq=seq $0}
         END {print seq}' "$CONTIG_PATH")
 
-    [[ -z "$SEQUENCE" ]] && SEQUENCE="NotFound"
+    if [[ -z "$SEQ" ]]; then
+        echo "No sequence found for $CONTIGID in $SAMPLEID"
+        continue
+    fi
 
-    # Output CSV line
-    echo "$SAMPLEID,$CONTIGID,$ACCESSION,$PID,$EVAL,$QCOV,$SCI_NAME,\"$SEQUENCE\"" >> "$OUTPUT_FILE"
+    # Write to CSV (quoted sequence to preserve line integrity)
+    echo "$SAMPLEID,$CONTIGID,$ACCESSION,$PID,$EVAL,$QCOV,$SCI_NAME,\"$SEQ\"" >> "$CSV_OUT"
+
+    # Write to multi-FASTA
+    echo ">$SAMPLEID|$CONTIGID|$SCI_NAME" >> "$FASTA_OUT"
+    echo "$SEQ" >> "$FASTA_OUT"
 done
 
-echo "✅ Done! FASTA-inclusive file written to: $OUTPUT_FILE"
+echo "✅ All done. Output written to:"
+echo "- $CSV_OUT"
+echo "- $FASTA_OUT"
