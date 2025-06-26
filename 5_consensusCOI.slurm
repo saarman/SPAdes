@@ -13,66 +13,66 @@
 # Load any needed modules 
 module load blast/2.10.1
 
-# Paths
-FILTERED_DIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/blast_result/filtered_coi_out"
-ASSEMBLY_DIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/denovo_assembly"
-CSV_OUT="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/blast_result/consensus_top_hits.csv"
-FASTA_OUT="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/blast_result/consensus_top_hits.fasta"
+# === USER PATHS ===
+BLAST_DIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/blast_result/filtered_coi_out"
+FASTA_BASE="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/denovo_assembly"
+CSV_OUT="consensus_multi_hits.csv"
+FASTA_OUT="consensus_multi_hits.fasta"
 
-# Init output files
-echo "SampleID,ContigID,TopHitAccession,PercentIdentity,Evalue,QueryCoverage,ScientificName,ContigSequence" > "$CSV_OUT"
+# === Init output files ===
+echo "SampleID,ContigID,HitAccession,PercentIdentity,Evalue,QueryCoverage,ScientificName,ContigSequence" > "$CSV_OUT"
 > "$FASTA_OUT"
 
-# Loop through filtered BLAST results
-for FILE in "$FILTERED_DIR"/*.filteredcoioutput; do
-    SAMPLEID=$(basename "$FILE" .filteredcoioutput)
-    TOPHIT=$(head -n 1 "$FILE")
+# === Main loop ===
+for FILE in "$BLAST_DIR"/*.filteredcoioutput; do
+    SAMPLE=$(basename "$FILE" .filteredcoioutput)
+    CONTIG_PATH="$FASTA_BASE/$SAMPLE/contigs.fasta"
 
-    if [[ -z "$TOPHIT" ]]; then
-        echo "Skipping $SAMPLEID: no top hit"
+    if [[ ! -f "$FILE" ]]; then
+        echo "⚠️ No BLAST file for $SAMPLE, skipping."
         continue
     fi
 
-    # Parse top hit
-    CONTIGID=$(echo "$TOPHIT" | cut -f1)
-    ACCESSION=$(echo "$TOPHIT" | cut -f2)
-    PID=$(echo "$TOPHIT" | cut -f3)
-    ALIGNLEN=$(echo "$TOPHIT" | cut -f4)
-    EVAL=$(echo "$TOPHIT" | cut -f11)
-    QLEN=$(echo "$TOPHIT" | cut -f13)
-    QCOV=$(awk -v a="$ALIGNLEN" -v q="$QLEN" 'BEGIN {printf "%.2f", (a/q)*100}')
-
-    # Get scientific name from *_Alignment.txt
-    SCI_NAME=$(grep "$ACCESSION" "$FILTERED_DIR"/../*_Alignment.txt | tail -1 | awk '{print $1 " " $2}')
-    [[ -z "$SCI_NAME" ]] && SCI_NAME="Unknown"
-
-    # Get contig path
-    CONTIG_PATH="$ASSEMBLY_DIR/$SAMPLEID/contigs.fasta"
     if [[ ! -f "$CONTIG_PATH" ]]; then
-        echo "Missing contigs.fasta for $SAMPLEID"
+        echo "⚠️ Missing contigs.fasta for $SAMPLE, skipping."
         continue
     fi
 
-    # Extract contig sequence
-    SEQ=$(awk -v id=">${CONTIGID}" '
-        $0 ~ id {flag=1; next}
-        /^>/ {flag=0}
-        flag {seq=seq $0}
-        END {print seq}' "$CONTIG_PATH")
+    while IFS=$'\t' read -r QSEQID SSEQID PIDENT LENGTH MISMATCH GAPOPEN QSTART QEND SSTART SEND EVALUE BITSCORE QLEN SLEN; do
+        QCOV=$(awk "BEGIN { printf \"%.2f\", (${LENGTH} / ${QLEN}) * 100 }")
 
-    if [[ -z "$SEQ" ]]; then
-        echo "No sequence found for $CONTIGID in $SAMPLEID"
-        continue
-    fi
+        # Try to find scientific name from the optional alignment text file (if it exists)
+        ALIGN_FILE="${FILE%.filteredcoioutput}-Alignment.txt"
+        SCI_NAME="Unknown"
+        if [[ -f "$ALIGN_FILE" ]]; then
+            SCI_NAME_LINE=$(grep -A 5 "$QSEQID" "$ALIGN_FILE" | tail -1)
+            SCI_NAME=$(echo "$SCI_NAME_LINE" | awk '{print $1 " " $2}')
+        fi
 
-    # Write to CSV (quoted sequence to preserve line integrity)
-    echo "$SAMPLEID,$CONTIGID,$ACCESSION,$PID,$EVAL,$QCOV,$SCI_NAME,\"$SEQ\"" >> "$CSV_OUT"
+        # Extract contig sequence from contigs.fasta
+        SEQ=$(awk -v id="$QSEQID" '
+            BEGIN { found=0; seq="" }
+            /^>/ { if (found) exit; found=($0 ~ ">"id) }
+            found && !/^>/ { seq = seq $0 }
+            END { print seq }
+        ' "$CONTIG_PATH")
 
-    # Write to multi-FASTA
-    echo ">$SAMPLEID|$CONTIGID|$SCI_NAME" >> "$FASTA_OUT"
-    echo "$SEQ" >> "$FASTA_OUT"
+        if [[ -z "$SEQ" ]]; then
+            echo "⚠️ Could not find contig $QSEQID in $SAMPLE"
+            continue
+        fi
+
+        # Write CSV row
+        echo "$SAMPLE,$QSEQID,$SSEQID,$PIDENT,$EVALUE,$QCOV,$SCI_NAME,\"$SEQ\"" >> "$CSV_OUT"
+
+        # Write FASTA entry
+        echo ">$SAMPLE|$QSEQID|$SCI_NAME|$SSEQID" >> "$FASTA_OUT"
+        echo "$SEQ" >> "$FASTA_OUT"
+
+    done < "$FILE"
+
 done
 
-echo "✅ All done. Output written to:"
-echo "- $CSV_OUT"
-echo "- $FASTA_OUT"
+echo "✅ Done! Output written to:"
+echo "   - $CSV_OUT"
+echo "   - $FASTA_OUT"
