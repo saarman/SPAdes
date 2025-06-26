@@ -11,7 +11,7 @@
 #SBATCH --mail-user=emily.calhoun@usu.edu
 
 # Load any needed modules 
-module load blast/2.10.1
+module load blast/2.11.0
 
 # Define paths
 BLAST_DIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/blast_result/filtered_coi_out"                # Directory containing filtered coi 
