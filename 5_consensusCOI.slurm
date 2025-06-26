@@ -13,35 +13,38 @@
 # Load any needed modules 
 module load blast/2.10.1
 
-# === USER PATHS ===
-BLAST_DIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/blast_result/filtered_coi_out"
-FASTA_BASE="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/denovo_assembly"
-CSV_OUT="consensus_multi_hits.csv"
-FASTA_OUT="consensus_multi_hits.fasta"
+# Define paths
+BLAST_DIR="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/blast_result/filtered_coi_out"                # Directory containing filtered coi 
+FASTA_BASE="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/denovo_assembly"                             # Directory containing sample subfolders with contigs.fasta
+CSV_OUT="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/blast_result/consensus_multi_hits.csv"
+FASTA_OUT="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/blast_result/consensus_multi_hits.fasta"
 
-# === Init output files ===
+# === Initialize the output files ===
 echo "SampleID,ContigID,HitAccession,PercentIdentity,Evalue,QueryCoverage,ScientificName,ContigSequence" > "$CSV_OUT"
-> "$FASTA_OUT"
+> "$FASTA_OUT"  # Truncate/create the FASTA file
 
-# === Main loop ===
+# === Process each BLAST output file ===
 for FILE in "$BLAST_DIR"/*.filteredcoioutput; do
     SAMPLE=$(basename "$FILE" .filteredcoioutput)
     CONTIG_PATH="$FASTA_BASE/$SAMPLE/contigs.fasta"
 
+    # Skip if required files don't exist
     if [[ ! -f "$FILE" ]]; then
-        echo "⚠️ No BLAST file for $SAMPLE, skipping."
+        echo "⚠️ BLAST file missing for $SAMPLE, skipping."
         continue
     fi
-
     if [[ ! -f "$CONTIG_PATH" ]]; then
-        echo "⚠️ Missing contigs.fasta for $SAMPLE, skipping."
+        echo "⚠️ contigs.fasta missing for $SAMPLE, skipping."
         continue
     fi
 
+    # === Process every line (hit) in the BLAST file ===
     while IFS=$'\t' read -r QSEQID SSEQID PIDENT LENGTH MISMATCH GAPOPEN QSTART QEND SSTART SEND EVALUE BITSCORE QLEN SLEN; do
+        
+        # Calculate query coverage as a percentage
         QCOV=$(awk "BEGIN { printf \"%.2f\", (${LENGTH} / ${QLEN}) * 100 }")
 
-        # Try to find scientific name from the optional alignment text file (if it exists)
+        # Try to get the scientific name from an optional alignment summary file
         ALIGN_FILE="${FILE%.filteredcoioutput}-Alignment.txt"
         SCI_NAME="Unknown"
         if [[ -f "$ALIGN_FILE" ]]; then
@@ -49,7 +52,7 @@ for FILE in "$BLAST_DIR"/*.filteredcoioutput; do
             SCI_NAME=$(echo "$SCI_NAME_LINE" | awk '{print $1 " " $2}')
         fi
 
-        # Extract contig sequence from contigs.fasta
+        # Extract the corresponding sequence from contigs.fasta
         SEQ=$(awk -v id="$QSEQID" '
             BEGIN { found=0; seq="" }
             /^>/ { if (found) exit; found=($0 ~ ">"id) }
@@ -57,15 +60,16 @@ for FILE in "$BLAST_DIR"/*.filteredcoioutput; do
             END { print seq }
         ' "$CONTIG_PATH")
 
+        # Skip if contig not found in FASTA
         if [[ -z "$SEQ" ]]; then
             echo "⚠️ Could not find contig $QSEQID in $SAMPLE"
             continue
         fi
 
-        # Write CSV row
+        # === Write to CSV ===
         echo "$SAMPLE,$QSEQID,$SSEQID,$PIDENT,$EVALUE,$QCOV,$SCI_NAME,\"$SEQ\"" >> "$CSV_OUT"
 
-        # Write FASTA entry
+        # === Write to FASTA ===
         echo ">$SAMPLE|$QSEQID|$SCI_NAME|$SSEQID" >> "$FASTA_OUT"
         echo "$SEQ" >> "$FASTA_OUT"
 
@@ -73,8 +77,10 @@ for FILE in "$BLAST_DIR"/*.filteredcoioutput; do
 
 done
 
-echo "✅ Done! Output written to:"
-echo "   - $CSV_OUT"
-echo "   - $FASTA_OUT"
+# === Done ===
+echo "✅ Complete!"
+echo "Output written to:"
+echo "  CSV:   $CSV_OUT"
+echo "  FASTA: $FASTA_OUT"
 
 chmod -R g+w "$BLAST_DIR" "$FASTA_BASE" "$CSV_OUT" "$FASTA_OUT"
