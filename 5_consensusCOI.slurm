@@ -20,7 +20,7 @@ CSV_OUT="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts
 FASTA_OUT="/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/blast_result/consensus_multi_hits.fasta"
 
 # === Initialize the output files ===
-echo "SampleID,ContigID,HitAccession,PercentIdentity,Evalue,QueryCoverage,ScientificName,ContigSequence" > "$CSV_OUT"
+echo "SampleID,ContigID,ContigSequence" > "$CSV_OUT"
 > "$FASTA_OUT"  # Truncate/create the FASTA file
 
 # === Process each BLAST output file ===
