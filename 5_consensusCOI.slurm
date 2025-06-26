@@ -24,7 +24,7 @@ echo "SampleID,ContigID,HitAccession,PercentIdentity,Evalue,QueryCoverage,Scient
 > "$FASTA_OUT"  # Truncate/create the FASTA file
 
 # === Process each BLAST output file ===
-for FILE in $BLAST_DIR/*.m8; do
+for FILE in "$BLAST_DIR"/*.m8; do
     SAMPLE=$(basename "$FILE" .m8)
     CONTIG_PATH="$FASTA_BASE/$SAMPLE/contigs.fasta"
 
@@ -38,22 +38,23 @@ for FILE in $BLAST_DIR/*.m8; do
         continue
     fi
 
+    ALIGN_FILE="${FILE%.m8}-Alignment.txt"
+
     # === Process every line (hit) in the BLAST file ===
     while IFS=$'\t' read -r QSEQID SSEQID PIDENT LENGTH MISMATCH GAPOPEN QSTART QEND SSTART SEND EVALUE BITSCORE QLEN SLEN; do
         
         # Calculate query coverage as a percentage
         QCOV=$(awk "BEGIN { printf \"%.2f\", (${LENGTH} / ${QLEN}) * 100 }")
 
-        # Try to get the scientific name from an optional alignment summary file
-        ALIGN_FILE="${FILE%.filteredcoioutput}-Alignment.txt"
+        # Try to get the scientific name from optional alignment summary file
         SCI_NAME="Unknown"
         if [[ -f "$ALIGN_FILE" ]]; then
-            SCI_NAME_LINE=$(grep -A 5 "$QSEQID" "$ALIGN_FILE" | tail -1)
+            SCI_NAME_LINE=$(grep -A 5 "$SSEQID" "$ALIGN_FILE" | tail -1)
             SCI_NAME=$(echo "$SCI_NAME_LINE" | awk '{print $1 " " $2}')
         fi
 
-        # Extract the corresponding sequence from contigs.fasta
-        SEQ=$(awk -v id="$QSEQID" '
+        # Extract the corresponding contig sequence from contigs.fasta using SSEQID
+        SEQ=$(awk -v id="$SSEQID" '
             BEGIN { found=0; seq="" }
             /^>/ { if (found) exit; found=($0 ~ ">"id) }
             found && !/^>/ { seq = seq $0 }
@@ -62,15 +63,15 @@ for FILE in $BLAST_DIR/*.m8; do
 
         # Skip if contig not found in FASTA
         if [[ -z "$SEQ" ]]; then
-            echo "⚠️ Could not find contig $QSEQID in $SAMPLE"
+            echo "⚠️ Could not find contig $SSEQID in $SAMPLE"
             continue
         fi
 
         # === Write to CSV ===
-        echo "$SAMPLE,$QSEQID,$SSEQID,$PIDENT,$EVALUE,$QCOV,$SCI_NAME,\"$SEQ\"" >> "$CSV_OUT"
+        echo "$SAMPLE,$SSEQID,$QSEQID,$PIDENT,$EVALUE,$QCOV,$SCI_NAME,\"$SEQ\"" >> "$CSV_OUT"
 
         # === Write to FASTA ===
-        echo ">$SAMPLE|$QSEQID|$SCI_NAME|$SSEQID" >> "$FASTA_OUT"
+        echo ">$SAMPLE|$SSEQID|$SCI_NAME|$QSEQID" >> "$FASTA_OUT"
         echo "$SEQ" >> "$FASTA_OUT"
 
     done < "$FILE"
