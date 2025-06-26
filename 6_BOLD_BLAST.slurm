@@ -34,7 +34,7 @@ chmod -R g+w "$OUTDIR"
           -db "$DataBASE" \
           -out "${OUTDIR}/bold-chordata-hits.m8" \
           -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' \
-          -evalue 10 \
+          -evalue 0.05 \
           -word_size 5 \
           -max_target_seqs 1000000 \
           -task blastn \
@@ -46,7 +46,7 @@ chmod -R g+w "$OUTDIR"
 grep -c "^>" ./Outputs/Blast_iPRO_consensus_Clustering-0.4ID-0.4cov_Rep.fasta
 
 
-
+# awk '{ if ($13 > 0 && ($4 / $13) >= 0.125 && $3 > 74) print }' "${inOUTDIR}/${NAME}.m8" > "${OUTDIR}/${NAME}.m8"
 
 
 
