@@ -24,7 +24,7 @@ echo "SampleID,ContigID,HitAccession,PercentIdentity,Evalue,QueryCoverage,Scient
 > "$FASTA_OUT"  # Truncate/create the FASTA file
 
 # === Process each BLAST output file ===
-for FILE in "$BLAST_DIR"/*.filteredcoioutput; do
+for FILE in $BLAST_DIR/*.filteredcoioutput; do
     SAMPLE=$(basename "$FILE" .filteredcoioutput)
     CONTIG_PATH="$FASTA_BASE/$SAMPLE/contigs.fasta"
 
