@@ -12,7 +12,7 @@
 
 
 # Change to BLAST directory
-# cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/denovo_assembly
+cd /uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts
 
 # Load any needed modules 
 module load blast/2.11.0
