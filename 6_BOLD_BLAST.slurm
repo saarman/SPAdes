@@ -32,9 +32,10 @@ chmod -R g+w "$OUTDIR"
 # Search each blast directory with Sparrow COI to identify all COIs
    blastn -query "$INFILE" \
           -db "$DataBASE" \
-          -out "${OUTDIR}/bold-chordata-hits.m8" \
+          -out "${OUTDIR}/test-bold-chordata-hits.m8" \
           -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' \
-          -evalue 0.05 \
+          -evalue 1e-10 \
+          -perc_identity 95 \
           -word_size 5 \
           -max_target_seqs 1000000 \
           -task blastn \
@@ -43,7 +44,6 @@ chmod -R g+w "$OUTDIR"
           -num_threads "$SLURM_CPUS_ON_NODE"
 
 
-grep -c "^>" ./Outputs/Blast_iPRO_consensus_Clustering-0.4ID-0.4cov_Rep.fasta
 
 
 # awk '{ if ($13 > 0 && ($4 / $13) >= 0.125 && $3 > 74) print }' "${inOUTDIR}/${NAME}.m8" > "${OUTDIR}/${NAME}.m8"
