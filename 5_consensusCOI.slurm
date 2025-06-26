@@ -61,10 +61,10 @@ for FILE in "$BLAST_DIR"/*.m8; do
         fi
 
         # === Write to CSV ===
-        echo "$SAMPLE,$SSEQID,$QSEQID,$PIDENT,$EVALUE,$QCOV,$SCI_NAME,\"$SEQ\"" >> "$CSV_OUT"
+        echo "$SAMPLE,$SSEQID,\"$SEQ\"" >> "$CSV_OUT"
 
         # === Write to FASTA ===
-        echo ">$SAMPLE|$SSEQID|$SCI_NAME|$QSEQID" >> "$FASTA_OUT"
+        echo ">$SAMPLE|$SSEQID" >> "$FASTA_OUT"
         echo "$SEQ" >> "$FASTA_OUT"
 
     done < "$FILE"
