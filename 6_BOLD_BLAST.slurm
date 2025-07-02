@@ -4,7 +4,7 @@
 #SBATCH --ntasks=20          # same as $max set in ForkManager
 #SBATCH --account=saarman-np
 #SBATCH --partition=saarman-shared-np   
-#SBATCH --job-name=consensus-COI
+#SBATCH --job-name=BLAST-COI
 #SBATCH --mail-type=BEGIN
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
@@ -29,10 +29,10 @@ mkdir -p "$OUTDIR"
 chmod -R g+w "$OUTDIR"
 
 
-# Search each blast directory with Sparrow COI to identify all COIs
+# Search through BOLD/BLAST database of all Chordata 
    blastn -query "$INFILE" \
           -db "$DataBASE" \
-          -out "${OUTDIR}/test-bold-chordata-hits.m8" \
+          -out "${OUTDIR}/final_bold-chordata-hits.m8" \
           -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' \
           -evalue 1e-10 \
           -perc_identity 98 \
