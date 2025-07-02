@@ -44,7 +44,7 @@ chmod -R g+w "$OUTDIR"
           -num_threads "$SLURM_CPUS_ON_NODE"
 
 
-
+awk -F'\t' '!seen[$1]++' "${OUTDIR}/final_bold-chordata-hits.m8" > "${OUTDIR}/one_hit_final_bold-chordata-hits.m8"
 
 # awk '{ if ($13 > 0 && ($4 / $13) >= 0.125 && $3 > 74) print }' "${inOUTDIR}/${NAME}.m8" > "${OUTDIR}/${NAME}.m8"
 
