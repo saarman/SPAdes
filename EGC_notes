@@ -245,5 +245,8 @@ chmod -R g+w "../blast_result/"
 chmod -R g+w "../SPAdes_scripts/"
 
 
+7-7-25
 
+Eric and Emily rewrote pipeline steps 1-6 that worked for us, alternative next steps could be mapping final reads back to references but we are thinking that this is not necessary for this project. maybe only if a reviewer makes a comment. we have final files on chpc here is the path to the final results 
+/uufs/chpc.utah.edu/common/home/saarman-group1/uphlfiles/SPAdes_scripts/blast_result
 
