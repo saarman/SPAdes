@@ -34,8 +34,8 @@ chmod -R g+w "$OUTDIR"
           -db "$DataBASE" \
           -out "${OUTDIR}/final_bold-chordata-hits.m8" \
           -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' \
-          -evalue 1e-10 \
-          -perc_identity 98 \
+          -evalue 1e-8 \
+          -perc_identity 97 \
           -word_size 5 \
           -max_target_seqs 1000000 \
           -task blastn \
@@ -44,7 +44,18 @@ chmod -R g+w "$OUTDIR"
           -num_threads "$SLURM_CPUS_ON_NODE"
 
 
-awk -F'\t' '!seen[$1]++' "${OUTDIR}/final_bold-chordata-hits.m8" > "${OUTDIR}/one_hit_final_bold-chordata-hits.m8"
+# Keep only the first hit per query, save as new file
+awk -F'\t' '!seen[$1]++' "${OUTDIR}/final_bold-chordata-hits97-1e8.m8" > \
+     "${OUTDIR}/one_hit_final_bold-chordata-hits97-1e8.m8"
+
+
+
+
+
+
+
+
+# awk -F'\t' '!seen[$1]++' "${OUTDIR}/final_bold-chordata-hits.m8" > "${OUTDIR}/one_hit_final_bold-chordata-hits.m8"
 
 # awk '{ if ($13 > 0 && ($4 / $13) >= 0.125 && $3 > 74) print }' "${inOUTDIR}/${NAME}.m8" > "${OUTDIR}/${NAME}.m8"
 
