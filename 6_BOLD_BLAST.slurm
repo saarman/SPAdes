@@ -32,7 +32,7 @@ chmod -R g+w "$OUTDIR"
 # Search through BOLD/BLAST database of all Chordata 
    blastn -query "$INFILE" \
           -db "$DataBASE" \
-          -out "${OUTDIR}/final_bold-chordata-hits.m8" \
+          -out "${OUTDIR}/final_bold-chordata-hits97-1e8.m8" \
           -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' \
           -evalue 1e-8 \
           -perc_identity 97 \
