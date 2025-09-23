@@ -36,7 +36,7 @@ chmod -R g+w "$OUTDIR"
           -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' \
           -evalue 1e-5 \
           -perc_identity 97 \
-          -word_size 5 \
+          -word_size 6 \
           -max_target_seqs 1000000 \
           -task blastn \
           -soft_masking false \
