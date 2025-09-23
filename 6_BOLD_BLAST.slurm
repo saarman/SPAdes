@@ -34,7 +34,7 @@ chmod -R g+w "$OUTDIR"
           -db "$DataBASE" \
           -out "${OUTDIR}/final_bold-chordata-hits97-1e8.m8" \
           -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' \
-          -evalue 1e-8 \
+          -evalue 1e-5 \
           -perc_identity 97 \
           -word_size 5 \
           -max_target_seqs 1000000 \
