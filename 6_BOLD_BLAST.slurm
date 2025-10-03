@@ -45,12 +45,16 @@ chmod -R g+w "$OUTDIR"
 
 
 # Keep only the first hit per query, save as new file
-awk -F'\t' '!seen[$1]++' "${OUTDIR}/final_bold-chordata-hits97-1e8.m8" > \
-     "${OUTDIR}/one_hit_final_bold-chordata-hits97-1e8.m8"
+# awk -F'\t' '!seen[$1]++' "${OUTDIR}/final_bold-chordata-hits97-1e8.m8" > \
+    # "${OUTDIR}/one_hit_final_bold-chordata-hits97-1e8.m8"
 
 
 
+# Trying top 3 hits?
 
+awk -F'\t' 'count[$1] < 3 { print; count[$1]++ }' \
+    "${OUTDIR}/final_bold-chordata-hits97-1e8.m8" > \
+    "${OUTDIR}/three_hits_final_bold-chordata-hits97-1e8.m8"
 
 
 
