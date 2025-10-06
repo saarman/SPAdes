@@ -35,7 +35,7 @@ chmod -R g+w "$OUTDIR"
           -out "${OUTDIR}/final_bold-chordata-hits97-1e8.m8" \
           -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen' \
           -evalue 1e-5 \
-          -perc_identity 95 \
+          -perc_identity 90 \
           -word_size 6 \
           -max_target_seqs 1000000 \
           -task blastn \
