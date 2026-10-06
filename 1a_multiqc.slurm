@@ -17,17 +17,13 @@
 # Load Module
 module load multiqc/1.12
 
-# Input and output files
-in_path="/uufs/chpc.utah.edu/common/home/u1055819/saarman-group/uphlfiles/fastqc"
-outdir="/uufs/chpc.utah.edu/common/home/u1055819/saarman-group/uphlfiles/fastqc/multiqc/"
+base="/uufs/chpc.utah.edu/common/home/u1055819/saarman-group/uphlfiles"
 
-# Create the output folder if it doesn't exist
-mkdir -p "$outdir"
-
-# Record version
-multiqc --version > "${outdir}multiqc_version.txt"
-
-multiqc "$in_path" --outdir "$outdir"
-
-# Give the group write access to the output
-chmod -R g+w "$outdir"
+for run in UT-M07101-240702 UT-M70330-240718; do
+  in_path="${base}/${run}/fastqc"
+  outdir="${base}/${run}/multiqc/"
+  mkdir -p "$outdir"
+  multiqc --version > "${outdir}multiqc_version.txt"
+  multiqc "$in_path" --outdir "$outdir"
+  chmod -R g+w "$outdir"
+done
