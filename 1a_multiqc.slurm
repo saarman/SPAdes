@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --partition=saarman-shared-np   
+#SBATCH --partition=saarman-np   
 #SBATCH --account=saarman-np
 #SBATCH --time=24:00:00   # walltime limit (HH:MM:SS)
 #SBATCH --mem=24576 # memory given in MB
